@@ -6,7 +6,7 @@
 
 clearvars
 
-Nx = 40; % Number of gridpoints along each dimension
+Nx = 41; % Number of gridpoints along each dimension
 h = 1/(Nx-1); % Meshsize
 x = linspace(0,1,Nx);
 P = zeros(Nx^2,3);
@@ -18,7 +18,7 @@ end
   
 PE = [0 0 0; 0 1 0; 1 1 0; 1 0 0]; % bottom face
 
-E = element2d(PE, sum(PE,1)/4);
+E = element2dsquare(PE);
 
 KE = E.K;
 ME = E.M;
@@ -39,16 +39,23 @@ M = M*h^2;
 
 f = @(x,y) (2*pi^2+1)*cos(pi*x).*cos(pi*y);
 esol = @(x,y) cos(pi*x).*cos(pi*y);
+es = esol(P(:,1),P(:,2));
 
 % Solving linear system (K+M)u = Mf
 u = (K+M)\(M*f(P(:,1),P(:,2)));
 
-% ESOL plotter
+% Plotting exact solution
 figure(1)
 scatter(P(:,1), P(:,2), 30, esol(P(:,1), P(:,2)),'filled')
 colorbar
 
-% NUMSOL plotter
+% Plotting numerical solution
 figure(2)
 scatter(P(:,1), P(:,2), 30, u,'filled')
 colorbar
+
+% Computing L2 error
+err = es - u;
+l2err = sqrt(err'*M*err);
+l2solnorm = sqrt(es'*M*es);
+l2err_rel = l2err/l2solnorm;
