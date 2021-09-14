@@ -2,10 +2,12 @@ classdef element3d
     % ELEMENT3D represents a VEM polyhedral element with k=1
     
     properties (SetAccess = private)
+        
         % INITIALISED VIA CONSTRUCTOR
-        Faces(:,1) element2d
+        Faces(:,1) element2dgeneric
         P(:,3) double % Vertices
         P0(1,3) double % The element is star-shaped wrt P0
+        
         % COMPUTED BY CONSTRUCTOR
         NVert(1,1) double
         NFaces(1,1) double

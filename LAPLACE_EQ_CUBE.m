@@ -4,7 +4,7 @@
 
 % Exact solution: u(x,y,z) = cos(pi*x)*cos(pi*y)*cos(pi*z)
 
-Nx = 20; % Number of gridpoints along each dimension
+Nx = 41; % Number of gridpoints along each dimension
 h = 1/(Nx-1); % Meshsize
 x = linspace(0,1,Nx);
 P = zeros(Nx^3,3);
@@ -60,19 +60,21 @@ f = @(x,y,z) (3*pi^2+1)*cos(pi*x).*cos(pi*y).*cos(pi*z);
 esol = @(x,y,z) cos(pi*x).*cos(pi*y).*cos(pi*z);
 
 % Solving linear system (K+M)u = Mf
+tic
 u = (K+M)\(M*f(P(:,1),P(:,2),P(:,3)));
 es = esol(P(:,1),P(:,2),P(:,3));
+toc
 
-% ESOL plotter
+% Plotting Exact solution
 figure(1)
 scatter3(P(:,1), P(:,2), P(:,3), 30, esol(P(:,1), P(:,2), P(:,3)),'filled')
 colorbar
 
-% NUMSOL plotter
+% Plotting Numerical solution
 figure(2)
 scatter3(P(:,1), P(:,2), P(:,3), 30, u,'filled')
 colorbar
 
-%L2 ERROR
+% Computing L2 error
 err = es - u;
 l2err = sqrt(err'*M*err);
