@@ -1,8 +1,9 @@
 % Script to test VEM 3d for the Laplace equation on the unit cube
-
+%
 %   - Delta(u) + u = (3*pi^2+1)*cos(pi*x)*cos(pi*y)*cos(pi*z)
-
+%
 % Exact solution: u(x,y,z) = cos(pi*x)*cos(pi*y)*cos(pi*z)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Nx = 41; % Number of gridpoints along each dimension
 h = 1/(Nx-1); % Meshsize
@@ -23,17 +24,17 @@ P4 = [1 0 0; 1 1 0; 1 1 1; 1 0 1]; % front face
 P5 = [0 0 0; 1 0 0; 1 0 1; 0 0 1]; % left face
 P6 = [0 1 0; 1 1 0; 1 1 1; 0 1 1]; % right face
 
-E1 = element2d(P1, sum(P1,1)/4);
-E2 = element2d(P2, sum(P2,1)/4);
-E3 = element2d(P3, sum(P3,1)/4);
-E4 = element2d(P4, sum(P4,1)/4);
-E5 = element2d(P5, sum(P5,1)/4);
-E6 = element2d(P6, sum(P6,1)/4);
+E1S = element2dsquare(P1);
+E2S = element2dsquare(P2);
+E3S = element2dsquare(P3);
+E4S = element2dsquare(P4);
+E5S = element2dsquare(P5);
+E6S = element2dsquare(P6);
 
-PE = unique([P1; P2; P3; P4; P5; P6],'rows');
-E = element3d([E1;E2;E3;E4;E5;E6], PE, sum(PE,1)/8);
-KE = E.K;
-ME = E.M;
+PS = unique([P1; P2; P3; P4; P5; P6],'rows');
+ES = element3dcube([E1S;E2S;E3S;E4S;E5S;E6S], PS);
+KE = ES.K;
+ME = ES.M;
 
 K = spalloc(Nx^3,Nx^3,57*Nx^3);
 M = spalloc(Nx^3,Nx^3,57*Nx^3);
@@ -78,3 +79,5 @@ colorbar
 % Computing L2 error
 err = es - u;
 l2err = sqrt(err'*M*err);
+l2solnorm = sqrt(es'*M*es);
+l2err_rel = l2err/l2solnorm;

@@ -17,10 +17,10 @@ E3 = element2d(P3, sum(P3,1)/4);
 E4 = element2d(P4, sum(P4,1)/4);
 E5 = element2d(P5, sum(P5,1)/4);
 E6 = element2d(P6, sum(P6,1)/4);
-toc
 
 P = unique([P1; P2; P3; P4; P5; P6],'rows');
-E = element3d([E1;E2;E3;E4;E5;E6], P, [.5 .5 .5]);
+E = element3d([E1;E2;E3;E4;E5;E6], P, sum(P,1)/8);
+toc
 
 % SMART IMPLEMENTATION: USE CLOSED FORM MATRICES FOR 2D
 tic
@@ -30,7 +30,7 @@ E3S = element2dsquare(P3);
 E4S = element2dsquare(P4);
 E5S = element2dsquare(P5);
 E6S = element2dsquare(P6);
-toc
 
 PS = unique([P1; P2; P3; P4; P5; P6],'rows');
-ES = element3d([E1S;E2S;E3S;E4S;E5S;E6S], PS, [.5 .5 .5]);
+ES = element3dcube([E1S;E2S;E3S;E4S;E5S;E6S], PS);
+toc

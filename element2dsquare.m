@@ -16,6 +16,9 @@ classdef element2dsquare < element2dgeneric
         Diameter
         K
         M
+        
+        % COMPUTED BY CONSTRUCTOR AND NOT PRESENT IN ABSTRACT CLASS
+        EdgeLength(1,1) double
     end
     
     methods(Access = private)
@@ -25,8 +28,11 @@ classdef element2dsquare < element2dgeneric
              % Compute number of vertices
              obj.NVert = 4;
              
+             % Compute edge length
+             obj.EdgeLength = norm(obj.P(1,:) - obj.P(2,:));
+             
              % Compute Area
-             obj.Area = norm(obj.P(1,:) - obj.P(2,:))^2;
+             obj.Area = obj.EdgeLength^2;
              
              % Compute Oriented Area
              obj.OrientedArea = cross(obj.P(3,:) - obj.P(2,:), obj.P(2,:) - obj.P(1,:));
