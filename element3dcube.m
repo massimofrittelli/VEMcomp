@@ -1,4 +1,4 @@
-classdef element3dcube < element3dgeneric
+classdef element3dcube < element3dabstract
     % ELEMENT3DCUBE represents a cubic VEM element with k=1
         
     properties (SetAccess = private)

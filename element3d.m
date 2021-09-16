@@ -1,4 +1,4 @@
-classdef element3d < element3dgeneric
+classdef element3d < element3dabstract
     % ELEMENT3D represents a VEM polyhedral element with k=1
     
     properties (SetAccess = private)

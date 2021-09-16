@@ -1,11 +1,10 @@
-classdef element2d < element2dgeneric
+classdef element2d < element2dabstract
     % ELEMENT2D represents a VEM polygonal element with k=1
     
     properties(SetAccess = private)
         
         % CONSTRUCTOR INPUTS
         P % Nodes
-        % NodesIndexes(:,1) int64
         P0 % Element is star-shaped wrt P0
         
         % COMPUTED BY CONSTRUCTOR

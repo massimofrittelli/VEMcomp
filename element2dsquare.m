@@ -1,4 +1,4 @@
-classdef element2dsquare < element2dgeneric
+classdef element2dsquare < element2dabstract
     % ELEMENT2DSQUARE represents a VEM square element with k=1
     
     properties(SetAccess = private)
