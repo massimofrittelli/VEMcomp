@@ -6,7 +6,6 @@ classdef (Abstract) element3dgeneric < matlab.mixin.Heterogeneous
         
         Faces(:,1) element2dgeneric
         P(:,3) double % Vertices
-        P0(1,3) double % The element is star-shaped wrt P0
         NVert(1,1) double % Number of vertices
         NFaces(1,1) double % Number of faces
         Volume(1,1) double

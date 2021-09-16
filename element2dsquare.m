@@ -5,7 +5,6 @@ classdef element2dsquare < element2dgeneric
         
         % CONSTRUCTOR INPUT
         P % Nodes
-        % NodesIndexes(:,1) int64
         
         % COMPUTED BY CONSTRUCTOR
         P0 % Element is star-shaped wrt P0

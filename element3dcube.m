@@ -8,7 +8,6 @@ classdef element3dcube < element3dgeneric
         P % Vertices
         
         % COMPUTED UPON INITIALISATION
-        P0 % The element is star-shaped wrt P0
         NVert
         NFaces
         Volume
@@ -21,9 +20,8 @@ classdef element3dcube < element3dgeneric
     methods (Access = private)
        function obj = initElement(obj)
            
-           % Compute P0 and centroid
-           obj.P0 = sum(obj.P,1)/8;
-           obj.Centroid = obj.P0;
+           % Compute centroid
+           obj.Centroid = mean(obj.P);
            
            % Compute number of vertices and faces
            obj.NVert = 8;

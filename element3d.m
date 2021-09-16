@@ -6,7 +6,9 @@ classdef element3d < element3dgeneric
         % INITIALISED VIA CONSTRUCTOR
         Faces
         P % Vertices
-        P0 % The element is star-shaped wrt P0
+        
+        % INITIALISED VIA CONSTRUCTOR - SUBCLASS SPECIFIC
+        P0(1,3) double % The element is star-shaped wrt P0
         
         % COMPUTED UPON INITIALISATION
         NVert
