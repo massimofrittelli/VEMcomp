@@ -13,9 +13,10 @@
 % - P: array of nodes
 % - h: meshsize
 % - K,M: stiffness and mass matrices
+% - Elements: polyhedral elements in element3ddummy format
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [P, h, K, M, radii, noncubes] = generate_mesh_sphere(Nx)
+function [P, h, K, M, radii, Elements] = generate_mesh_sphere(Nx)
 
 hx = 2/(Nx-1); % Discretisation step along each dimension
 h = hx*sqrt(3); % Meshsize
@@ -24,24 +25,25 @@ h = hx*sqrt(3); % Meshsize
 K = spalloc(Nx^3,Nx^3,57*Nx^3);
 M = spalloc(Nx^3,Nx^3,57*Nx^3);
 
-P1S = [0 0 0; 0 1 0; 1 1 0; 1 0 0]; % bottom face
-P2S = [0 0 1; 0 1 1; 1 1 1; 1 0 1]; % top face
-P3S = [0 0 0; 0 1 0; 0 1 1; 0 0 1]; % back face
-P4S = [1 0 0; 1 1 0; 1 1 1; 1 0 1]; % front face
-P5S = [0 0 0; 1 0 0; 1 0 1; 0 0 1]; % left face
-P6S = [0 1 0; 1 1 0; 1 1 1; 0 1 1]; % right face
+P1S = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*hx; % bottom face
+P2S = [0 0 1; 0 1 1; 1 1 1; 1 0 1]*hx; % top face
+P3S = [0 0 0; 0 1 0; 0 1 1; 0 0 1]*hx; % back face
+P4S = [1 0 0; 1 1 0; 1 1 1; 1 0 1]*hx; % front face
+P5S = [0 0 0; 1 0 0; 1 0 1; 0 0 1]*hx; % left face
+P6S = [0 1 0; 1 1 0; 1 1 1; 0 1 1]*hx; % right face
 
-E1S = element2dsquare(P1S);
-E2S = element2dsquare(P2S);
-E3S = element2dsquare(P3S);
-E4S = element2dsquare(P4S);
-E5S = element2dsquare(P5S);
-E6S = element2dsquare(P6S);
+E1S = element2ddummy(P1S, true);
+E2S = element2ddummy(P2S, true);
+E3S = element2ddummy(P3S, true);
+E4S = element2ddummy(P4S, true);
+E5S = element2ddummy(P5S, true);
+E6S = element2ddummy(P6S, true);
 PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
-ES = element3dcube([E1S;E2S;E3S;E4S;E5S;E6S], PS);
+ESD = element3ddummy(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
+ES = dummy2element(ESD);
 
-KS = ES.K*hx;
-MS = ES.M*hx^3;
+KS = ES.K;
+MS = ES.M;
 
 % CREATING GRIDPOINTS OF BOUNDING BOX
 
@@ -59,7 +61,7 @@ end
 
 % MATRIX ASSEMBLY
 newP = P;
-noncubes = 0;
+Elements = [];
 for i=0:Nx-2 % For each element of the bounding box
     for j=0:Nx-2
         for k=0:Nx-2
@@ -85,10 +87,10 @@ for i=0:Nx-2 % For each element of the bounding box
                     % Element fully inside, is a cube
                     M(indexes, indexes) = M(indexes, indexes) + MS; %#ok
                     K(indexes, indexes) = K(indexes, indexes) + KS; %#ok
-                else
-                    % Element intersects the boundary, cut cube
-                    noncubes = noncubes+1;
                     
+                    Elements = [Elements; shiftElement(ESD, P(indexes(1),:))]; %#ok
+                else
+                    % Element intersects the boundary, cut cube                    
                     
                     P1 = P(indexes([1 3 7 5]),:);
                     P2 = P(indexes([2 4 8 6]),:);
@@ -108,7 +110,8 @@ for i=0:Nx-2 % For each element of the bounding box
                     EC = cut(ED);
                    
                     E = dummy2element(EC);
-                    
+                    Elements = [Elements; EC]; %#ok
+                                        
                     M(indexes, indexes) = M(indexes, indexes) + E.M; %#ok
                     K(indexes, indexes) = K(indexes, indexes) + E.K; %#ok
                     

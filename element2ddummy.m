@@ -2,6 +2,7 @@ classdef element2ddummy
     %ELEMENT2DDUMMY is a bare-bone class that models a convex 2D element:
     % 1) contains minimal information on the element
     % 2) allows for element cutting in the unit sphere
+    % 3) allows for element translation/shifting
     
     properties (SetAccess = private)
         P(:,3) % Vertexes
@@ -12,6 +13,10 @@ classdef element2ddummy
         function obj = element2ddummy(P,issquare)     
             obj.P = P;
             obj.issquare = issquare;
+        end
+        
+        function E = shiftElement(obj, v)
+           E =  element2ddummy(obj.P+repmat(v,length(obj.P),1),obj.issquare);
         end
         
         function Earray = dummy2element(EDarray)

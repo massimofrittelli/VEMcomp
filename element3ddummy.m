@@ -2,7 +2,8 @@ classdef element3ddummy
     %ELEMENT3DDUMMY is a bare-bone class that models a convex 3D element:
     % 1) contains minimal information on the element
     % 2) allows for element cutting in the unit sphere
-    % 3) allows for element plotting
+    % 3) allows for element translation/shifting
+    % 4) allows for element plotting
     
     properties
         P(:,3) % Vertexes
@@ -15,6 +16,14 @@ classdef element3ddummy
             obj.P = P;
             obj.Faces = Faces;
             obj.iscube = iscube;
+        end
+        
+        function E = shiftElement(obj, v)
+           newFaces = obj.Faces;
+           for i=1:size(newFaces,1)
+              newFaces(i) = shiftElement(obj.Faces(i), v); 
+           end
+           E =  element3ddummy(obj.P+repmat(v,length(obj.P),1), newFaces, obj.iscube);
         end
         
         function E = dummy2element(obj)
@@ -43,17 +52,11 @@ classdef element3ddummy
         end
         
         function plot(obj)
-           figure
-           hold on
            for i=1:size(obj.Faces,1)
                PF = obj.Faces(i).P;
-               fill3(PF(:,1), PF(:,2), PF(:,3), 0*PF(:,1));
+               radii = vecnorm(PF')';
+               fill3(PF(:,1), PF(:,2), PF(:,3), radii.^3);
            end
-           view(3)
-           axis equal
-           xlabel('x')
-           ylabel('y')
-           zlabel('z','rot',0)
         end
     end
 end
