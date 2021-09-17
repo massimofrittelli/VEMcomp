@@ -140,11 +140,15 @@ classdef element2d < element2dabstract
             obj.K = PInablastar'*Gtilde*PInablastar + (eye(obj.NVert)-PInabla)'*(eye(obj.NVert)-PInabla);
 
             %computing matrix H (see Hitchhiker's)
+            [X,Y,Wx,Wy] = quadrature_quadratic(obj);
             H = zeros(3,3);
             for i=1:3
                 for j=1:3
                     fun = @(x,y) monomials{i}(x,y).*monomials{j}(x,y);
-                    H(i,j) = quadrature(obj, fun);
+                    F = fun(X,Y);
+                    FC = num2cell(F,[1,2]);
+                    FB = blkdiag(FC{:});
+                    H(i,j) = Wx' * FB * Wy;
                 end
             end
 
@@ -154,17 +158,22 @@ classdef element2d < element2dabstract
             obj.M = C'*PInablastar + obj.Area*(eye(obj.NVert)-PI0)'*(eye(obj.NVert)-PI0);
         end
         
-        function I = quadrature(obj, fun)
-            I = 0;
+        
+        function [X,Y,Wx,Wy] = quadrature_quadratic(obj)
+            % Determines quadrature weights and nodes on polygon
+            Wx = zeros(2*obj.NVert,1);
+            Wy = zeros(2*obj.NVert,1);
+            X = zeros(2,2,obj.NVert);
+            Y = zeros(2,2,obj.NVert);
             for i = 1:obj.NVert-1
                 PP = [obj.TransformedP(i:i+1,:); obj.TransformedP0];
-                [X,Y,Wx,Wy] = quadrature_triangle_quadratic(PP);
-                I = I + Wx'*fun(X,Y)*Wy;
+                [X(:,:,i),Y(:,:,i),Wx([2*i-1 2*i],1),Wy([2*i-1 2*i],1)] = quadrature_triangle_quadratic(PP);
             end
+            i = obj.NVert;
             PP = [obj.TransformedP([obj.NVert,1],:); obj.TransformedP0];
-            [X,Y,Wx,Wy] = quadrature_triangle_quadratic(PP);
-            I = I + Wx'*fun(X,Y)*Wy;
+            [X(:,:,i),Y(:,:,i),Wx([2*i-1 2*i],1),Wy([2*i-1 2*i],1)] = quadrature_triangle_quadratic(PP);
         end
+        
     end
     
     methods
