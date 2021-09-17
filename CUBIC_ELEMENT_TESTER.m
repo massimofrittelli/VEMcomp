@@ -1,13 +1,14 @@
 clearvars
 
 edge = 1; % edge length
+shift = [0 0 0];
 
-P1 = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*edge; % bottom face
-P2 = [0 0 1; 0 1 1; 1 1 1; 1 0 1]*edge; % top face
-P3 = [0 0 0; 0 1 0; 0 1 1; 0 0 1]*edge; % back face
-P4 = [1 0 0; 1 1 0; 1 1 1; 1 0 1]*edge; % front face
-P5 = [0 0 0; 1 0 0; 1 0 1; 0 0 1]*edge; % left face
-P6 = [0 1 0; 1 1 0; 1 1 1; 0 1 1]*edge; % right face
+P1 = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*edge + shift; % bottom face
+P2 = [0 0 1; 0 1 1; 1 1 1; 1 0 1]*edge + shift; % top face
+P3 = [0 0 0; 0 1 0; 0 1 1; 0 0 1]*edge + shift; % back face
+P4 = [1 0 0; 1 1 0; 1 1 1; 1 0 1]*edge + shift; % front face
+P5 = [0 0 0; 1 0 0; 1 0 1; 0 0 1]*edge + shift; % left face
+P6 = [0 1 0; 1 1 0; 1 1 1; 0 1 1]*edge + shift; % right face
 
 % NAIVE IMPLEMENTATION: ACTUALLY COMPUTE MATRICES
 tic
@@ -33,4 +34,18 @@ E6S = element2dsquare(P6);
 
 PS = unique([P1; P2; P3; P4; P5; P6],'rows');
 ES = element3dcube([E1S;E2S;E3S;E4S;E5S;E6S], PS);
+toc
+
+% CUT TEST
+tic
+E1D = element2ddummy(P1, true);
+E2D = element2ddummy(P2, true);
+E3D = element2ddummy(P3, true);
+E4D = element2ddummy(P4, true);
+E5D = element2ddummy(P5, true);
+E6D = element2ddummy(P6, true);
+
+PD = unique([P1; P2; P3; P4; P5; P6],'rows');
+ED = element3ddummy(PD, [E1D;E2D;E3D;E4D;E5D;E6D], true);
+EC = cut(ED);
 toc

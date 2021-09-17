@@ -1,5 +1,5 @@
 classdef (Abstract) element2dabstract < matlab.mixin.Heterogeneous
-    %element2dabstract is an absract class that defines the functionality of
+    %element2dabstract is an abstract class that defines the functionality of
     %any 2D VEM element
     
     properties (Abstract, SetAccess = private)
