@@ -135,11 +135,11 @@ classdef element3d < element3dabstract
            I = 0;
            for i=1:face.NVert-1
               PP = [face.P([i i+1],:); face.P0; obj.P0];
-              [X,Y,Z,W] = quadrature_tetrahedron(2,PP);
+              [X,Y,Z,W] = quadrature_tetrahedron_quadratic(PP);
               I = I + W'*fun([X Y Z]);
            end
            PP = [face.P([face.NVert 1],:); face.P0; obj.P0];
-           [X,Y,Z,W] = quadrature_tetrahedron(2,PP);
+           [X,Y,Z,W] = quadrature_tetrahedron_quadratic(PP);
            I = I + W'*fun([X Y Z]);
        end
        

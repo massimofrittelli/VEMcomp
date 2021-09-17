@@ -158,11 +158,11 @@ classdef element2d < element2dabstract
             I = 0;
             for i = 1:obj.NVert-1
                 PP = [obj.TransformedP(i:i+1,:); obj.TransformedP0];
-                [X,Y,Wx,Wy] = quadrature_triangle(2 ,PP);
+                [X,Y,Wx,Wy] = quadrature_triangle_quadratic(PP);
                 I = I + Wx'*fun(X,Y)*Wy;
             end
             PP = [obj.TransformedP([obj.NVert,1],:); obj.TransformedP0];
-            [X,Y,Wx,Wy] = quadrature_triangle(2 ,PP);
+            [X,Y,Wx,Wy] = quadrature_triangle_quadratic(PP);
             I = I + Wx'*fun(X,Y)*Wy;
         end
     end
