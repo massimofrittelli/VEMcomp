@@ -109,11 +109,12 @@ classdef element3d < element3dabstract
             obj.K = PInablastar'*Gtilde*PInablastar + obj.Diameter*(eye(obj.NVert)-PInabla)'*(eye(obj.NVert)-PInabla);
 
             %computing matrix H (see Hitchhiker's)
+            [XYZ,W] = quadrature(obj);
             H = zeros(4,4);
             for i=1:4
                 for j=1:4
                     fun = @(x) monomials{i}(x).*monomials{j}(x);
-                    H(i,j) = quadrature(obj, fun);
+                    H(i,j) = W'*fun(XYZ);
                 end
             end
 
@@ -123,24 +124,26 @@ classdef element3d < element3dabstract
             obj.M = C'*PInablastar + obj.Volume*(eye(obj.NVert)-PI0)'*(eye(obj.NVert)-PI0);
        end
        
-       function I = quadrature(obj, fun)
-            integrals = zeros(6,1);
+       function [XYZ,W] = quadrature(obj)
+            % COMPUTES QUADRATURE NODES AND WEIGHTS ON THE WHOLE 3D ELEMENT
+            XYZ = []; W = []; 
             for i = 1:obj.NFaces
-               integrals(i) = quadraturePyramid(obj, obj.Faces(i), fun);
+               [XYZF, WF] = quadraturePyramid(obj, obj.Faces(i));
+               XYZ = [XYZ; XYZF]; W = [W;WF];  %#ok
             end
-            I = sum(integrals);
        end
         
-       function I = quadraturePyramid(obj, face, fun)
-           I = 0;
+       function [XYZ,W] = quadraturePyramid(obj, face)
+           % COMPUTES QUADRATURE NODES AND WEIGHTS ON PYRAMID HAVING AN
+           % element2d AS BASE
+           XYZ = zeros(8*face.NVert,3); W = zeros(8*face.NVert,1); 
            for i=1:face.NVert-1
               PP = [face.P([i i+1],:); face.P0; obj.P0];
-              [X,Y,Z,W] = quadrature_tetrahedron_quadratic(PP);
-              I = I + W'*fun([X Y Z]);
+              [XYZ(8*i-7:8*i,:), W(8*i-7:8*i,:)] = quadrature_tetrahedron_quadratic(PP);
            end
+           i=face.NVert;
            PP = [face.P([face.NVert 1],:); face.P0; obj.P0];
-           [X,Y,Z,W] = quadrature_tetrahedron_quadratic(PP);
-           I = I + W'*fun([X Y Z]);
+           [XYZ(8*i-7:8*i,:), W(8*i-7:8*i,:)] = quadrature_tetrahedron_quadratic(PP);
        end
        
        function I = boundaryIntegral(obj, normders, i)

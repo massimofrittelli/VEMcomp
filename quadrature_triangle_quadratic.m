@@ -1,4 +1,4 @@
-function [X,Y,Wx,Wy] = quadrature_triangle_quadratic(v)
+function [XY,W] = quadrature_triangle_quadratic(v)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -35,14 +35,18 @@ function [X,Y,Wx,Wy] = quadrature_triangle_quadratic(v)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+cd = [ 1, 0, 0; -1, 0, 1; 0, 1,-1]*v; 
+
+Y = [1-sqrt(3); 1+sqrt(3)]/2;
+X = [6-sqrt(6); 6+sqrt(6)]/10;
+[Y,X] = meshgrid(Y,X); 
+Y = Y.*X;
+X = X(:);
+Y = Y(:);
+
 Wy = [1;1]/2;
-t = [1-sqrt(3); 1+sqrt(3)]/2;
-x = [6-sqrt(6); 6+sqrt(6)]/10;
-wx = [9-sqrt(6); 9+sqrt(6)]/36;
+Wx = [9-sqrt(6); 9+sqrt(6)]/36;
+Wx = abs(det(cd(2:3,:)))*Wx;
+W = reshape(Wy*Wx',4,1);
 
-cd=[ 1, 0, 0; -1, 0, 1; 0, 1,-1]*v; 
-Wx=abs(det(cd(2:3,:)))*wx;
-[tt,xx]=meshgrid(t,x); yy=tt.*xx;
-
-X=cd(1,1)+cd(2,1)*xx+cd(3,1)*yy;    
-Y=cd(1,2)+cd(2,2)*xx+cd(3,2)*yy;
+XY = [cd(1,1)+cd(2,1)*X+cd(3,1)*Y, cd(1,2)+cd(2,2)*X+cd(3,2)*Y];

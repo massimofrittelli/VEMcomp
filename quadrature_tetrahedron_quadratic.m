@@ -1,4 +1,4 @@
-function [X,Y,Z,W] = quadrature_tetrahedron_quadratic(vert)
+function [XYZ,W] = quadrature_tetrahedron_quadratic(vert)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % Gaussian Quadrature for a tetrahedron of order N = 2
@@ -35,7 +35,7 @@ w=reshape(reshape(w2*w1',4,1)*w3',8,1);
 c=[1 0 0 0;-1 1 0 0;-1 0 1 0;-1 0 0 1]*vert;
 W=abs(det(c(2:4,:)))*w;
 % Change of coordinates 
-XYZ=[ones(8,1) x y z]*c; X=XYZ(:,1); Y=XYZ(:,2); Z=XYZ(:,3);
+XYZ=[ones(8,1) x y z]*c;
  
 % function [x,w]=rquad2
 % k2 = 4;
