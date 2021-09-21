@@ -63,8 +63,8 @@ classdef element3ddummy
            hold on
            for i=1:size(obj.Faces,1)
                PF = obj.Faces(i).P;
-               radii = vecnorm(PF')';
-               fill3(PF(:,1), PF(:,2), PF(:,3), radii.^3);
+               % radii = vecnorm(PF')';
+               fill3(PF(:,1), PF(:,2), PF(:,3), PF(:,1)*0 + 1 - obj.iscube);
            end
         end
     end

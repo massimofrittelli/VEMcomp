@@ -1,9 +1,9 @@
 % Plots the mesh generated as follows
-% [P,h,K,M,radii,Elements] = generate_mesh_sphere(5);
+% [P,h,K,M,radii,Elements] = generate_mesh_sphere(6);
 
 figure
 set(gcf,'color','white')
-ii = [1:32 37 41:48];
+ii = [73:207];
 hold on
 for i=1:length(ii)
    plot(Elements(ii(i))); 
@@ -13,5 +13,5 @@ axis equal
 xlabel('x')
 ylabel('y')
 zlabel('z','rot',0)
-title('Sawed-off cubic mesh on the sphere')
+title('Extruded cubic mesh on the sphere')
 set(gca,'FontSize',18)

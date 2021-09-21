@@ -89,7 +89,7 @@ for i=0:Nx-2 % For each element of the bounding box
                 K(indexes, indexes) = K(indexes, indexes) + KS; %#ok
                     
                 NewCubicElement = shiftElement(ESD, P(indexes(1),:));
- %               Elements = [Elements; NewCubicElement]; %#ok
+                Elements = [Elements; NewCubicElement]; %#ok
                 
                 % Extrude element, if it has an external face
                 extrusion_directions = find(vecnorm(repmat(TPO',1,3) + eye(3)*hx) > 1 | vecnorm(repmat(TPO',1,3) - eye(3)*hx) > 1);
@@ -98,7 +98,7 @@ for i=0:Nx-2 % For each element of the bounding box
                 end
                 extrusion_verses = sign(TPO(extrusion_directions));
                 NewElements = extrude(NewCubicElement,indexes,extrusion_directions,extrusion_verses,Ncube);
- %               Elements = [Elements; NewElements]; %#ok
+                Elements = [Elements; NewElements]; %#ok
                 for l=1:length(NewElements)
                     eind = NewElements(l).Pind;
                     E = dummy2element(NewElements(l));
@@ -106,9 +106,9 @@ for i=0:Nx-2 % For each element of the bounding box
                     newP(eind(5:8),:) = NewElements(l).P(5:8,:);
                     M(eind, eind) = M(eind, eind) + E.M; %#ok
                     K(eind, eind) = K(eind, eind) + E.K; %#ok
-                    if abs(sum(sum(E.M)) - newP(eind,:)'*E.K*newP(eind,:)) > 1e-14
-                        error('Error!')
-                    end
+%                     if abs(sum(sum(E.M)) - newP(eind,:)'*E.K*newP(eind,:)) > 1e-14
+%                         error('Error!')
+%                     end
                 end
             end
         end
