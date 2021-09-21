@@ -29,7 +29,7 @@ classdef element3ddummy
            E =  element3ddummy(obj.P+repmat(v,length(obj.P),1), newFaces, obj.iscube);
         end
         
-        function EE = extrude(obj, Pind, directions, verses, Ncube)
+        function EE = extrude(obj, Pind, Ncube)
             % Extrudes the faces that contain the point OP as vertex in the
             % directions specified by the vector 'directions'
             if not(obj.iscube)
@@ -37,17 +37,23 @@ classdef element3ddummy
             end
             obj.Pind = Pind; % Indexes of vertexes of obj
             EE = [];
+            I = eye(3);
+            deltax = max(obj.P(:,1)) - min(obj.P(:,1));
             for i=1:6
-               dirindex = find(ismember(directions, obj.Faces(i).NormalDirection));
-               if isempty(dirindex)
-                  continue 
-               end
-               dir = directions(dirindex);
-               verse = verses(dirindex);
-               if verse*(obj.Faces(i).P(1,dir) - mean(obj.P(:,dir))) > 0
-                   [~, indb] = ismember(obj.Faces(i).P,obj.P,'rows');
-                   EE = [EE; extrude(obj.Faces(i), Pind(indb), Ncube)]; %#ok
-               end
+                dir = obj.Faces(i).NormalDirection;
+                fabsdir = abs(obj.Faces(i).P(1,dir));
+                maxdir = max(obj.P(:,dir));
+                mindir = min(obj.P(:,dir));
+                maxabsdir = max(abs(obj.P(:,dir)));
+                if maxdir*mindir > 0 && fabsdir < maxabsdir
+                    continue
+                end
+                verse = sign(obj.Faces(i).P(1,dir) - mean(obj.P(:,dir)));
+                if max(vecnorm((obj.Faces(i).P + I(dir,:)*deltax*verse)')) <=1
+                   continue 
+                end
+                [~, indb] = ismember(obj.Faces(i).P,obj.P,'rows');
+                EE = [EE; extrude(obj.Faces(i), Pind(indb), Ncube)]; %#ok
             end
         end
         

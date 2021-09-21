@@ -16,7 +16,7 @@
 % - Elements: polyhedral elements in element3ddummy format
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [P, h, K, M, Elements] = generate_mesh_sphere(Nx)
+function [P, h, K, M] = generate_mesh_sphere(Nx)
 
 hx = 2/(Nx-1); % Discretisation step along each dimension
 h = hx*sqrt(3); % Meshsize
@@ -65,7 +65,7 @@ end
 acceptednode = false(2*size(P,1),1);
 newP = [P; zeros(size(P))];
 % Twice the amount of nodes of the bounding box to allow for extrusion
-Elements = [];
+% Elements = [];
 for i=0:Nx-2 % For each element of the bounding box
     for j=0:Nx-2
         for k=0:Nx-2
@@ -89,16 +89,14 @@ for i=0:Nx-2 % For each element of the bounding box
                 K(indexes, indexes) = K(indexes, indexes) + KS; %#ok
                     
                 NewCubicElement = shiftElement(ESD, P(indexes(1),:));
-                Elements = [Elements; NewCubicElement]; %#ok
+                % Elements = [Elements; NewCubicElement]; %#ok
                 
                 % Extrude element, if it has an external face
-                extrusion_directions = find(vecnorm(repmat(TPO',1,3) + eye(3)*hx) > 1 | vecnorm(repmat(TPO',1,3) - eye(3)*hx) > 1);
-                if isempty(extrusion_directions)
-                   continue 
+                if norm(TPO) < 1 - h
+                    continue
                 end
-                extrusion_verses = sign(TPO(extrusion_directions));
-                NewElements = extrude(NewCubicElement,indexes,extrusion_directions,extrusion_verses,Ncube);
-                Elements = [Elements; NewElements]; %#ok
+                NewElements = extrude(NewCubicElement,indexes,Ncube);
+                % Elements = [Elements; NewElements]; %#ok
                 for l=1:length(NewElements)
                     eind = NewElements(l).Pind;
                     E = dummy2element(NewElements(l));

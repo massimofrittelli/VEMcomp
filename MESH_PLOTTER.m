@@ -3,7 +3,8 @@
 
 figure
 set(gcf,'color','white')
-ii = [73:207];
+%ii = [73:207];
+ii = 1:73;
 hold on
 for i=1:length(ii)
    plot(Elements(ii(i))); 
