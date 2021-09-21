@@ -47,5 +47,5 @@ E6D = element2ddummy(P6, true);
 
 PD = unique([P1; P2; P3; P4; P5; P6],'rows');
 ED = element3ddummy(PD, [E1D;E2D;E3D;E4D;E5D;E6D], true);
-EC = cut(ED);
+EE = extrude(E2D);
 toc
