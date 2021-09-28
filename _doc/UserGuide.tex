@@ -12,6 +12,8 @@
     %backgroundcolor=\color{yellow!20},%
     basicstyle=\ttfamily%
     }%
+    
+\newcommand{\boldn}{\boldsymbol{n}}
 
 \begin{document}
  
@@ -504,7 +506,9 @@ ans =
 which agree with \eqref{stiffness_3d}-\eqref{mass_3d} up to machine precision.
 
 
-\section{Numerical example: Laplace equation on the cube}
+\section{Numerical examples for bulk problems}
+
+\subsection{Laplace equation on the cube}
 We now test the convergence of Virtual Elements, implemented via VEMLAB,  for the following  Laplace equation on the unit cube $\Omega = [0,1]^3$:
 \begin{equation}
 \label{experiment_laplace_equation_3d}
@@ -548,7 +552,8 @@ $i$ & $N$ & $h$ & $L^2(\Omega)$ error & $L^2(\Omega)$ rate\\
 \end{figure}
 
  
-\section{Numerical example: Laplace equation on the sphere}
+\subsection{Laplace equation on the sphere}
+\label{sec:laplace_sphere}
 We now consider another domain, the unit sphere $\Omega$ in 3D. The test problem, in spherical coordinates, is as follows
 \begin{equation}
 \label{experiment_laplace_equation_3d_sphere}
@@ -588,10 +593,55 @@ $i$ & $N$ & $h$ & $L^2(\Omega)$ error & $L^2(\Omega)$ rate\\
 
 \begin{figure}[H]
 \begin{center}
-\includegraphics[scale=0.5]{laplace3dsphere_numsol_Nx41.eps}
+\includegraphics[scale=0.5]{laplace3dsphere_Nx41.eps}
 \end{center}
-\caption{Laplace equation \eqref{experiment_laplace_equation_3d_sphere} on the unit sphere$\Omega$ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes.}
+\caption{Laplace equation \eqref{experiment_laplace_equation_3d_sphere} on the unit sphere $\Omega$ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes.}
 \label{fig:laplace_3d_numsol_sphere}
+\end{figure} 
+
+\section{Numerical examples for bulk-surface problems}
+
+\subsection{Elliptic bulk-surface problem on the sphere}
+We numerically solve the following elliptic bulk-surface problem,  found in \cite{elliott2013finite}, on the unit sphere $\Omega$ in 3D:
+\begin{equation}
+\label{experiment_bs_3d_sphere}
+\begin{cases}
+-&\Delta u + u = xyz \qquad \text{in}\ \Omega\\
+-&\Delta_\Gamma v + v +\nabla u\cdot\boldn = 29xyz \qquad \text{on}\ \partial \Omega\\
+&\nabla u \cdot \boldn = -u + 2v   \qquad \text{on}\ \partial \Omega
+\end{cases}
+\end{equation}
+whose exact solution is given by
+\begin{align*}
+&u(x,y,z) = xyz, \qquad (x,y,z) \in \Omega;\\
+&v(x,y,z) = 2xyz, \qquad (x,y,z) \in \partial\Omega.
+\end{align*}
+We consider the same sequence of four meshes $\Omega_i$, $i=1,2,3,4$ of Experiment \ref{sec:laplace_sphere}.  The surface meshes are induced by the corresponding bulk mesh, i.e. $\Gamma_i = \partial \Omega_i$, $i=1,\dots,4$. On each mesh we solve the discrete problem,  we compute the error in $L^2(\Omega)\times L^2(\Gamma)$ norm and the respective convergence rate. As shown in Table \ref{tab:bs_3d_convergence_sphere}, the convergence in $L^2(\Omega)\times L^2(\Gamma)$ norm is optimal, i.e. quadratic. The numerical solution obtained on the finest mesh is plotted in Fig.  \ref{fig:bs_3d_numsol_sphere}.
+
+\begin{table}[H]
+\caption{Elliptic bulk-surface problem \eqref{experiment_bs_3d_sphere} on the unit sphere $\Omega$ in 3D. The VEM implemented in VEMLAB shows optimal quadratic convergence in $L^2(\Omega) \times L^2(\Gamma)$ norm. Times required for the solution of the linear system are shown.}
+\begin{center}
+\begin{tabular}{c | c | c | c | c | c}
+$i$ & $N$ & $h$ & $L^2(\Omega)\times L^2(\Gamma)$ error & $L^2(\Omega)\times L^2(\Gamma)$ rate & Time (s)\\
+\hline
+1 & 111 & 0.6928 &   2.1985e-01 &  -   & 0.002159\\
+2 & 799 & 0.3464 & 3.8387e-02 & 2.5178    & 0.015645\\
+3 & 5749 & 0.1732 & 8.5674e-03 & 2.1637  & 0.197641  \\
+4 & 40381 & 0.0866 &  1.9884e-03 & 2.1072 & 5.994934
+\end{tabular}
+\end{center}
+\label{tab:bs_3d_convergence_sphere}
+\end{table}
+
+\begin{figure}[H]
+\begin{center}
+\hspace*{-10mm}
+\includegraphics[scale=0.4]{bs_3d_sphere_nx41_u.eps}
+\hspace*{-5mm}
+\includegraphics[scale=0.4]{bs_3d_sphere_nx41_v.eps}
+\end{center}
+\caption{Elliptic bulk-surface  problem \eqref{experiment_bs_3d_sphere} on the unit sphere $\Omega$ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes. Left: bulk component $u$. Right: surface component $v$.}
+\label{fig:bs_3d_numsol_sphere}
 \end{figure} 
  
 \bibliographystyle{plain}

@@ -39,10 +39,11 @@ L2errel = L2err/normsol;
 % L2errel = L2err/normsol;
 
 % Plotting Numerical solution
-indsol = P(:,1) >= 0;
 figure
+indsol = P(:,1) >= 0;
+chull = convhull(P(indsol,1), P(indsol,2), P(indsol,3));
 set(gcf,'Color','white')
-scatter3(P(indsol,1), P(indsol,2), P(indsol,3), 30, u(indsol,1),'filled')
+trisurf(chull, P(indsol,1), P(indsol,2), P(indsol,3), u(indsol,1),'EdgeColor', 'none', 'FaceColor', 'interp')
 view(3)
 set(gca,'FontSize',18)
 xlabel('x')
