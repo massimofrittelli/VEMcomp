@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.6.23)  24 SEP 2021 20:06
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.6.23)  1 OCT 2021 19:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -383,16 +383,12 @@ Package epstopdf Info: Source file: <laplace3dsphere_Nx41.eps>
 (epstopdf)                    size: 82955 bytes
 (epstopdf)             Output file: <laplace3dsphere_Nx41-eps-converted-to.pdf>
 
+(epstopdf)                    date: 2021-09-24 20:06:24
+(epstopdf)                    size: 108196 bytes
 (epstopdf)             Command: <repstopdf --outfile=laplace3dsphere_Nx41-eps-c
 onverted-to.pdf laplace3dsphere_Nx41.eps>
 (epstopdf)             \includegraphics on input line 596.
-runsystem(repstopdf --outfile=laplace3dsphere_Nx41-eps-converted-to.pdf laplace
-3dsphere_Nx41.eps)...executed safely (allowed).
-
-Package epstopdf Info: Result file: <laplace3dsphere_Nx41-eps-converted-to.pdf>
-
-(epstopdf)                    date: 2021-09-24 20:06:24
-(epstopdf)                    size: 108196 bytes.
+Package epstopdf Info: Output file is already uptodate.
 <laplace3dsphere_Nx41-eps-converted-to.pdf, id=56, 562.1pt x 421.575pt>
 File: laplace3dsphere_Nx41-eps-converted-to.pdf Graphic file (type pdf)
 <use laplace3dsphere_Nx41-eps-converted-to.pdf>
@@ -408,13 +404,13 @@ Package epstopdf Info: Source file: <bs_3d_sphere_nx41_u.eps>
 (epstopdf)                    size: 112178 bytes
 (epstopdf)             Command: <repstopdf --outfile=bs_3d_sphere_nx41_u-eps-co
 nverted-to.pdf bs_3d_sphere_nx41_u.eps>
-(epstopdf)             \includegraphics on input line 639.
+(epstopdf)             \includegraphics on input line 640.
 Package epstopdf Info: Output file is already uptodate.
 <bs_3d_sphere_nx41_u-eps-converted-to.pdf, id=65, 562.1pt x 421.575pt>
 File: bs_3d_sphere_nx41_u-eps-converted-to.pdf Graphic file (type pdf)
 <use bs_3d_sphere_nx41_u-eps-converted-to.pdf>
 Package pdftex.def Info: bs_3d_sphere_nx41_u-eps-converted-to.pdf  used on inpu
-t line 639.
+t line 640.
 (pdftex.def)             Requested size: 224.83601pt x 168.627pt.
 Package epstopdf Info: Source file: <bs_3d_sphere_nx41_v.eps>
 (epstopdf)                    date: 2021-09-24 19:47:30
@@ -424,49 +420,89 @@ Package epstopdf Info: Source file: <bs_3d_sphere_nx41_v.eps>
 (epstopdf)                    size: 122806 bytes
 (epstopdf)             Command: <repstopdf --outfile=bs_3d_sphere_nx41_v-eps-co
 nverted-to.pdf bs_3d_sphere_nx41_v.eps>
-(epstopdf)             \includegraphics on input line 641.
+(epstopdf)             \includegraphics on input line 642.
 Package epstopdf Info: Output file is already uptodate.
 <bs_3d_sphere_nx41_v-eps-converted-to.pdf, id=66, 562.1pt x 421.575pt>
 File: bs_3d_sphere_nx41_v-eps-converted-to.pdf Graphic file (type pdf)
 <use bs_3d_sphere_nx41_v-eps-converted-to.pdf>
 Package pdftex.def Info: bs_3d_sphere_nx41_v-eps-converted-to.pdf  used on inpu
-t line 641.
+t line 642.
 (pdftex.def)             Requested size: 224.83601pt x 168.627pt.
- [11 <./laplace3dsphere_Nx41-eps-converted-to.pdf>] (./UserGuide.bbl) [12 <./bs
-_3d_sphere_nx41_u-eps-converted-to.pdf> <./bs_3d_sphere_nx41_v-eps-converted-to
-.pdf>] (./UserGuide.aux) ) 
+ [11 <./laplace3dsphere_Nx41-eps-converted-to.pdf>]
+Package epstopdf Info: Source file: <bs_3d_sphere_nx41_parabolic_u.eps>
+(epstopdf)                    date: 2021-10-01 19:14:04
+(epstopdf)                    size: 89551 bytes
+(epstopdf)             Output file: <bs_3d_sphere_nx41_parabolic_u-eps-converte
+d-to.pdf>
+(epstopdf)                    date: 2021-10-01 19:16:01
+(epstopdf)                    size: 113816 bytes
+(epstopdf)             Command: <repstopdf --outfile=bs_3d_sphere_nx41_paraboli
+c_u-eps-converted-to.pdf bs_3d_sphere_nx41_parabolic_u.eps>
+(epstopdf)             \includegraphics on input line 683.
+Package epstopdf Info: Output file is already uptodate.
+<bs_3d_sphere_nx41_parabolic_u-eps-converted-to.pdf, id=75, 562.1pt x 421.575pt
+>
+File: bs_3d_sphere_nx41_parabolic_u-eps-converted-to.pdf Graphic file (type pdf
+)
+<use bs_3d_sphere_nx41_parabolic_u-eps-converted-to.pdf>
+Package pdftex.def Info: bs_3d_sphere_nx41_parabolic_u-eps-converted-to.pdf  us
+ed on input line 683.
+(pdftex.def)             Requested size: 224.83601pt x 168.627pt.
+Package epstopdf Info: Source file: <bs_3d_sphere_nx41_parabolic_v.eps>
+(epstopdf)                    date: 2021-10-01 19:14:54
+(epstopdf)                    size: 94423 bytes
+(epstopdf)             Output file: <bs_3d_sphere_nx41_parabolic_v-eps-converte
+d-to.pdf>
+(epstopdf)                    date: 2021-10-01 19:16:02
+(epstopdf)                    size: 119640 bytes
+(epstopdf)             Command: <repstopdf --outfile=bs_3d_sphere_nx41_paraboli
+c_v-eps-converted-to.pdf bs_3d_sphere_nx41_parabolic_v.eps>
+(epstopdf)             \includegraphics on input line 685.
+Package epstopdf Info: Output file is already uptodate.
+<bs_3d_sphere_nx41_parabolic_v-eps-converted-to.pdf, id=76, 562.1pt x 421.575pt
+>
+File: bs_3d_sphere_nx41_parabolic_v-eps-converted-to.pdf Graphic file (type pdf
+)
+<use bs_3d_sphere_nx41_parabolic_v-eps-converted-to.pdf>
+Package pdftex.def Info: bs_3d_sphere_nx41_parabolic_v-eps-converted-to.pdf  us
+ed on input line 685.
+(pdftex.def)             Requested size: 224.83601pt x 168.627pt.
+ [12 <./bs_3d_sphere_nx41_u-eps-converted-to.pdf> <./bs_3d_sphere_nx41_v-eps-co
+nverted-to.pdf>] (./UserGuide.bbl) [13 <./bs_3d_sphere_nx41_parabolic_u-eps-con
+verted-to.pdf> <./bs_3d_sphere_nx41_parabolic_v-eps-converted-to.pdf>]
+(./UserGuide.aux) ) 
 Here is how much of TeX's memory you used:
- 5314 strings out of 478994
- 70140 string characters out of 5858184
- 455295 words of memory out of 5000000
- 22733 multiletter control sequences out of 15000+600000
+ 5331 strings out of 478994
+ 70919 string characters out of 5858184
+ 454337 words of memory out of 5000000
+ 22748 multiletter control sequences out of 15000+600000
  420952 words of font info for 76 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  68i,20n,74p,873b,1544s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/c
-m-super/cm-super-t1.enc}{/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-
-super/cm-super-ts1.enc}</usr/local/texlive/2021/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmmi10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmmi7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmmib10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmr10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmr7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmsy7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/symb
-ols/msbm10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/
-sfbx1200.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sf
-bx1440.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm
-1000.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm12
-00.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1728
-.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfti1000.p
-fb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sftt0800.pfb
-></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb><
-/usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sftt1440.pfb>
-Output written on UserGuide.pdf (12 pages, 855802 bytes).
+{/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super
+/cm-super-t1.enc}{/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/c
+m-super-ts1.enc}</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmmi10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmmi7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmmib10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy1
+0.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.
+pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/symbols/msb
+m10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx120
+0.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1440.
+pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pf
+b></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
+</usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></
+usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb></us
+r/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sftt0800.pfb></usr/
+local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/lo
+cal/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sftt1440.pfb>
+Output written on UserGuide.pdf (13 pages, 1088849 bytes).
 PDF statistics:
- 149 PDF objects out of 1000 (max. 8388607)
- 91 compressed objects within 1 object stream
+ 165 PDF objects out of 1000 (max. 8388607)
+ 96 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
 

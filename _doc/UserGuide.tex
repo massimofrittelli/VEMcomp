@@ -602,6 +602,7 @@ $i$ & $N$ & $h$ & $L^2(\Omega)$ error & $L^2(\Omega)$ rate\\
 \section{Numerical examples for bulk-surface problems}
 
 \subsection{Elliptic bulk-surface problem on the sphere}
+\label{sec:example_elliptic_bs_sphere}
 We numerically solve the following elliptic bulk-surface problem,  found in \cite{elliott2013finite}, on the unit sphere $\Omega$ in 3D:
 \begin{equation}
 \label{experiment_bs_3d_sphere}
@@ -643,8 +644,52 @@ $i$ & $N$ & $h$ & $L^2(\Omega)\times L^2(\Gamma)$ error & $L^2(\Omega)\times L^2
 \caption{Elliptic bulk-surface  problem \eqref{experiment_bs_3d_sphere} on the unit sphere $\Omega$ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes. Left: bulk component $u$. Right: surface component $v$.}
 \label{fig:bs_3d_numsol_sphere}
 \end{figure} 
+
+\subsection{Parabolic bulk-surface problem on the sphere}
+We numerically solve the following parabolic bulk-surface problem,  found in \cite{frittelli2021bulk}, on the unit sphere $\Omega$ in 3D:
+\begin{equation}
+\label{experiment_bs_3d_sphere_parabolic}
+\begin{cases}
+&\dot{u} -\Delta u  = xyze^t \qquad  \text{in}\ \Omega \times [0,T];\\
+&\dot{v} -\Delta_\Gamma v +\nabla u\cdot\boldn = 16xyze^t \qquad \text{on}\ \partial \Omega \times [0,T];\\
+&\nabla u \cdot \boldn = 3xyze^t  \qquad \text{on}\ \partial \Omega \times [0,T],
+\end{cases}
+\end{equation}
+for final time $T=1$, whose exact solution is given by
+\begin{align*}
+&u(x,y,z,t) = xyze^t, \qquad (x,y,z,t) \in \Omega \times [0,T];\\
+&v(x,y,z,t) = 2xyze^t, \qquad (x,y,z,t) \in \partial\Omega \times [0,T].
+\end{align*}
+We consider the same sequence of four meshes $\Omega_i$, $i=1,2,3,4$ of Experiment \ref{sec:example_elliptic_bs_sphere}.  Correspondingly, we choose timesteps $\tau_i = 2^{1-i}$,  $i=1,2,3,4$. On each mesh we solve the discrete problem,  we compute the error in $L^2(\Omega)\times L^2(\Gamma)$ norm at the final time $T=1$ and the respective convergence rate. As shown in Table \ref{tab:bs_3d_convergence_sphere_parabolic}, the convergence in $L^2(\Omega)\times L^2(\Gamma)$ norm is optimal, i.e. quadratic in space and linear in time. The numerical solution at the final time obtained on the finest mesh is plotted in Fig.  \ref{fig:bs_3d_numsol_sphere_parabolic}.
+
+\begin{table}[H]
+\caption{Parabolic bulk-surface problem \eqref{experiment_bs_3d_sphere_parabolic} on the unit sphere $\Omega$ in 3D. The VEM implemented in VEMLAB shows optimal quadratic convergence in $L^2(\Omega) \times L^2(\Gamma)$ norm. Times required for the time integration are shown.}
+\begin{center}
+\begin{tabular}{c | c | c | c | c | c | c}
+$i$ & $N$ & $h$ & $\tau$ & $L^2(\Omega)\times L^2(\Gamma)$ error & $L^2(\Omega)\times L^2(\Gamma)$ rate & Time (s)\\
+\hline
+1 & 111 & 0.6928 &   1 & 1.2074 &  -   & 0.002417\\
+2 & 799 & 0.3464 & 2.5e-1 & 4.3481e-01 & 1.4734    & 0.038881\\
+3 & 5749 & 0.1732 & 6.25e-2 & 1.2110e-01 & 1.8442  & 2.134601  \\
+4 & 40381 & 0.0866 &  1.5625e-2 & 3.0881e-02 & 1.9714 & 287.345570
+\end{tabular}
+\end{center}
+\label{tab:bs_3d_convergence_sphere_parabolic}
+\end{table}
+
+\begin{figure}[H]
+\begin{center}
+\hspace*{-10mm}
+\includegraphics[scale=0.4]{bs_3d_sphere_nx41_parabolic_u.eps}
+\hspace*{-5mm}
+\includegraphics[scale=0.4]{bs_3d_sphere_nx41_parabolic_v.eps}
+\end{center}
+\caption{Parabolic bulk-surface  problem \eqref{experiment_bs_3d_sphere_parabolic} on the unit sphere $\Omega$ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes and timestep $\tau = 1.5625e-2$. Left: bulk component $u$. Right: surface component $v$.}
+\label{fig:bs_3d_numsol_sphere_parabolic}
+\end{figure} 
  
 \bibliographystyle{plain}
 \bibliography{bibliography}
+ 
 
 \end{document}

@@ -8,9 +8,9 @@ b = 2;
 du = 1;
 dv = 1;
 T = 1;
-tau = .01;
+tau = 1.5625e-02;
 
-load('sphere21.mat')
+load('sphere41.mat')
 N = length(P);
 
 NGamma = length(MS); % Amount of boundary nodes
@@ -70,5 +70,19 @@ xlabel('x')
 ylabel('y')
 zlabel('z','rot',0)
 axis equal
-title('Numerical solution')
+title('Bulk solution u')
+colorbar
+
+% Plotting Numerical Solution on the surface
+figure
+set(gcf,'Color','white')
+trisurf(Egamma, P(:,1), P(:,2), P(:,3), [zeros(N-NGamma,1); v], 'EdgeColor', 'none', 'FaceColor', 'interp')
+view(3)
+set(gca,'FontSize',18)
+xlabel('x')
+ylabel('y')
+zlabel('z','rot',0)
+axis equal
+xlim([-0.5,1])
+title('Surface solution v')
 colorbar

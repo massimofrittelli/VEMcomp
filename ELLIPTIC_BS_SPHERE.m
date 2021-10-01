@@ -45,6 +45,7 @@ axis equal
 title('Bulk solution u')
 colorbar
 
+% Plotting Numerical Solution - Surface Component v
 figure
 set(gcf,'Color','white')
 trisurf(Egamma, P(:,1), P(:,2), P(:,3), [zeros(N-NGamma,1); v], 'EdgeColor', 'none', 'FaceColor', 'interp')

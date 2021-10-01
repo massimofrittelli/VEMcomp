@@ -12,4 +12,10 @@ C~M Elliott and T~Ranner.
   differential equation.
 \newblock {\em IMA Journal of Numerical Analysis}, 33(2):377--402, 2013.
 
+\bibitem{frittelli2021bulk}
+M~Frittelli, A~Madzvamuse, and I~Sgura.
+\newblock Bulk-surface virtual element method for systems of pdes in two-space
+  dimensions.
+\newblock {\em Numerische Mathematik}, 147(2):305--348, 2021.
+
 \end{thebibliography}
