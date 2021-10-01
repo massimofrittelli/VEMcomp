@@ -1,4 +1,4 @@
-% Script to test the stiffness matrix on the 3d sphere
+% Script to test the Laplace equation on the 3D sphere
 
 load('sphere41.mat')
 N = length(P);
