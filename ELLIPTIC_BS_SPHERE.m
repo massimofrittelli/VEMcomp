@@ -1,3 +1,5 @@
+close all
+
 % Script to solve an elliptic B-S problem on the sphere
 alpha = 1;
 beta = 2;
@@ -6,10 +8,15 @@ load('sphere41.mat')
 N = length(P); % Overall amount of nodes
 NGamma = length(MS); % Amount of boundary nodes
 
-esol_u = @(P) P(:,1).*P(:,2).*P(:,3);
-esol_v = @(P) 2*P(:,1).*P(:,2).*P(:,3);
-f_u = @(P) P(:,1).*P(:,2).*P(:,3);
-f_v = @(P) 29*P(:,1).*P(:,2).*P(:,3);
+% esol_u = @(P) P(:,1).*P(:,2).*P(:,3);
+% esol_v = @(P) 2*P(:,1).*P(:,2).*P(:,3);
+% f_u = @(P) P(:,1).*P(:,2).*P(:,3);
+% f_v = @(P) 29*P(:,1).*P(:,2).*P(:,3);
+
+esol_u = @(P) P(:,1).*P(:,2).*P(:,3) - P(:,1).*P(:,2);
+esol_v = @(P) 2*P(:,1).*P(:,2).*P(:,3) - 3/2*P(:,1).*P(:,2);
+f_u = @(P) P(:,1).*P(:,2).*P(:,3) - P(:,1).*P(:,2);
+f_v = @(P) 29*P(:,1).*P(:,2).*P(:,3) - 25/2*P(:,1).*P(:,2);
 
 RM = spalloc(N, NGamma, NGamma);
 RM(boundarynode, 1:NGamma) = speye(NGamma); % reduction matrix
