@@ -32,7 +32,11 @@ err_u = u - es_u;
 err_v = v - es_v;
 L2err_u = sqrt(err_u'*M*err_u);
 L2err_v = sqrt(err_v'*MS*err_v);
+H1err_u = sqrt(err_u'*K*err_u);
+H1err_v = sqrt(err_v'*KS*err_v);
+
 L2err_product = sqrt(err_u'*M*err_u + err_v'*MS*err_v);
+H1err_product = sqrt(err_u'*K*err_u + err_v'*KS*err_v);
 
 % normsol = sqrt(es_u'*M*es_u);
 % L2errel = L2err/normsol;

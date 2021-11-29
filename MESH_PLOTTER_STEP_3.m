@@ -10,13 +10,14 @@ for i=1:length(ii)
    plot(Elements(ii(i))); 
 end
 view(3)
-axis equal
+axis equal tight
 xlabel('x')
 ylabel('y')
 zlabel('z','rot',0)
 set(gca,'FontSize',18)
 
 colormap jet
+% colormap spring %(parabolic paper)
 caxis([-1.2,1.3]);
 
 lightangle(-40,20)

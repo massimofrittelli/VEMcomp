@@ -10,7 +10,7 @@ for i=1:length(ii)
    plot(Elements(ii(i))); 
 end
 view(3)
-axis equal
+axis equal tight
 xlabel('x')
 ylabel('y')
 zlabel('z','rot',0)
@@ -28,4 +28,4 @@ surf(r.*z,r.*y,r.*x,0*x+1,'FaceColor','interp','EdgeColor','none','FaceAlpha',0.
 
 lightangle(-40,20)
 lighting gouraud
-%axis off
+axis off

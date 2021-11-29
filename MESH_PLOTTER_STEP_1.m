@@ -10,7 +10,7 @@ for i=1:length(ii)
    plot(Elements(ii(i))); 
 end
 view(3)
-axis equal
+axis equal tight
 xlabel('x')
 ylabel('y')
 zlabel('z','rot',0)

@@ -8,7 +8,7 @@ hold on
 i = 2;
 plot(Elements(i)); 
 view(3)
-axis equal
+axis equal tight
 xlabel('x')
 ylabel('y')
 zlabel('z','rot',0)
