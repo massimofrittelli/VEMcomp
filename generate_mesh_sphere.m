@@ -1,5 +1,5 @@
 %
-% Generates polyhedral mesh on the unit sphere
+% Generates polyhedral mesh and matrices on the unit sphere
 % How to test it: volume of the sphere = 4/3*pi*R^3
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -12,7 +12,8 @@
 %
 % - P: array of nodes
 % - h: meshsize
-% - K,M: stiffness and mass matrices
+% - K,M: stiffness and mass matrices in the bulk
+% - KS,MS: stiffness and mass matrices on the surface
 % - Elements: polyhedral elements in element3ddummy format
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -139,7 +140,7 @@ EGamma = acceptedindexes(EGamma);
 
 end
 
-% Extracts largest magnitude element from array
+% Extracts largest magnitude entry from array
 function y = maxabs(x)
     [m,mind] = max(abs(x));
     y = m * sign(x(mind));
