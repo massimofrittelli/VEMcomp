@@ -13,11 +13,11 @@
 % - P: array of nodes
 % - h: meshsize
 % - K,M: stiffness and mass matrices in the bulk
-% - KS,MS: stiffness and mass matrices on the surface
+% - KS,MS,CMS: stiffness, mass, and consistency matrices on the surface
 % - Elements: polyhedral elements in element3ddummy format
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [P, h, K, M, KS, MS, boundarynode, EGamma] = generate_mesh_sphere(Nx)
+function [P, h, K, M, KS, MS, CMS, boundarynode, EGamma] = generate_mesh_sphere(Nx)
 
 hx = 2/(Nx-1); % Discretisation step along each dimension
 h = hx*sqrt(3); % Meshsize
@@ -31,6 +31,7 @@ M = spalloc(2*Ncube,2*Ncube,57*Ncube); % Mass matrix in the bulk
 
 KS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Stiffness matrix on the surf
 MS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Mass matrix on the surf
+CMS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Consistency matrix on the surf
 
 P1S = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*hx; % bottom face
 P2S = [0 0 1; 0 1 1; 1 1 1; 1 0 1]*hx; % top face
@@ -120,6 +121,8 @@ for i=0:Nx-2 % For each element of the bounding box
                     MS(eind([5 7:8]), eind([5 7:8])) = MS(eind([5 7:8]), eind([5 7:8])) + E.Faces(3).M; %#ok
                     KS(eind(5:7), eind(5:7)) = KS(eind(5:7), eind(5:7)) + E.Faces(2).K; %#ok
                     KS(eind([5 7:8]), eind([5 7:8])) = KS(eind([5 7:8]), eind([5 7:8])) + E.Faces(3).K; %#ok
+                    CMS(eind(5:7), eind(5:7)) = CMS(eind(5:7), eind(5:7)) + E.Faces(2).CM; %#ok
+                    CMS(eind([5 7:8]), eind([5 7:8])) = CMS(eind([5 7:8]), eind([5 7:8])) + E.Faces(3).CM; %#ok
                 end
             end
         end
@@ -132,6 +135,7 @@ M = M(acceptednode, acceptednode);
 K = K(acceptednode, acceptednode);
 MS = MS(boundarynode, boundarynode);
 KS = KS(boundarynode, boundarynode);
+CMS = CMS(boundarynode, boundarynode);
 boundarynode = find(boundarynode(acceptednode));
 acceptedindexes = zeros(2*Ncube,1);
 acceptedindexes(acceptednode,1) = linspace(1,length(P),length(P))';

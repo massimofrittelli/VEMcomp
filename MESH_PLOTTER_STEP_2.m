@@ -1,10 +1,12 @@
 % GENERATES ILLUSTRATION OF STEP 2 OF MESH CUTTING ALGORITHM
 
-[P, h, K, M, KS, MS, boundarynode, EGamma, Elements] = plot_mesh_step_2(8);
+%[P, h, K, M, KS, MS, boundarynode, EGamma, Elements] = plot_mesh_step_2(8);
+[P, h, K, M, KS, MS, boundarynode, EGamma, Elements] = plot_mesh_step_2(6);
 
 figure
 set(gcf,'color','white')
-ii = 18:81;
+%ii = 18:81;
+ii = 1:19;
 hold on
 for i=1:length(ii)
    plot(Elements(ii(i))); 
@@ -14,7 +16,8 @@ axis equal tight
 xlabel('x')
 ylabel('y')
 zlabel('z','rot',0)
-set(gca,'FontSize',18)
+set(gca,'FontSize',18, 'Position', [0 0 1 1])
+
 
 colormap jet
 caxis([-1.2,1.3]);

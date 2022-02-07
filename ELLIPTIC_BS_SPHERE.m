@@ -8,11 +8,13 @@ load('sphere41.mat')
 N = length(P); % Overall amount of nodes
 NGamma = length(MS); % Amount of boundary nodes
 
+% TOY PROBLEM 1 - 1 EIGENMODE
 % esol_u = @(P) P(:,1).*P(:,2).*P(:,3);
 % esol_v = @(P) 2*P(:,1).*P(:,2).*P(:,3);
 % f_u = @(P) P(:,1).*P(:,2).*P(:,3);
 % f_v = @(P) 29*P(:,1).*P(:,2).*P(:,3);
 
+% TOY PROBLEM 2 - 2 EIGENMODES
 esol_u = @(P) P(:,1).*P(:,2).*P(:,3) - P(:,1).*P(:,2);
 esol_v = @(P) 2*P(:,1).*P(:,2).*P(:,3) - 3/2*P(:,1).*P(:,2);
 f_u = @(P) P(:,1).*P(:,2).*P(:,3) - P(:,1).*P(:,2);
@@ -45,7 +47,9 @@ H1err_product = sqrt(err_u'*K*err_u + err_v'*KS*err_v);
 figure
 indsol = P(:,1) >= -0.5;
 chull = convhull(P(indsol,1), P(indsol,2), P(indsol,3));
-set(gcf,'Color','white')
+set(gcf, 'Color','white')
+set(gcf, 'Renderer','painters')
+%set(gcf, 'Renderer', 'zbuffer')
 trisurf(chull, P(indsol,1), P(indsol,2), P(indsol,3), u(indsol,1),'EdgeColor', 'none', 'FaceColor', 'interp')
 view(3)
 set(gca,'FontSize',18)
@@ -53,8 +57,18 @@ xlabel('x')
 ylabel('y')
 zlabel('z','rot',0)
 axis equal
-title('Bulk solution u')
+title('$U$', 'interpreter', 'latex')
 colorbar
+hold on
+Ccirc = [-0.5, 0, 0];   % Center of circle 
+Rcirc = sqrt(3)/2;      % Radius of circle 
+teta = 0:0.01:2*pi;
+xcirc = Ccirc(1) + zeros(size(teta)) ;
+ycirc = Ccirc(2) + Rcirc*cos(teta);
+zcirc = Ccirc(3) + Rcirc*sin(teta) ;
+plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
+% lightangle(gca,-65,30)
+% lighting gouraud
 
 % Plotting Numerical Solution - Surface Component v
 figure
@@ -67,5 +81,68 @@ ylabel('y')
 zlabel('z','rot',0)
 axis equal
 xlim([-0.5,1])
-title('Surface solution v')
+title('$V$', 'interpreter', 'latex')
 colorbar
+hold on
+Ccirc = [-0.5, 0, 0];   % Center of circle 
+Rcirc = sqrt(3)/2;      % Radius of circle 
+teta = 0:0.01:2*pi;
+xcirc = Ccirc(1) + zeros(size(teta)) ;
+ycirc = Ccirc(2) + Rcirc*cos(teta);
+zcirc = Ccirc(3) + Rcirc*sin(teta) ;
+plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
+% lightangle(gca,-65,30)
+% lighting gouraud
+
+% Plotting Numerical Error - Bulk Component u
+figure
+indsol = P(:,1) >= -0.5;
+chull = convhull(P(indsol,1), P(indsol,2), P(indsol,3));
+set(gcf, 'Color','white')
+set(gcf, 'Renderer','painters')
+%set(gcf, 'Renderer', 'zbuffer')
+trisurf(chull, P(indsol,1), P(indsol,2), P(indsol,3), es_u(indsol,1)-u(indsol,1),'EdgeColor', 'none', 'FaceColor', 'interp')
+view(3)
+set(gca,'FontSize',18)
+xlabel('x')
+ylabel('y')
+zlabel('z','rot',0)
+axis equal
+caxis([min(es_u-u), max(es_u-u)])
+title('$u^{-\ell}-U$', 'interpreter', 'latex')
+colorbar
+hold on
+Ccirc = [-0.5, 0, 0];   % Center of circle 
+Rcirc = sqrt(3)/2;      % Radius of circle 
+teta = 0:0.01:2*pi;
+xcirc = Ccirc(1) + zeros(size(teta)) ;
+ycirc = Ccirc(2) + Rcirc*cos(teta);
+zcirc = Ccirc(3) + Rcirc*sin(teta) ;
+plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
+% lightangle(gca,-65,30)
+% lighting gouraud
+
+% Plotting Numerical Error - Surface Component v
+figure
+set(gcf,'Color','white')
+trisurf(Egamma, P(:,1), P(:,2), P(:,3), [zeros(N-NGamma,1); es_v-v], 'EdgeColor', 'none', 'FaceColor', 'interp')
+view(3)
+set(gca,'FontSize',18)
+xlabel('x')
+ylabel('y')
+zlabel('z','rot',0)
+axis equal
+caxis([min(es_v-v), max(es_v-v)])
+xlim([-0.5,1])
+title('$v^{-\ell}-V$','interpreter', 'latex')
+colorbar
+hold on
+Ccirc = [-0.5, 0, 0];   % Center of circle 
+Rcirc = sqrt(3)/2;      % Radius of circle 
+teta = 0:0.01:2*pi;
+xcirc = Ccirc(1) + zeros(size(teta)) ;
+ycirc = Ccirc(2) + Rcirc*cos(teta);
+zcirc = Ccirc(3) + Rcirc*sin(teta) ;
+plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
+% lightangle(gca,-65,30)
+% lighting gouraud
