@@ -99,13 +99,6 @@ for i=0:Nx-2 % For each element of the bounding box
                     
                 NewCubicElement = shiftElement(ESD, P(indexes(1),:));
                 if i == ceil((Nx-2)/4)
-                    NewCubicElement.Pind = indexes;
-                    NewCubicElement.Faces(1).Pind = indexes([1 3 7 5]);
-                    NewCubicElement.Faces(2).Pind = indexes([2 4 8 6]);
-                    NewCubicElement.Faces(3).Pind = indexes([1 3 4 2]);
-                    NewCubicElement.Faces(4).Pind = indexes([5 7 8 6]);
-                    NewCubicElement.Faces(5).Pind = indexes([1 5 6 2]);
-                    NewCubicElement.Faces(6).Pind = indexes([3 7 8 4]);
                     ElementsCut = [ElementsCut; NewCubicElement]; %#ok
                 end
                 
@@ -113,7 +106,8 @@ for i=0:Nx-2 % For each element of the bounding box
                 if norm(TPO) < 1 - h
                     continue
                 end
-                NewElements = extrude(NewCubicElement,indexes,Ncube);
+                NewCubicElement.Pind = indexes;
+                NewElements = extrude(NewCubicElement,Ncube);
                 if i == ceil((Nx-2)/4)
                     ElementsCut = [ElementsCut; NewElements]; %#ok
                 end

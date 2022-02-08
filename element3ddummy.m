@@ -29,13 +29,12 @@ classdef element3ddummy
            E =  element3ddummy(obj.P+repmat(v,length(obj.P),1), newFaces, obj.iscube);
         end
         
-        function EE = extrude(obj, Pind, Ncube)
+        function EE = extrude(obj, Ncube)
             % Extrudes the faces that contain the point OP as vertex in the
             % directions specified by the vector 'directions'
             if not(obj.iscube)
                error('Extrusion is only supported for cubic elements'); 
             end
-            obj.Pind = Pind; % Indexes of vertexes of obj
             EE = [];
             I = eye(3);
             deltax = max(obj.P(:,1)) - min(obj.P(:,1));
@@ -53,7 +52,7 @@ classdef element3ddummy
                    continue 
                 end
                 [~, indb] = ismember(obj.Faces(i).P,obj.P,'rows');
-                obj.Faces(i).Pind = Pind(indb);
+                obj.Faces(i).Pind = obj.Pind(indb);
                 EE = [EE; extrude(obj.Faces(i), Ncube)]; %#ok
             end
         end
