@@ -53,7 +53,8 @@ classdef element3ddummy
                    continue 
                 end
                 [~, indb] = ismember(obj.Faces(i).P,obj.P,'rows');
-                EE = [EE; extrude(obj.Faces(i), Pind(indb), Ncube)]; %#ok
+                obj.Faces(i).Pind = Pind(indb);
+                EE = [EE; extrude(obj.Faces(i), Ncube)]; %#ok
             end
         end
         

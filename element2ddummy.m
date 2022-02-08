@@ -37,14 +37,12 @@ classdef element2ddummy
            E =  element2ddummy(obj.P+repmat(v,length(obj.P),1),obj.issquare);
         end
         
-        function EE = extrude(obj,Pind, Ncube)
+        function EE = extrude(obj, Ncube)
            EP = obj.P./repmat(vecnorm(obj.P')',[1 3]); % Extruded points
            ExtrudedFaces = obj;
            for i=1:obj.NVert-2
                NewExtrudedFace = element2ddummy(EP([1 i+1 i+2],:), false);
-               if not(isempty(obj.Pind))
-                    NewExtrudedFace.Pind = obj.Pind([1 i+1 i+2],1) + Ncube;
-               end
+               NewExtrudedFace.Pind = obj.Pind([1 i+1 i+2],1) + Ncube;
                ExtrudedFaces = [ExtrudedFaces; NewExtrudedFace]; %#ok
            end
            for i=1:obj.NVert
@@ -52,15 +50,13 @@ classdef element2ddummy
               EP2 = [EP([i 1+rem(i,obj.NVert)],:); obj.P(1+rem(i,obj.NVert),:)];
               NewExtrudedFace1 = element2ddummy(EP1, false);
               NewExtrudedFace2 = element2ddummy(EP2, false);
-              if not(isempty(obj.Pind))
-                EP1ind = [obj.Pind([i 1+rem(i,obj.NVert)],1); obj.Pind(i) + Ncube];
-                EP2ind = [obj.Pind([i 1+rem(i,obj.NVert)],1); obj.Pind(1+rem(i,obj.NVert))];
-                NewExtrudedFace1.Pind = EP1ind;
-                NewExtrudedFace2.Pind = EP2ind;
-              end
+              EP1ind = [obj.Pind([i 1+rem(i,obj.NVert)],1); obj.Pind(i) + Ncube];
+              EP2ind = [obj.Pind([i 1+rem(i,obj.NVert)],1); obj.Pind(1+rem(i,obj.NVert))];
+              NewExtrudedFace1.Pind = EP1ind;
+              NewExtrudedFace2.Pind = EP2ind;
               ExtrudedFaces = [ExtrudedFaces; NewExtrudedFace1; NewExtrudedFace2]; %#ok 
            end
-           EE = element3ddummy([obj.P; EP], ExtrudedFaces, false, [Pind; Pind + Ncube]);
+           EE = element3ddummy([obj.P; EP], ExtrudedFaces, false, [obj.Pind; obj.Pind + Ncube]);
         end
         
         function Earray = dummy2element(EDarray)
