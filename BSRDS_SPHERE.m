@@ -122,7 +122,7 @@ figure
 
 % Bulk Component u
 subplot(2,2,1)
-set(gcf, 'Color','white','renderer','painters')
+set(gcf, 'Color','white','renderer','zbuffer')
 trisurf(EScut, PB(:,1), PB(:,2), PB(:,3), u, 'FaceColor', 'interp', 'EdgeColor', 'interp');
 hold on
 rho = 1.01;

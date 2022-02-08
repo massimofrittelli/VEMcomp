@@ -17,7 +17,7 @@
 % - Elements: polyhedral elements in element3ddummy format
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [P, h, K, M, KS, MS, CMS, boundarynode, EGamma] = generate_mesh_sphere(Nx)
+function [P, h, K, M, KS, MS, CMS, boundarynode, EGamma, ElementsCut, EGammaCut] = generate_mesh_sphere(Nx)
 
 hx = 2/(Nx-1); % Discretisation step along each dimension
 h = hx*sqrt(3); % Meshsize
@@ -72,8 +72,9 @@ acceptednode = false(2*size(P,1),1);
 boundarynode = false(2*size(P,1),1);
 newP = [P; zeros(size(P))];
 EGamma = [];
+EGammaCut = [];
 % Twice the amount of nodes of the bounding box to allow for extrusion
-% Elements = [];
+ElementsCut = [];
 for i=0:Nx-2 % For each element of the bounding box
     for j=0:Nx-2
         for k=0:Nx-2
@@ -97,20 +98,34 @@ for i=0:Nx-2 % For each element of the bounding box
                 K(indexes, indexes) = K(indexes, indexes) + KC; %#ok
                     
                 NewCubicElement = shiftElement(ESD, P(indexes(1),:));
-                % Elements = [Elements; NewCubicElement]; %#ok
+                if i == ceil((Nx-2)/4)
+                    NewCubicElement.Pind = indexes;
+                    NewCubicElement.Faces(1).Pind = indexes([1 3 7 5]);
+                    NewCubicElement.Faces(2).Pind = indexes([2 4 8 6]);
+                    NewCubicElement.Faces(3).Pind = indexes([1 3 4 2]);
+                    NewCubicElement.Faces(4).Pind = indexes([5 7 8 6]);
+                    NewCubicElement.Faces(5).Pind = indexes([1 5 6 2]);
+                    NewCubicElement.Faces(6).Pind = indexes([3 7 8 4]);
+                    ElementsCut = [ElementsCut; NewCubicElement]; %#ok
+                end
                 
                 % Extrude element, if it has an external face
                 if norm(TPO) < 1 - h
                     continue
                 end
                 NewElements = extrude(NewCubicElement,indexes,Ncube);
-                % Elements = [Elements; NewElements]; %#ok
+                if i == ceil((Nx-2)/4)
+                    ElementsCut = [ElementsCut; NewElements]; %#ok
+                end
                 for l=1:length(NewElements)
                     eind = NewElements(l).Pind;
                     E = dummy2element(NewElements(l));
                     acceptednode(eind, 1) = true(8,1);
                     boundarynode(eind(5:8),1) = true(4,1);
                     EGamma = [EGamma; eind(5:7)'; eind([5 7:8])']; %#ok
+                    if i >= ceil((Nx-2)/4)
+                        EGammaCut = [EGammaCut; eind(5:7)'; eind([5 7:8])']; %#ok
+                    end
                     newP(eind(5:8),:) = NewElements(l).P(5:8,:);
                     M(eind, eind) = M(eind, eind) + E.M; %#ok
                     K(eind, eind) = K(eind, eind) + E.K; %#ok
@@ -140,6 +155,14 @@ boundarynode = find(boundarynode(acceptednode));
 acceptedindexes = zeros(2*Ncube,1);
 acceptedindexes(acceptednode,1) = linspace(1,length(P),length(P))';
 EGamma = acceptedindexes(EGamma);
+EGammaCut = acceptedindexes(EGammaCut);
+
+for i=1:length(ElementsCut)
+   ElementsCut(i).Pind = acceptedindexes(ElementsCut(i).Pind); %#ok
+   for j=1:length(ElementsCut(i).Faces)
+       ElementsCut(i).Faces(j).Pind = acceptedindexes(ElementsCut(i).Faces(j).Pind);
+   end
+end
 
 
 end

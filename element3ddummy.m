@@ -73,6 +73,17 @@ classdef element3ddummy
                fill3(PF(:,1), PF(:,2), PF(:,3), PF(:,1)*0 + 1 - obj.iscube);
            end
         end
+        
+        function plotSolution(obj, sol)
+           hold on
+           for i=1:size(obj.Faces,1)
+               PF = obj.Faces(i).P;
+               PFind = obj.Faces(i).Pind;
+               if not(isempty(PFind))
+                    fill3(PF(:,1), PF(:,2), PF(:,3), sol(PFind),'FaceColor', 'interp', 'EdgeColor', 'interp');
+               end
+           end
+        end
     end
 end
 
