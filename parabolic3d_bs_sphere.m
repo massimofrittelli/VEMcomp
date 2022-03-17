@@ -1,6 +1,6 @@
-% Script to test a parabolic coupled  bulk-surface problem on the 3D sphere
+% DESCRIPTION - solves parabolic B-S problem on the 3D sphere, plots
+% solution and computes error.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % u_t - Laplace(u) = xyz exp(-t),                                   x in \Omega
 % v_t - LaplaceBeltrami(v) + \nabla u \cdot \nu = 16xyz exp(-t),    x in \Gamma
@@ -21,25 +21,9 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+function [L2err_prod, h] = parabolic3d_bs_sphere(meshfile, T, tau, plotflag)
 
-close all
-%clearvars
-
-% Set free model parameters
-
-% Dependent model parameters (DO NOT TOUCH);
-
-% Set time discretisation
- T = 2^(-2);
-% tau = 2^(-4);
-% tau = 2^(-6);
-% tau = 2^(-8);
-% tau = 2^(-10);
-
-% Set space discretisation
-% load('sphere17.mat')
-
-% END OF INPUT
+load(meshfile); % Load mesh 
 
 N = length(PB);
 NGamma = length(MS); % Amount of boundary nodes
@@ -76,10 +60,12 @@ es_u = esol_u(PB,T);
 es_v = esol_v(R'*PB,T);
 err_u = u - es_u;
 err_v = v - es_v;
-L2err_u = sqrt(err_u'*M*err_u);
-L2err_v = sqrt(err_v'*MS*err_v);
+%L2err_u = sqrt(err_u'*M*err_u);
+%L2err_v = sqrt(err_v'*MS*err_v);
 L2err_prod = sqrt(err_u'*M*err_u + err_v'*MS*err_v);
 
+if plotflag 
+    
 % % Plotting Numerical Solution - Bulk Component u
 figure
 set(gcf, 'Color','white')
@@ -106,27 +92,28 @@ lightangle(gca,-40,0)
 % % Plotting Numerical Solution - Surface Component v
 figure
 set(gcf,'Color','white')
-trisurf(EGamma, PB(:,1), PB(:,2), PB(:,3), R*v, 'EdgeColor', 'none', 'FaceColor', 'interp')
+trisurf(EGammaCut, PB(:,1), PB(:,2), PB(:,3), R*v, 'EdgeColor', 'none', 'FaceColor', 'interp')
 view(3)
 set(gca,'FontSize',18)
 xlabel('x')
 ylabel('y')
 zlabel('z','rot',0)
 axis equal
-xlim([-0.5,1])
+%xlim([-0.5,1])
 title('$V$', 'interpreter', 'latex')
 colorbar
 hold on
-Ccirc = [-0.5, 0, 0];   % Center of circle 
-Rcirc = sqrt(3)/2;      % Radius of circle 
-teta = 0:0.01:2*pi;
-xcirc = Ccirc(1) + zeros(size(teta)) ;
-ycirc = Ccirc(2) + Rcirc*cos(teta);
-zcirc = Ccirc(3) + Rcirc*sin(teta) ;
-plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
+% Ccirc = [-0.5, 0, 0];   % Center of circle 
+% Rcirc = sqrt(3)/2;      % Radius of circle 
+% teta = 0:0.01:2*pi;
+% xcirc = Ccirc(1) + zeros(size(teta)) ;
+% ycirc = Ccirc(2) + Rcirc*cos(teta);
+% zcirc = Ccirc(3) + Rcirc*sin(teta) ;
+% plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
 lightangle(gca,-40,0)
 % lighting gouraud
 
+% CONV HULL PLOTTING SYSTEM
 
 % % Plotting Numerical Error - Bulk Component u
 % figure
@@ -180,3 +167,7 @@ lightangle(gca,-40,0)
 % plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
 % % lightangle(gca,-65,30)
 % % lighting gouraud
+
+end
+
+end

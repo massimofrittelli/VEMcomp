@@ -1,11 +1,12 @@
-% Script to test the Laplace equation on the 3D sphere, with
-% NON-HOMOGENEOUS Neumann boundary conditions
+% DESCRIPTION - Solves the Laplace equation on the 3D sphere with NON
+% homogeneous Neumann boundary conditions with VEM on a polyhefral mesh
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 close all
 clearvars
 
 load('sphere41.mat')
-N = length(P);
+N = length(PB);
 
 NGamma = length(MS); % Amount of boundary nodes
 R = spalloc(N, NGamma, NGamma);
@@ -15,9 +16,9 @@ esol = @(P) P(:,1).*P(:,2).*P(:,3);
 f = @(P)    P(:,1).*P(:,2).*P(:,3);
 r = @(P)  3*P(:,1).*P(:,2).*P(:,3);
 tic
-u = (K+M)\(M*f(P) + R*MS*r(R'*P));
+u = (K+M)\(M*f(PB) + R*MS*r(R'*PB));
 toc
-es = esol(P);
+es = esol(PB);
 err = u - es;
 L2err = sqrt(err'*M*err);
 normsol = sqrt(es'*M*es);
@@ -25,10 +26,10 @@ L2errel = L2err/normsol;
 
 % Plotting Exact solution
 figure
-indsol = P(:,1) >= -0.5;
-chull = convhull(P(indsol,1), P(indsol,2), P(indsol,3));
+indsol = PB(:,1) >= -0.5;
+chull = convhull(PB(indsol,1), PB(indsol,2), PB(indsol,3));
 set(gcf,'Color','white')
-trisurf(chull, P(indsol,1), P(indsol,2), P(indsol,3), es(indsol,1),'EdgeColor', 'none', 'FaceColor', 'interp')
+trisurf(chull, PB(indsol,1), PB(indsol,2), PB(indsol,3), es(indsol,1),'EdgeColor', 'none', 'FaceColor', 'interp')
 view(3)
 set(gca,'FontSize',18)
 xlabel('x')
@@ -40,10 +41,10 @@ colorbar
 
 % Plotting Numerical solution
 figure
-indsol = P(:,1) >= -0.5;
-chull = convhull(P(indsol,1), P(indsol,2), P(indsol,3));
+indsol = PB(:,1) >= -0.5;
+chull = convhull(PB(indsol,1), PB(indsol,2), PB(indsol,3));
 set(gcf,'Color','white')
-trisurf(chull, P(indsol,1), P(indsol,2), P(indsol,3), u(indsol,1),'EdgeColor', 'none', 'FaceColor', 'interp')
+trisurf(chull, PB(indsol,1), PB(indsol,2), PB(indsol,3), u(indsol,1),'EdgeColor', 'none', 'FaceColor', 'interp')
 view(3)
 set(gca,'FontSize',18)
 xlabel('x')

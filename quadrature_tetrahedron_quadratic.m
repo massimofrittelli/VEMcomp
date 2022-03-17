@@ -21,6 +21,8 @@ function [XYZ,W] = quadrature_tetrahedron_quadratic(vert)
 % Contact: gregvw(at)math(dot)unm(dot)edu
 % http://math.unm.edu/~gregvw
 %
+% Optimised for the case N=2 by Massimo Frittelli
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 q1 = [10-sqrt(10), 10+sqrt(10)]/15;
 w1 = [8-sqrt(10); 8+sqrt(10)]/48;

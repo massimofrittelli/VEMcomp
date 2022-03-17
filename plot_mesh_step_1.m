@@ -1,7 +1,7 @@
 %
-% Generates polyhedral mesh on the unit sphere
-% How to test it: volume of the sphere = 4/3*pi*R^3
-%
+% DESCRIPTION - Generates polyhedral mesh on the unit sphere
+% Notice: this function serves only as an auxiliary function for the script
+% MESH_PLOTTER_STEP_1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % INPUTS:

@@ -1,7 +1,9 @@
-% Script to test the Laplace equation on the 3D sphere
+% DESCRIPTION - Solves Laplace equation on the 3D sphere with homogeneous
+% Neumann boundary conditions with VEM on a polyhedral mesh.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 load('sphere41.mat')
-N = length(P);
+N = length(PB);
 
 % f1 = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2;
 % integral1 = f1(P)'*K*f1(P);
@@ -17,9 +19,9 @@ rsquare = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2;
 esol = @(P) (1- rsquare(P)).^2;
 f = @(P) 4*(3-5*rsquare(P)) + esol(P);
 tic
-u = (K+M)\(M*f(P));
+u = (K+M)\(M*f(PB));
 toc
-es = esol(P);
+es = esol(PB);
 err = u - es;
 L2err = sqrt(err'*M*err);
 normsol = sqrt(es'*M*es);
@@ -40,10 +42,10 @@ L2errel = L2err/normsol;
 
 % Plotting Numerical solution
 figure
-indsol = P(:,1) >= 0;
-chull = convhull(P(indsol,1), P(indsol,2), P(indsol,3));
+indsol = PB(:,1) >= 0;
+chull = convhull(PB(indsol,1), PB(indsol,2), PB(indsol,3));
 set(gcf,'Color','white')
-trisurf(chull, P(indsol,1), P(indsol,2), P(indsol,3), u(indsol,1),'EdgeColor', 'none', 'FaceColor', 'interp')
+trisurf(chull, PB(indsol,1), PB(indsol,2), PB(indsol,3), u(indsol,1),'EdgeColor', 'none', 'FaceColor', 'interp')
 view(3)
 set(gca,'FontSize',18)
 xlabel('x')

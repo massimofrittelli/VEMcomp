@@ -1,4 +1,6 @@
-% Script to solve a BSRDS on the unit sphere
+% DESCRIPTION - Solves Anotida's 4-species Schnakenberg BSRDS on the 3D 
+% unit sphere using VEM on a polyhedral mesh and plots the solution
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -29,17 +31,21 @@ k2 = 5;
 
 d_Omega = 10;
 d_Gamma = 10;
-gamma_Omega = 50;
-gamma_Gamma = 50;
+gamma_Omega = 55;
+gamma_Gamma = 55;
 
 % Set time discretisation
- T = 20;
- tau = 2e-4;
+T = 20;
+tau = 2e-4;
 
 % Set space discretisation
-load('sphere_tri_4385.mat')
+load('sphere21.mat')
 
 % END OF INPUT
+N = length(M);
+NGamma = length(MS);
+R = spalloc(N, NGamma, NGamma);
+R(boundarynode, 1:NGamma) = speye(NGamma); % reduction matrix
 
 % Lumping!
 M = diag(sum(M));
@@ -98,35 +104,68 @@ for i=0:NT-1
 end
 toc
 
-
-EScut = zeros(0,3);
-for i=1:length(EB)
-    if max(PB(EB(i,:),1) >= -0.4) && max(PB(EB(i,:),1) < -0.4)
-       EScut = [EScut; EB(i,[1 2 3]); EB(i,[1 2 4]); EB(i,[1 3 4]); EB(i,[2 3 4])]; %#ok
-    end
-end
-picked = false(length(EScut),1);
-for i=1:length(EScut)
-    picked(i) = max(vecnorm(PB(EScut(i,:),:),2,2) < 0.99);
-end
-EScut = EScut(picked,:);
-
-picked = false(length(ES),1);
-for i=1:length(ES)
-    picked(i) = max(PB(ES(i,:),1) >= -0.4);
-end
-EScut_exterior = ES(picked,:);
-
-% Plotting Numerical Solution
+% % Plotting Numerical Solution
 figure
 
-% Bulk Component u
-subplot(2,2,1)
-set(gcf, 'Color','white','renderer','zbuffer')
-trisurf(EScut, PB(:,1), PB(:,2), PB(:,3), u, 'FaceColor', 'interp', 'EdgeColor', 'interp');
+
+% % Plotting Numerical Solution - Bulk Component u
+subplot(3,2,1)
+set(gcf, 'Color','white')
+set(gcf, 'Renderer','zbuffer')
+trisurf(EGamma, PB(:,1), PB(:,2), PB(:,3), u, 'EdgeColor', 'none', 'FaceColor', 'interp')
+view(3)
+set(gca,'FontSize',18)
+xlabel('x')
+ylabel('y')
+zlabel('z','rot',0)
+axis equal
+%xlim([-0.5,1])
+title('$U$', 'interpreter', 'latex')
+colorbar
 hold on
+% Ccirc = [-0.5, 0, 0];   % Center of circle 
+% Rcirc = sqrt(3)/2;      % Radius of circle 
+% teta = 0:0.01:2*pi;
+% xcirc = Ccirc(1) + zeros(size(teta)) ;
+% ycirc = Ccirc(2) + Rcirc*cos(teta);
+% zcirc = Ccirc(3) + Rcirc*sin(teta) ;
+% plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
+lightangle(gca,-40,0)
+% lighting gouraud
+
+% % Plotting Numerical Solution - Bulk Component v
+subplot(3,2,2)
+trisurf(EGamma, PB(:,1), PB(:,2), PB(:,3), v, 'EdgeColor', 'none', 'FaceColor', 'interp')
+view(3)
+set(gca,'FontSize',18)
+xlabel('x')
+ylabel('y')
+zlabel('z','rot',0)
+axis equal
+%xlim([-0.5,1])
+title('$V$', 'interpreter', 'latex')
+colorbar
+hold on
+% Ccirc = [-0.5, 0, 0];   % Center of circle 
+% Rcirc = sqrt(3)/2;      % Radius of circle 
+% teta = 0:0.01:2*pi;
+% xcirc = Ccirc(1) + zeros(size(teta)) ;
+% ycirc = Ccirc(2) + Rcirc*cos(teta);
+% zcirc = Ccirc(3) + Rcirc*sin(teta) ;
+% plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
+lightangle(gca,-40,0)
+% lighting gouraud
+
+
+% % Plotting Numerical Solution - Bulk Component u
+subplot(3,2,3)
+hold on
+for i=1:size(ElementsCut)
+    plotSolution(ElementsCut(i), u);
+end
 rho = 1.01;
-trisurf(EScut_exterior, rho*PB(:,1), rho*PB(:,2), rho*PB(:,3), u, 'FaceColor', 'interp', 'EdgeColor', 'none');
+trisurf(EGammaCut, rho*PB(:,1), rho*PB(:,2), rho*PB(:,3), u, 'FaceColor', 'interp', 'EdgeColor', 'none');
+view(3)
 set(gca,'FontSize',18)
 xlabel('x')
 ylabel('y')
@@ -135,16 +174,19 @@ title('$U$', 'interpreter', 'latex')
 colorbar
 colormap jet
 axis equal
+axis([-1.1,1.1,-1.1,1.1,-1.1,1.1])
 lightangle(gca,-40,0)
-lighting gouraud
-lighting gouraud
 
-% Bulk Component v
-subplot(2,2,2)
-trisurf(EScut, PB(:,1), PB(:,2), PB(:,3), v, 'FaceColor', 'interp', 'EdgeColor', 'interp');
+
+% % Plotting Numerical Solution - Bulk Component v
+subplot(3,2,4)
 hold on
+for i=1:size(ElementsCut)
+    plotSolution(ElementsCut(i), v);
+end
 rho = 1.01;
-trisurf(EScut_exterior, rho*PB(:,1), rho*PB(:,2), rho*PB(:,3), v, 'FaceColor', 'interp', 'EdgeColor', 'none');
+trisurf(EGammaCut, rho*PB(:,1), rho*PB(:,2), rho*PB(:,3), v, 'FaceColor', 'interp', 'EdgeColor', 'none');
+view(3)
 set(gca,'FontSize',18)
 xlabel('x')
 ylabel('y')
@@ -153,59 +195,170 @@ title('$V$', 'interpreter', 'latex')
 colorbar
 colormap jet
 axis equal
+axis([-1.1,1.1,-1.1,1.1,-1.1,1.1])
 lightangle(gca,-40,0)
-lighting gouraud
-lighting gouraud
+ 
 
-% Surface Component r
-subplot(2,2,3)
-trisurf(ES, PB(:,1), PB(:,2), PB(:,3), R*r, 'EdgeColor', 'none', 'FaceColor', 'interp')
+% % Plotting Numerical Solution - Surface Component r
+subplot(3,2,5)
+trisurf(EGammaCut, PB(:,1), PB(:,2), PB(:,3), R*r, 'EdgeColor', 'none', 'FaceColor', 'interp')
 view(3)
 set(gca,'FontSize',18)
 xlabel('x')
 ylabel('y')
 zlabel('z','rot',0)
 axis equal
-xlim([-0.5,1])
+caxis([min(r), max(r)])
+%xlim([-0.5,1])
 title('$R$', 'interpreter', 'latex')
 colorbar
-colormap jet
-caxis([min(r), max(r)])
 hold on
-Ccirc = [-0.5, 0, 0];   % Center of circle 
-Rcirc = sqrt(3)/2;      % Radius of circle 
-teta = 0:0.01:2*pi;
-xcirc = Ccirc(1) + zeros(size(teta)) ;
-ycirc = Ccirc(2) + Rcirc*cos(teta);
-zcirc = Ccirc(3) + Rcirc*sin(teta) ;
-plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
+% Ccirc = [-0.5, 0, 0];   % Center of circle 
+% Rcirc = sqrt(3)/2;      % Radius of circle 
+% teta = 0:0.01:2*pi;
+% xcirc = Ccirc(1) + zeros(size(teta)) ;
+% ycirc = Ccirc(2) + Rcirc*cos(teta);
+% zcirc = Ccirc(3) + Rcirc*sin(teta) ;
+% plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
 lightangle(gca,-40,0)
-lighting gouraud
-lighting gouraud
+% lighting gouraud
 
 
-% Plotting Numerical Solution - Surface Component s
-subplot(2,2,4)
-trisurf(ES, PB(:,1), PB(:,2), PB(:,3), R*s, 'EdgeColor', 'none', 'FaceColor', 'interp')
+% % Plotting Numerical Solution - Surface Component s
+subplot(3,2,6)
+trisurf(EGammaCut, PB(:,1), PB(:,2), PB(:,3), R*s, 'EdgeColor', 'none', 'FaceColor', 'interp')
 view(3)
 set(gca,'FontSize',18)
 xlabel('x')
 ylabel('y')
 zlabel('z','rot',0)
 axis equal
-xlim([-0.5,1])
+caxis([min(s), max(s)])
+%xlim([-0.5,1])
 title('$S$', 'interpreter', 'latex')
 colorbar
-colormap jet
-caxis([min(s), max(s)])
 hold on
-Ccirc = [-0.5, 0, 0];   % Center of circle 
-Rcirc = sqrt(3)/2;      % Radius of circle 
-teta = 0:0.01:2*pi;
-xcirc = Ccirc(1) + zeros(size(teta)) ;
-ycirc = Ccirc(2) + Rcirc*cos(teta);
-zcirc = Ccirc(3) + Rcirc*sin(teta) ;
-plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
+% Ccirc = [-0.5, 0, 0];   % Center of circle 
+% Rcirc = sqrt(3)/2;      % Radius of circle 
+% teta = 0:0.01:2*pi;
+% xcirc = Ccirc(1) + zeros(size(teta)) ;
+% ycirc = Ccirc(2) + Rcirc*cos(teta);
+% zcirc = Ccirc(3) + Rcirc*sin(teta) ;
+% plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
 lightangle(gca,-40,0)
-lighting gouraud
-lighting gouraud
+% lighting gouraud
+
+
+
+% PLOT FOR TETRAHEDRAL MESHES
+
+% EScut = zeros(0,3);
+% for i=1:length(EB)
+%     if max(PB(EB(i,:),1) >= -0.4) && max(PB(EB(i,:),1) < -0.4)
+%        EScut = [EScut; EB(i,[1 2 3]); EB(i,[1 2 4]); EB(i,[1 3 4]); EB(i,[2 3 4])]; %#ok
+%     end
+% end
+% picked = false(length(EScut),1);
+% for i=1:length(EScut)
+%     picked(i) = max(vecnorm(PB(EScut(i,:),:),2,2) < 0.99);
+% end
+% EScut = EScut(picked,:);
+% 
+% picked = false(length(ES),1);
+% for i=1:length(ES)
+%     picked(i) = max(PB(ES(i,:),1) >= -0.4);
+% end
+% EScut_exterior = ES(picked,:);
+% 
+% % Plotting Numerical Solution
+% figure
+% 
+% % Bulk Component u
+% subplot(2,2,1)
+% set(gcf, 'Color','white','renderer','zbuffer')
+% trisurf(EScut, PB(:,1), PB(:,2), PB(:,3), u, 'FaceColor', 'interp', 'EdgeColor', 'interp');
+% hold on
+% rho = 1.01;
+% trisurf(EScut_exterior, rho*PB(:,1), rho*PB(:,2), rho*PB(:,3), u, 'FaceColor', 'interp', 'EdgeColor', 'none');
+% set(gca,'FontSize',18)
+% xlabel('x')
+% ylabel('y')
+% zlabel('z','rot',0)
+% title('$U$', 'interpreter', 'latex')
+% colorbar
+% colormap jet
+% axis equal
+% lightangle(gca,-40,0)
+% lighting gouraud
+% lighting gouraud
+% 
+% % Bulk Component v
+% subplot(2,2,2)
+% trisurf(EScut, PB(:,1), PB(:,2), PB(:,3), v, 'FaceColor', 'interp', 'EdgeColor', 'interp');
+% hold on
+% rho = 1.01;
+% trisurf(EScut_exterior, rho*PB(:,1), rho*PB(:,2), rho*PB(:,3), v, 'FaceColor', 'interp', 'EdgeColor', 'none');
+% set(gca,'FontSize',18)
+% xlabel('x')
+% ylabel('y')
+% zlabel('z','rot',0)
+% title('$V$', 'interpreter', 'latex')
+% colorbar
+% colormap jet
+% axis equal
+% lightangle(gca,-40,0)
+% lighting gouraud
+% lighting gouraud
+% 
+% % Surface Component r
+% subplot(2,2,3)
+% trisurf(ES, PB(:,1), PB(:,2), PB(:,3), R*r, 'EdgeColor', 'none', 'FaceColor', 'interp')
+% view(3)
+% set(gca,'FontSize',18)
+% xlabel('x')
+% ylabel('y')
+% zlabel('z','rot',0)
+% axis equal
+% xlim([-0.5,1])
+% title('$R$', 'interpreter', 'latex')
+% colorbar
+% colormap jet
+% caxis([min(r), max(r)])
+% hold on
+% Ccirc = [-0.5, 0, 0];   % Center of circle 
+% Rcirc = sqrt(3)/2;      % Radius of circle 
+% teta = 0:0.01:2*pi;
+% xcirc = Ccirc(1) + zeros(size(teta)) ;
+% ycirc = Ccirc(2) + Rcirc*cos(teta);
+% zcirc = Ccirc(3) + Rcirc*sin(teta) ;
+% plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
+% lightangle(gca,-40,0)
+% lighting gouraud
+% lighting gouraud
+% 
+% 
+% % Plotting Numerical Solution - Surface Component s
+% subplot(2,2,4)
+% trisurf(ES, PB(:,1), PB(:,2), PB(:,3), R*s, 'EdgeColor', 'none', 'FaceColor', 'interp')
+% view(3)
+% set(gca,'FontSize',18)
+% xlabel('x')
+% ylabel('y')
+% zlabel('z','rot',0)
+% axis equal
+% xlim([-0.5,1])
+% title('$S$', 'interpreter', 'latex')
+% colorbar
+% colormap jet
+% caxis([min(s), max(s)])
+% hold on
+% Ccirc = [-0.5, 0, 0];   % Center of circle 
+% Rcirc = sqrt(3)/2;      % Radius of circle 
+% teta = 0:0.01:2*pi;
+% xcirc = Ccirc(1) + zeros(size(teta)) ;
+% ycirc = Ccirc(2) + Rcirc*cos(teta);
+% zcirc = Ccirc(3) + Rcirc*sin(teta) ;
+% plot3(xcirc,ycirc,zcirc,'k','LineWidth',1.5)
+% lightangle(gca,-40,0)
+% lighting gouraud
+% lighting gouraud

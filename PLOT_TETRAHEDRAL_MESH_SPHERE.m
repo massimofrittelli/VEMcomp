@@ -1,3 +1,7 @@
+% DESCRIPTION - Plots tetrahedral 3D mesh on the unit sphere. Contains
+% commented code for the generation of such mesh
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 close all
 clearvars
 

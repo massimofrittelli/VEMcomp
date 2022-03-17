@@ -1,10 +1,21 @@
 function [ A,M ] = matrices( P,E )
 
+% DESCRIPTION - Generates SFEM matrices for an arbitrary surface mesh.
+
+% INPUTS:
+%  - P is a NPx3 array containing the coordinates of the nodes
+%  - E is a NEx3 array in which each row contains the indexes of the nodes
+%    of a triangular element (common representation of elements)
+
+% OUTPUTS:
+%  - A is the NPxNP stiffness matrix for the Laplace-Beltrami operator
+%  - M is the mass matrix
+
 NE = size(E,1);
 NP = size(P,1);
-A = spalloc(NP,NP,NP*7);    %discrete Laplace-Beltrami
+A = spalloc(NP,NP,NP*7);    %stiffness matrix for Laplace-Beltrami
 M = spalloc(NP,NP,NP*7);    %mass matrix       
-refM = (ones(3)+eye(3))/24; %reference mass matrix
+refM = (ones(3)+eye(3))/24; %mass matrix on reference element
 
 for i=1:NE
    e = E(i,:);

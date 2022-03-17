@@ -1,6 +1,8 @@
-% Solves Laplace equation on the unit cube through VEM with k=1
+% DESCRIPTION - Solves Laplace equation on the unit cube with homogeneous
+% Neumann boundary conditions with VEM on a cubic mesh.
 %
 %   - Delta(u) + u = (3*pi^2+1)*cos(pi*x)*cos(pi*y)*cos(pi*z)
+%     Nabla(u) \cdot n = 0
 %
 % Exact solution: u(x,y,z) = cos(pi*x)*cos(pi*y)*cos(pi*z)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

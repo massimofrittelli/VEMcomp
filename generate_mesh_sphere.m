@@ -1,6 +1,6 @@
 %
-% Generates polyhedral mesh and matrices on the unit sphere
-% How to test it: volume of the sphere = 4/3*pi*R^3
+% DESCRIPTION - Generates polyhedral mesh and VEM matrices on the unit sphere
+% Hint for testing: volume of the sphere = 4/3*pi*R^3
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -14,7 +14,12 @@
 % - h: meshsize
 % - K,M: stiffness and mass matrices in the bulk
 % - KS,MS,CMS: stiffness, mass, and consistency matrices on the surface
-% - Elements: polyhedral elements in element3ddummy format
+% - boundarynode: boolean array that identifies nodes that are on the surface
+% - EGamma: all elements of the surface
+% - ElementsCut: elements of the bulk. Not all of them, just the ones in
+%   proximity of the cut (sphere is cut to see inside)
+% - EGammaCut: elements of the surface. Not all of them, just the one that
+%   survive after the sphere is cut.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [P, h, K, M, KS, MS, CMS, boundarynode, EGamma, ElementsCut, EGammaCut] = generate_mesh_sphere(Nx)
@@ -98,7 +103,8 @@ for i=0:Nx-2 % For each element of the bounding box
                 K(indexes, indexes) = K(indexes, indexes) + KC; %#ok
                     
                 NewCubicElement = shiftElement(ESD, P(indexes(1),:));
-                if i == ceil((Nx-2)/4)
+                if i == ceil((Nx-2)/2) || j == ceil((Nx-2)/2)
+                    NewCubicElement.Pind = indexes;
                     ElementsCut = [ElementsCut; NewCubicElement]; %#ok
                 end
                 
@@ -108,7 +114,7 @@ for i=0:Nx-2 % For each element of the bounding box
                 end
                 NewCubicElement.Pind = indexes;
                 NewElements = extrude(NewCubicElement,Ncube);
-                if i == ceil((Nx-2)/4)
+                if i == ceil((Nx-2)/2) || j == ceil((Nx-2)/2)
                     ElementsCut = [ElementsCut; NewElements]; %#ok
                 end
                 for l=1:length(NewElements)
@@ -117,7 +123,7 @@ for i=0:Nx-2 % For each element of the bounding box
                     acceptednode(eind, 1) = true(8,1);
                     boundarynode(eind(5:8),1) = true(4,1);
                     EGamma = [EGamma; eind(5:7)'; eind([5 7:8])']; %#ok
-                    if i >= ceil((Nx-2)/4)
+                    if i >= ceil((Nx-2)/2) || j >= ceil((Nx-2)/2)
                         EGammaCut = [EGammaCut; eind(5:7)'; eind([5 7:8])']; %#ok
                     end
                     newP(eind(5:8),:) = NewElements(l).P(5:8,:);

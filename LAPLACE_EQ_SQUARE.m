@@ -1,4 +1,6 @@
-% Script to test VEM 2d for the Laplace equation on the unit square
+% DESCRIPTION - Solves the Laplace equation on the 2D unit square with
+% homogeneous Neumann boundary conditions with VEM on a square mesh.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %   - Delta(u) + u = (2*pi^2+1)*cos(pi*x)*cos(pi*y)*cos(pi*z)
 

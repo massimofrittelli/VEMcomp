@@ -1,6 +1,21 @@
 function [KB,MB,KS,MS,ES,R] = matricesTet(PB, EB)
 
+% DESCRIPTION - Generates BSFEM matrices for a 3D tetrahedral mesh. Source:
 % https://it.mathworks.com/matlabcentral/answers/678418-calculating-tetrahedral-stiffness-matrix-for-fem
+% after suitable testing and adaptations.
+
+% INPUTS:
+% - PB is a NPBx3 array containing the coordinates of the nodes by rows
+% - EB is a NEBx4 array containing the tetrahedral elements by rows
+
+% OUTPUTS:
+% - KB, MB: stiffness and mass matrices in the bulk
+% - KS, MS: stiffness and mass matrices on the surface
+% - ES: an array containing the surface elements by rows
+% - R: the reduction matrix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 % Number of nodes and elements in the bulk
 NPB = size(PB,1);

@@ -22,6 +22,7 @@ function [XY,W] = quadrature_triangle_quadratic(v)
 % Contact: gregvw(at)math(dot)unm(dot)edu
 % http://math.unm.edu/~gregvw
 %
+% Optimised for the case N=2 by Massimo Frittelli
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %A = [1/3 1/15 1/35];

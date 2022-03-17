@@ -1,3 +1,8 @@
+% DESCRIPTION - Tests the convergence for the Laplace equation on the 3D
+% cube with homogeneous Neumann boundary conditions with VEM on a cubic
+% mesh.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 NX = [6,11,16,21,26,31,36,41,46];
 Nit = length(NX);
 

@@ -1,4 +1,7 @@
-% Script to test a parabolic coupled  bulk-surface problem on the 3D CUBE
+% DESCRIPTION - Solves parabolic B-S problem on the 3D CUBE, plots
+% solution and computes error.
+% NOTICE: closed-form solution is wrong. Fix needed.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -47,7 +50,7 @@ e = - pi;
 % Set time discretisation
 T = 1;
 %tau = 1.5625e-02;
-tau = 1e-3;
+tau = 1e-4;
 
 % Set space discretisation
 load('cube17.mat')
@@ -99,8 +102,9 @@ xlabel('x')
 ylabel('y')
 zlabel('z','rot',0)
 axis equal
-title('Exact solution')
+title('Exact bulk solution u')
 colorbar
+colormap jet
 
 % Plotting Numerical solution in the bulk
 figure
@@ -114,13 +118,31 @@ xlabel('x')
 ylabel('y')
 zlabel('z','rot',0)
 axis equal
-title('Bulk solution u')
+title('Bulk solution U')
 colorbar
+colormap jet
+
+% Plotting error in the bulk
+figure
+indsol = P(:,1) >= 0;
+chull = convhull(P(indsol,1), P(indsol,2), P(indsol,3));
+set(gcf,'Color','white')
+trisurf(chull, P(indsol,1), P(indsol,2), P(indsol,3), es_u(indsol,1)-u(indsol,1),'EdgeColor', 'none', 'FaceColor', 'interp')
+view(3)
+set(gca,'FontSize',18)
+xlabel('x')
+ylabel('y')
+zlabel('z','rot',0)
+axis equal
+title('Bulk error u-U')
+colorbar
+colormap jet
 
 % Plotting Numerical Solution on the surface
 figure
 set(gcf,'Color','white')
-trisurf(Egamma, P(:,1), P(:,2), P(:,3), [zeros(N-NGamma,1); v], 'EdgeColor', 'none', 'FaceColor', 'interp')
+vext = A*v;
+trisurf(chull, P(indsol,1), P(indsol,2), P(indsol,3), vext(indsol,1),'EdgeColor', 'none', 'FaceColor', 'interp')
 view(3)
 set(gca,'FontSize',18)
 xlabel('x')
@@ -128,5 +150,23 @@ ylabel('y')
 zlabel('z','rot',0)
 axis equal
 xlim([-0.5,1])
-title('Surface solution v')
+title('Surface solution V')
 colorbar
+colormap jet
+
+% Plotting error on the surface
+figure
+set(gcf,'Color','white')
+vext = A*v;
+es_vext = A*es_v;
+trisurf(chull, P(indsol,1), P(indsol,2), P(indsol,3), es_vext(indsol,1)-vext(indsol,1),'EdgeColor', 'none', 'FaceColor', 'interp')
+view(3)
+set(gca,'FontSize',18)
+xlabel('x')
+ylabel('y')
+zlabel('z','rot',0)
+axis equal
+xlim([-0.5,1])
+title('Surface error v-V')
+colorbar
+colormap jet

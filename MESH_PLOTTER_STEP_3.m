@@ -1,7 +1,9 @@
-% GENERATES ILLUSTRATION OF STEP 3 OF MESH CUTTING ALGORITHM
+% DESCRIPTION - GENERATES ILLUSTRATION OF STEP 3 OF MESH EXTRUSION ALGORITHM
+% FOR THE BSVEM 3D ELLIPTIC PAPER
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %[P, h, K, M, KS, MS, boundarynode, EGamma, Elements] = plot_mesh_step_3(8);
-%[P, h, K, M, KS, MS, boundarynode, EGamma, Elements] = plot_mesh_step_3(6);
+[P, h, K, M, KS, MS, boundarynode, EGamma, Elements] = plot_mesh_step_3(6);
 
 figure
 set(gcf,'color','white')

@@ -1,7 +1,7 @@
 %
-% Generates polyhedral mesh on the unit sphere
-% How to test it: volume of the sphere = 4/3*pi*R^3
-%
+% DESCRIPTION - Generates polyhedral mesh on the unit sphere
+% Notice: this function serves only as an auxiliary function for the
+% scripts MESH_PLOTTER_STEP_3 and MESH_PLOTTER_STEP_4
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % INPUTS:
@@ -101,7 +101,8 @@ for i=0:Nx-2 % For each element of the bounding box
                 if norm(TPO) < 1 - h
                     continue
                 end
-                NewElements = extrude(NewCubicElement,indexes,Ncube);
+                NewCubicElement.Pind = indexes;
+                NewElements = extrude(NewCubicElement,Ncube);
                 Elements = [Elements; NewElements]; %#ok
                 for l=1:length(NewElements)
                     eind = NewElements(l).Pind;

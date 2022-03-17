@@ -76,11 +76,15 @@ classdef element3ddummy
         
         function plotSolution(obj, sol)
            hold on
+           solE = sol(obj.Pind);
            for i=1:size(obj.Faces,1)
                PF = obj.Faces(i).P;
-               PFind = obj.Faces(i).Pind;
-               if not(isempty(PFind))
-                    fill3(PF(:,1), PF(:,2), PF(:,3), sol(PFind),'FaceColor', 'interp', 'EdgeColor', 'interp');
+               [tf,loc] = ismember(obj.P,PF,'rows');
+               [~,p] = sort(loc(tf));
+               indF = find(tf);
+               indF = indF(p);
+               if not(isempty(indF))
+                    fill3(PF(:,1), PF(:,2), PF(:,3), solE(indF),'FaceColor', 'interp', 'EdgeColor', 'none');
                end
            end
         end

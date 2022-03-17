@@ -1,5 +1,7 @@
 %
-% Generates polyhedral mesh and matrices on the unit "DIB cube"
+% DESCRIPTION - Generates cubic mesh, VEM matrices on the unit "DIB cube"
+% and all necessary matrices to enforce boundary conditions of the B-S DIB
+% model on the cube.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -16,6 +18,7 @@
 % - A: reduction matrix of the whole boundary
 % - Abot: reduction matrix of the bottom face
 % - Atop: reduction matrix of the entire cube without top face
+% - Ebot: 2d square elements of the bottom face
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [P, h, K, M, Kbot, Mbot, KGamma, MGamma, A, Abot, Atop] = generate_mesh_cube(Nx)

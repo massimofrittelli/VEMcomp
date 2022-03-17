@@ -1,8 +1,13 @@
+% DESCRIPTION - Solves the BS DIB model on the 3D cube with VEM on a cubic
+% mesh.
+% NOTICE: still under development.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 clear variables
 close all
 clc
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Bulk-surface DIB model in 3D.
 %
 % Notations:
@@ -181,7 +186,7 @@ caxis([min([min(bdir+b_bulk),min(eta),min(eta_pure)]), max([max(bdir+b_bulk),max
 xlim([0,L])
 ylim([0,L])
 zlim([0,L])
-plot_surface(Abot'*P, "none", eta)
+plot_surface(Abot'*P, "none", eta) % this is what the TODO refers to
 colorbar('FontSize', 18)
 caxis([min([min(bdir+b_bulk),min(eta),min(eta_pure)]), max([max(bdir+b_bulk),max(eta),max(eta_pure)])])
 
@@ -190,7 +195,7 @@ set(gca, 'fontsize',18)
 xlim([0,L])
 ylim([0,L])
 zlim([0,L])
-plot_surface(Abot'*P, "none", eta_pure)
+plot_surface(Abot'*P, "none", eta_pure)  % this is what the TODO refers to
 caxis([min([min(bdir+b_bulk),min(eta),min(eta_pure)]), max([max(bdir+b_bulk),max(eta),max(eta_pure)])])
 colorbar('FontSize', 18)
     
