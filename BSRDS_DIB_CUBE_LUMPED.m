@@ -1,9 +1,8 @@
 % DESCRIPTION - Solves the BS DIB model on the 3D cube with VEM on a cubic
 % mesh.
-% NOTICE: still under development.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-clear variables
+clearvars
 close all
 clc
 
@@ -13,7 +12,7 @@ clc
 % Notations:
 % Omega = [0,L]^3               (cube)
 % F_0 = [0,L]^2 x {0}           (bottom face)
-% F_1 = [0,L]^2 x {1}           (top face)
+% F_1 = [0,L]^2 x {L}           (top face)
 % Gamma = \partial \Omega \setminus (F_0 \cup F_1)          (lateral faces)
 %
 %
@@ -48,17 +47,21 @@ clc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % LOAD MESH
-load('cube6.mat')
-L = 10;
-P = P*L;
-M = M*L^3;
-MS = MS*L^2;
-K = K*L;
-%KS = KS; % No transformation needed
+load('cube33.mat')
+L = 10;         % cube edge length
+P = P*L;        % rescaled  nodes
+% Non-Lumped version
+% M = M*L^3;      % rescaled bulk mass matrix
+% Mbot = Mbot*L^2;    % rescaled surface mass matrix
+% Lumped version
+M = spdiags(sum(M*L^3,2),0,length(M),length(M));      % rescaled bulk mass matrix
+Mbot = spdiags(sum(Mbot*L^2,2),0,length(Mbot),length(Mbot));    % rescaled surface mass matrix
+K = K*L;        % rescaled bulk stiffness matrix
+% no rescaling needed for surface stiffness matrix
 
 % SET FINAL TIME AND TIME STEP
-T = 150;
-tau = 1e-2;
+T = 100; % 100
+tau = 5e-3;
 
 % SET DIFFUSION COEFFICIENTS
 d_bulk = 1;
@@ -71,7 +74,7 @@ k_b = 1;
 k_q = 1;
 
 % SET DIB REACTION KINETICS
-rho = 1;
+rho = 1.5; %1
 A_1 = 10;
 A_2 = 1;
 alpha = 0.5;
@@ -94,6 +97,7 @@ psi_eta = pert_param;
 psi_theta = pert_param;
 
 % SET INITIAL CONDITIONS
+rng(0)
 ampl = 1e-2;
 b0 = @(x) 0*pert_param*b_bulk/L*x(:,2) + (1-0*pert_param)*b_bulk;
 q0 = @(x) 0*pert_param*b_bulk/L*x(:,2) + (1-0*pert_param)*b_bulk;
@@ -152,16 +156,22 @@ flux1 = @(bdir, eta, theta) -f_3(bdir, eta, theta)*psi_eta;
 flux2 = @(qdir, eta, theta) -f_4(qdir, eta, theta)*psi_theta;
 
 % AUXILIARY MATRICES FOR TIME STEPPING
-M1 = (Atop'*(M+tau*K)*Atop)\(Atop'*M*Atop);
-M1d = (Atop'*(M+d_bulk*tau*K)*Atop)\(Atop'*M*Atop);
+MIT1  = (Atop'*(M+tau*K)*Atop);
+MIT1d = (Atop'*(M+d_bulk*tau*K)*Atop);
+MIT3  = (Mbot+tau*Kbot);
+MIT3d = (Mbot+d_gamma*tau*Kbot);
+perm1 = symamd(MIT1);
+perm1d = symamd(MIT1d);
+perm3 = symamd(MIT3);
+perm3d = symamd(MIT3d);
+[L1, U1]  = lu(MIT1(perm1,perm1),'vector');
+[L1d,U1d] = lu(MIT1d(perm1d,perm1d),'vector');
+[L3, U3]  = lu(MIT3(perm3,perm3),'vector');
+[L3d,U3d] = lu(MIT3d(perm3d,perm3d),'vector');
 
-M2 = (Atop'*(M+tau*K)*Atop)\(Atop'*Abot*MS);
-M2d = (Atop'*(M+d_bulk*tau*K)*Atop)\(Atop'*Abot*MS);
-
-M3 = (MS+tau*KS)\MS;
-M3d = (MS+d_gamma*tau*KS)\MS;
-
-
+M1 = (Atop'*M*Atop);
+M2 = (Atop'*Abot*Mbot);
+M3 = Mbot;
 
 % INITIALIZING NUMERICAL SOLUTION
 N = size(Atop,2);
@@ -174,68 +184,110 @@ eta_pure = eta;
 theta_pure = theta;
 
 % PLOTTING INITIAL CONDITIONS
-figure('Renderer', 'zbuffer', 'color','white','Position', [100 100 500 400])
+cut = P(:,1) <= L/2;
+Pcut = P(cut,:);
+TRIcut = convhull(Pcut);
+TRI = delaunay(Abot'*P(:,1), Abot'*P(:,2));
+
+figure(1)
+set(gcf, 'Renderer', 'zbuffer', 'color','white','Position', [100 100 500 400])
+b = Atop*bdir + b_bulk;
+trisurf(TRIcut, Pcut(:,1), Pcut(:,2), Pcut(:,3), b(cut),'EdgeColor','none','FaceColor', 'interp');
+hold on
+trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta,'EdgeColor','none','FaceColor', 'interp');
+colorbar('FontSize', 18)
+colormap jet
 xlim([0,L])
 ylim([0,L])
 zlim([0,L])
-scatter3(P(:,1), P(:,2), P(:,3), Atop*bdir+b_bulk);
-colorbar('FontSize', 18)
-caxis([min([min(bdir+b_bulk),min(eta),min(eta_pure)]), max([max(bdir+b_bulk),max(eta),max(eta_pure)])])
-
-% TODO: plot correctly surf solution (mesh probably needed, or use Delaunay command)
-xlim([0,L])
-ylim([0,L])
-zlim([0,L])
-plot_surface(Abot'*P, "none", eta) % this is what the TODO refers to
-colorbar('FontSize', 18)
-caxis([min([min(bdir+b_bulk),min(eta),min(eta_pure)]), max([max(bdir+b_bulk),max(eta),max(eta_pure)])])
-
-figure('Renderer', 'zbuffer', 'color','white','Position', [100 100 500 400])
 set(gca, 'fontsize',18)
+title('$\eta, b$', 'interpreter', 'latex')
+caxis([min([min(b),min(eta),min(eta_pure)]), max([max(b),max(eta),max(eta_pure)])])
+
+figure(3)
+set(gcf, 'Renderer', 'zbuffer', 'color','white','Position', [100 100 500 400])
+trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta_pure,'EdgeColor','none','FaceColor', 'interp');
 xlim([0,L])
 ylim([0,L])
 zlim([0,L])
-plot_surface(Abot'*P, "none", eta_pure)  % this is what the TODO refers to
+set(gca, 'fontsize',18)
 caxis([min([min(bdir+b_bulk),min(eta),min(eta_pure)]), max([max(bdir+b_bulk),max(eta),max(eta_pure)])])
 colorbar('FontSize', 18)
+title('$\eta$', 'interpreter', 'latex')
+colormap jet
+view(2)
     
 % for i=1:10
 %     MOV(i) = getframe(gcf);
 % end
 
-
+tic
 %COMPUTING NUMERICAL SOLUTION
 for i=1:ceil(T/tau)
-    bnew = M1*(bdir+tau*f_1(bdir)) + M2*tau*flux1(bdir,eta,theta);
-    qnew = M1d*(qdir+tau*f_2(qdir)) + M2d*tau*flux2(qdir,eta,theta);
-    etanew = M3*(eta+ tau*f_3(bdir,eta,theta));
-    thetanew = M3d*(theta+ tau*f_4(qdir,eta,theta));
-    eta_pure_new = M3*(eta_pure + tau*f_eta(eta_pure, theta_pure));
-    theta_pure_new = M3d*(theta_pure + tau*f_theta(eta_pure, theta_pure));
-    bdir = bnew;
-    qdir = qnew;
-    eta = etanew;
-    theta = thetanew;
-    eta_pure = eta_pure_new;
-    theta_pure = theta_pure_new;
+    Fb = M1*(bdir+tau*f_1(bdir)) + M2*tau*flux1(bdir,eta,theta);
+    Fq = M1*(qdir+tau*f_2(qdir)) + M2*tau*flux2(qdir,eta,theta);
+    Feta = M3*(eta+ tau*f_3(bdir,eta,theta));
+    Ftheta = M3*(theta+ tau*f_4(qdir,eta,theta));
+    Feta_pure = M3*(eta_pure + tau*f_eta(eta_pure, theta_pure));
+    Ftheta_pure = M3*(theta_pure + tau*f_theta(eta_pure, theta_pure));
+    bdir(perm1) = U1\(L1\Fb(perm1));
+    qdir(perm1d) = U1d\(L1d\Fq(perm1d));
+    eta(perm3) = U3\(L3\Feta(perm3));
+    theta(perm3d) = U3d\(L3d\Ftheta(perm3d));
+    eta_pure(perm3) = U3\(L3\Feta_pure(perm3));
+    theta_pure(perm3d) = U3d\(L3d\Ftheta_pure(perm3d));
 
     
     if rem(i,plot_freq) == 0
+        
+        fprintf('t=%d\n', tau*i)
+        
+        % PLOTTING b,eta OF COUPLED BSRDS MODEL
         figure(1)
         cla
-        plot_bulk_polygons(P,E,'b','b',Atop*bdir+b_bulk);
-        caxis([min([min(bdir+b_bulk),min(eta),min(eta_pure)]), max([max(bdir+b_bulk),max(eta),max(eta_pure)])])
-        plot_surface(Abot'*P, "none", eta)
-        caxis([min([min(bdir+b_bulk),min(eta),min(eta_pure)]), max([max(bdir+b_bulk),max(eta),max(eta_pure)])])
-        %MOV(i/plot_freq+10) = getframe(gcf);
+        b = Atop*bdir + b_bulk;
+        trisurf(TRIcut, Pcut(:,1), Pcut(:,2), Pcut(:,3), b(cut),'EdgeColor','none','FaceColor', 'interp');
+        hold on
+        trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta,'EdgeColor','none','FaceColor', 'interp');
+        xlim([0,L])
+        ylim([0,L])
+        zlim([0,L])
+        set(gca, 'fontsize',18)
+        colorbar('FontSize', 18)
+        title('$\eta, b$', 'interpreter', 'latex')
+        caxis([min([min(b),min(eta),min(eta_pure)]), max([max(b),max(eta),max(eta_pure)])])
         
-        figure(2)
+        % PLOTTING eta OF UNCOUPLED SRDS MODEL
+        figure(3)
         cla
-        xlabel('x','FontSize',18)
-        ylabel('y','FontSize',18, 'rot', 0)
-        plot_surface(Abot'*P, "none", eta_pure)
+        trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta_pure,'EdgeColor','none','FaceColor', 'interp');
+        xlim([0,L])
+        ylim([0,L])
+        set(gca, 'fontsize',18)
+        colorbar('FontSize', 18)
+        title('$\eta$', 'interpreter', 'latex')
         caxis([min([min(bdir+b_bulk),min(eta),min(eta_pure)]), max([max(bdir+b_bulk),max(eta),max(eta_pure)])])
+        view(2)
     end
 end
+toc
 
-% movie2avi(MOV, 'receptor_ligand.avi')
+% PLOTTING b,eta OF COUPLED BSRDS MODEL AT FINAL TIME WITN NON_SCALED COLORMAPS
+figure(4)
+set(gcf, 'Renderer', 'zbuffer', 'color','white','Position', [100 100 500 400])
+b = Atop*bdir + b_bulk;
+b = b(cut)*(max([max(eta),max(eta_pure)])-min([min(eta),min(eta_pure)]))/(max(b(cut))-min(b(cut)));
+b = b-min(b) + min([min(eta),min(eta_pure)]);
+trisurf(TRIcut, Pcut(:,1), Pcut(:,2), Pcut(:,3), b,'EdgeColor','none','FaceColor', 'interp');
+hold on
+trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta,'EdgeColor','none','FaceColor', 'interp');
+xlim([0,L])
+ylim([0,L])
+zlim([0,L])
+set(gca, 'fontsize',18)
+title('$\eta, b$', 'interpreter', 'latex')
+caxis([min([min(eta),min(eta_pure)]), max([max(eta),max(eta_pure)])])
+colormap jet  
+colorbar off
+
+% movie2avi(MOV, 'BS_DIB_3D_cube.avi')

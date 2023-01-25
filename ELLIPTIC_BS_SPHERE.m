@@ -7,7 +7,7 @@ close all
 alpha = 1;
 beta = 2;
 
-load('sphere6.mat')
+load('sphere41.mat')
 N = length(PB); % Overall amount of nodes
 NGamma = length(MS); % Amount of boundary nodes
 
@@ -42,6 +42,8 @@ H1err_v = sqrt(err_v'*KS*err_v);
 
 L2err_product = sqrt(err_u'*M*err_u + err_v'*MS*err_v);
 H1err_product = sqrt(err_u'*K*err_u + err_v'*KS*err_v);
+
+H1err_norm_product = sqrt(err_u'*M*err_u + err_v'*MS*err_v + err_u'*K*err_u + err_v'*KS*err_v);
 
 % normsol = sqrt(es_u'*M*es_u);
 % L2errel = L2err/normsol;
