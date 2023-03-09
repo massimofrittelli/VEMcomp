@@ -1,0 +1,321 @@
+\begin{thebibliography}{10}
+
+\bibitem{adak2021virtual}
+D~Adak, D~Mora, S~Natarajan, and A~Silgado.
+\newblock A virtual element discretization for the time dependent
+  {Navier--Stokes} equations in stream-function formulation.
+\newblock {\em ESAIM: Mathematical Modelling and Numerical Analysis},
+  55(5):2535--2566, 2021.
+\newblock \href {https://doi.org/10.1051/m2an/2021058}
+  {\path{doi:10.1051/m2an/2021058}}.
+
+\bibitem{adak2019convergence}
+D~Adak, E~Natarajan, and S~Kumar.
+\newblock Convergence analysis of virtual element methods for semilinear
+  parabolic problems on polygonal meshes.
+\newblock {\em Numerical Methods for Partial Differential Equations},
+  35(1):222--245, 2019.
+\newblock \href {https://doi.org/10.1002/num.22298}
+  {\path{doi:10.1002/num.22298}}.
+
+\bibitem{aldakheel2018phase}
+F~Aldakheel, B~Hudobivnik, A~Hussein, and P~Wriggers.
+\newblock Phase-field modeling of brittle fracture using an efficient virtual
+  element scheme.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  341:443--466, 2018.
+\newblock \href {https://doi.org/10.1016/j.cma.2018.07.008}
+  {\path{doi:10.1016/j.cma.2018.07.008}}.
+
+\bibitem{aldakheel2019virtual}
+F~Aldakheel, B~Hudobivnik, and P~Wriggers.
+\newblock Virtual elements for finite thermo-plasticity problems.
+\newblock {\em Computational Mechanics}, 64:1347--1360, 2019.
+\newblock \href {https://doi.org/10.1007/s00466-019-01714-2}
+  {\path{doi:10.1007/s00466-019-01714-2}}.
+
+\bibitem{antonietti2016c}
+P~F Antonietti, L~Beir\~{a}o Da~Veiga, S~Scacchi, and M~Verani.
+\newblock A {$\mathcal{C}^1$} virtual element method for the {Cahn--Hilliard}
+  equation with polygonal meshes.
+\newblock {\em SIAM Journal on Numerical Analysis}, 54(1):34--56, 2016.
+\newblock \href {https://doi.org/10.1137/15M1008117}
+  {\path{doi:10.1137/15M1008117}}.
+
+\bibitem{bachini2021arbitrary}
+E~Bachini, G~Manzini, and M~Putti.
+\newblock Arbitrary-order intrinsic virtual element method for elliptic
+  equations on surfaces.
+\newblock {\em Calcolo}, 58(3):30, 2021.
+\newblock \href {https://doi.org/10.1007/s10092-021-00418-5}
+  {\path{doi:10.1007/s10092-021-00418-5}}.
+
+\bibitem{da2013virtual}
+L~Beir\~{a}o Da~Veiga, F~Brezzi, and L~D Marini.
+\newblock Virtual elements for linear elasticity problems.
+\newblock {\em SIAM Journal on Numerical Analysis}, 51(2):794--812, 2013.
+\newblock \href {https://doi.org/10.1137/120874746}
+  {\path{doi:10.1137/120874746}}.
+
+\bibitem{beirao2013basic}
+L~Beir{\~a}o~da Veiga, F~Brezzi, A~Cangiani, G~Manzini, L~D Marini, and
+  A~Russo.
+\newblock Basic principles of virtual element methods.
+\newblock {\em Mathematical Models and Methods in Applied Sciences},
+  23(01):199--214, 2013.
+\newblock \href {https://doi.org/10.1051/m2an/2013138}
+  {\path{doi:10.1051/m2an/2013138}}.
+
+\bibitem{hitchhikers}
+L~Beir{\~a}o~da Veiga, F~Brezzi, L~D Marini, and A~Russo.
+\newblock The hitchhiker's guide to the virtual element method.
+\newblock {\em Mathematical models and methods in applied sciences},
+  24(08):1541--1573, 2014.
+\newblock \href {https://doi.org/10.1142/S021820251440003X}
+  {\path{doi:10.1142/S021820251440003X}}.
+
+\bibitem{da2017high}
+L~Beir{\~a}o Da~Veiga, F~Dassi, and A~Russo.
+\newblock High-order virtual element method on polyhedral meshes.
+\newblock {\em Computers \& Mathematics with Applications}, 74(5):1110--1122,
+  2017.
+\newblock \href {https://doi.org/10.1016/j.camwa.2017.03.021}
+  {\path{doi:10.1016/j.camwa.2017.03.021}}.
+
+\bibitem{da2020c1}
+L~Beir{\~a}o~da Veiga, F~Dassi, and A~Russo.
+\newblock A {$\mathcal{C}^1$} virtual element method on polyhedral meshes.
+\newblock {\em Computers \& Mathematics with Applications}, 79(7):1936--1955,
+  2020.
+\newblock \href {https://doi.org/10.1016/j.camwa.2019.06.019}
+  {\path{doi:10.1016/j.camwa.2019.06.019}}.
+
+\bibitem{da2018virtual}
+L~Beir{\~a}o Da~Veiga, C~Lovadina, and G~Vacca.
+\newblock Virtual elements for the {Navier--Stokes} problem on polygonal
+  meshes.
+\newblock {\em SIAM Journal on Numerical Analysis}, 56(3):1210--1242, 2018.
+\newblock \href {https://doi.org/10.1137/17m1132811}
+  {\path{doi:10.1137/17m1132811}}.
+
+\bibitem{da2014virtual}
+L~Beir{\~a}o~da Veiga and G~Manzini.
+\newblock A virtual element method with arbitrary regularity.
+\newblock {\em IMA Journal of Numerical Analysis}, 34(2):759--781, 2014.
+\newblock \href {https://doi.org/10.1093/imanum/drt018}
+  {\path{doi:10.1093/imanum/drt018}}.
+
+\bibitem{beirao2019stokes}
+L~Beir{\~a}o~da Veiga, D~Mora, and G~Vacca.
+\newblock The {Stokes} complex for virtual elements with application to
+  {Navier--Stokes} flows.
+\newblock {\em Journal of Scientific Computing}, 81:990--1018, 2019.
+\newblock \href {https://doi.org/10.1007/s10915-019-01049-3}
+  {\path{doi:10.1007/s10915-019-01049-3}}.
+
+\bibitem{da2019virtual}
+L~Beir{\~a}o Da~Veiga, A~Russo, and G~Vacca.
+\newblock The virtual element method with curved edges.
+\newblock {\em ESAIM: Mathematical Modelling and Numerical Analysis},
+  53(2):375--404, 2019.
+\newblock \href {https://doi.org/10.1051/m2an/2018052}
+  {\path{doi:10.1051/m2an/2018052}}.
+
+\bibitem{benedetto2014virtual}
+M~F Benedetto, S~Berrone, S~Pieraccini, and S~Scial{\`o}.
+\newblock The virtual element method for discrete fracture network simulations.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  280:135--156, 2014.
+\newblock \href {https://doi.org/10.1016/j.cma.2014.07.016}
+  {\path{doi:10.1016/j.cma.2014.07.016}}.
+
+\bibitem{bertoluzza2019high}
+S~Bertoluzza, M~Pennacchio, and D~Prada.
+\newblock High order {VEM} on curved domains.
+\newblock {\em Rendiconti Lincei}, 30(2):391--412, 2019.
+\newblock \href {https://doi.org/10.4171/rlm/853} {\path{doi:10.4171/rlm/853}}.
+
+\bibitem{cangiani2017posteriori}
+A~Cangiani, E~H Georgoulis, T~Pryer, and O~J Sutton.
+\newblock A posteriori error estimates for the virtual element method.
+\newblock {\em Numerische mathematik}, 137:857--893, 2017.
+\newblock \href {https://doi.org/10.1007/s00211-017-0891-9}
+  {\path{doi:10.1007/s00211-017-0891-9}}.
+
+\bibitem{dassi2022virtual}
+F~Dassi, A~Fumagalli, I~Mazzieri, A~Scotti, and G~Vacca.
+\newblock A virtual element method for the wave equation on curved edges in two
+  dimensions.
+\newblock {\em Journal of Scientific Computing}, 90:1--25, 2022.
+\newblock \href {https://doi.org/10.1007/s10915-021-01683-w}
+  {\path{doi:10.1007/s10915-021-01683-w}}.
+
+\bibitem{dassi2022bend}
+F~Dassi, A~Fumagalli, A~Scotti, and G~Vacca.
+\newblock Bend 3d mixed virtual element method for darcy problems.
+\newblock {\em Computers \& Mathematics with Applications}, 119:1--12, 2022.
+\newblock \href {https://doi.org/10.1016/j.camwa.2022.05.023}
+  {\path{doi:10.1016/j.camwa.2022.05.023}}.
+
+\bibitem{Dhanush_2018}
+V.~Dhanush and S.~Natarajan.
+\newblock Implementation of the virtual element method for coupled
+  thermo-elasticity in abaqus.
+\newblock {\em Numerical Algorithms}, 80(3):1037--1058, 2018.
+\newblock \href {https://doi.org/10.1007/s11075-018-0516-0}
+  {\path{doi:10.1007/s11075-018-0516-0}}.
+
+\bibitem{elliott2013finite}
+C~M Elliott and T~Ranner.
+\newblock Finite element analysis for a coupled bulk--surface partial
+  differential equation.
+\newblock {\em IMA Journal of Numerical Analysis}, 33(2):377--402, 2013.
+\newblock \href {https://doi.org/10.1093/imanum/drs022}
+  {\path{doi:10.1093/imanum/drs022}}.
+
+\bibitem{frittelli2021bulk}
+M~Frittelli, A~Madzvamuse, and I~Sgura.
+\newblock Bulk-surface virtual element method for systems of {PDEs} in
+  two-space dimensions.
+\newblock {\em Numerische Mathematik}, 147(2):305--348, 2021.
+\newblock \href {https://doi.org/10.1007/s00211-020-01167-3}
+  {\path{doi:10.1007/s00211-020-01167-3}}.
+
+\bibitem{frittelli2023bsrds}
+M~Frittelli, A~Madzvamuse, and I~Sgura.
+\newblock The bulk-surface virtual element method for reaction-diffusion
+  {PDEs}: analysis and applications.
+\newblock {\em Communications in Computational Physics}, Accepted, 2023.
+
+\bibitem{Frittelli2017cross}
+M~Frittelli, A~Madzvamuse, I~Sgura, and C~Venkataraman.
+\newblock Lumped finite elements for reaction--cross--diffusion systems on
+  stationary surfaces.
+\newblock {\em Computers \& Mathematics with Applications}, 74(12):3008--3023,
+  2017.
+\newblock \href {https://doi.org/10.1016/j.camwa.2017.07.044}
+  {\path{doi:10.1016/j.camwa.2017.07.044}}.
+
+\bibitem{Frittelli2017preserving}
+M~Frittelli, A~Madzvamuse, I~Sgura, and C~Venkataraman.
+\newblock Preserving invariance properties of reaction--diffusion systems on
+  stationary surfaces.
+\newblock {\em {IMA} Journal of Numerical Analysis}, 39(1):235--270, 2017.
+\newblock \href {https://doi.org/10.1093/imanum/drx058}
+  {\path{doi:10.1093/imanum/drx058}}.
+
+\bibitem{frittelli2018virtual}
+M~Frittelli and I~Sgura.
+\newblock Virtual element method for the {Laplace}-{Beltrami} equation on
+  surfaces.
+\newblock {\em ESAIM: Mathematical Modelling and Numerical Analysis},
+  52(3):965--993, 2018.
+\newblock \href {https://doi.org/10.1051/m2an/2017040}
+  {\path{doi:10.1051/m2an/2017040}}.
+
+\bibitem{gain2014virtual}
+A~L Gain, C~Talischi, and G~H Paulino.
+\newblock On the virtual element method for three-dimensional linear elasticity
+  problems on arbitrary polyhedral meshes.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  282:132--160, 2014.
+\newblock \href {https://doi.org/10.1016/j.cma.2014.05.005}
+  {\path{doi:10.1016/j.cma.2014.05.005}}.
+
+\bibitem{Herrera_2022}
+C~Herrera, R~Corrales-Barquero, J~Arroyo-Esquivel, and J~G Calvo.
+\newblock A numerical implementation for the high-order {2D} virtual element
+  method in {MATLAB}.
+\newblock {\em Numerical Algorithms}, 92(3):1707--1721, 2022.
+\newblock \href {https://doi.org/10.1007/s11075-022-01361-4}
+  {\path{doi:10.1007/s11075-022-01361-4}}.
+
+\bibitem{huang2021posteriori}
+J~Huang and S~Lin.
+\newblock A posteriori error analysis of a non-consistent virtual element
+  method for reaction diffusion equations.
+\newblock {\em Applied Mathematics Letters}, 122:107531, 2021.
+\newblock \href {https://doi.org/10.1016/j.aml.2021.107531}
+  {\path{doi:10.1016/j.aml.2021.107531}}.
+
+\bibitem{lacitignola2017turing}
+D~Lacitignola, B~Bozzini, M~Frittelli, and I~Sgura.
+\newblock Turing pattern formation on the sphere for a morphochemical
+  reaction-diffusion model for electrodeposition.
+\newblock {\em Communications in Nonlinear Science and Numerical Simulation},
+  48:484--508, 2017.
+\newblock \href {https://doi.org/10.1016/j.cnsns.2017.01.008}
+  {\path{doi:10.1016/j.cnsns.2017.01.008}}.
+
+\bibitem{lacitignola2022pattern}
+D~Lacitignola, M~Frittelli, V~Cusimano, and A~De~Gaetano.
+\newblock Pattern formation on a growing oblate spheroid. an application to
+  adult sea urchin development.
+\newblock {\em Journal of Computational Dynamics}, 9(2):185--206, 2022.
+\newblock \href {https://doi.org/10.3934/jcd.2021027}
+  {\path{doi:10.3934/jcd.2021027}}.
+
+\bibitem{VEMLAB}
+A~Ortiz-Bernardin.
+\newblock Vemlab version 2.4.1.
+\newblock Accessed: 2023-03-07.
+\newblock URL: \url{https://camlab.cl/software/vemlab/}.
+
+\bibitem{Ortiz_Bernardin_2019}
+A~Ortiz-Bernardin, C~Alvarez, N~Hitschfeld-Kahler, A~Russo, R~Silva-Valenzuela,
+  and E~Olate-Sanzana.
+\newblock Veamy: an extensible object-oriented {C++} library for the virtual
+  element method.
+\newblock {\em Numerical Algorithms}, 82(4):1189--1220, 2019.
+\newblock \href {https://doi.org/10.1007/s11075-018-00651-0}
+  {\path{doi:10.1007/s11075-018-00651-0}}.
+
+\bibitem{Sutton_2016}
+O~J Sutton.
+\newblock The virtual element method in 50 lines of {MATLAB}.
+\newblock {\em Numerical Algorithms}, 75(4):1141--1159, 2016.
+\newblock \href {https://doi.org/10.1007/s11075-016-0235-3}
+  {\path{doi:10.1007/s11075-016-0235-3}}.
+
+\bibitem{Talischi_2012}
+C~Talischi, G~H Paulino, A~Pereira, and I~F~M Menezes.
+\newblock {PolyMesher}: a general-purpose mesh generator for polygonal elements
+  written in matlab.
+\newblock {\em Structural and Multidisciplinary Optimization}, 45(3):309--328,
+  2012.
+\newblock \href {https://doi.org/10.1007/s00158-011-0706-z}
+  {\path{doi:10.1007/s00158-011-0706-z}}.
+
+\bibitem{vacca2015virtual}
+G~Vacca and L~Beir{\~a}o~da Veiga.
+\newblock Virtual element methods for parabolic problems on polygonal meshes.
+\newblock {\em Numerical Methods for Partial Differential Equations},
+  31(6):2110--2134, 2015.
+\newblock \href {https://doi.org/10.1002/num.21982}
+  {\path{doi:10.1002/num.21982}}.
+
+\bibitem{van2022mesh}
+D~van Huyssteen, F~L Rivarola, G~Etse, and P~Steinmann.
+\newblock On mesh refinement procedures for the virtual element method for
+  two-dimensional elastic problems.
+\newblock {\em Computer Methods in Applied Mechanics and Engineering},
+  393:114849, 2022.
+\newblock \href {https://doi.org/10.1016/j.cma.2022.114849}
+  {\path{doi:10.1016/j.cma.2022.114849}}.
+
+\bibitem{xiao2022nonconforming}
+L~Xiao, M~Zhou, and J~Zhao.
+\newblock The nonconforming virtual element method for semilinear elliptic
+  problems.
+\newblock {\em Applied Mathematics and Computation}, 433:127402, 2022.
+\newblock \href {https://doi.org/10.1016/j.amc.2022.127402}
+  {\path{doi:10.1016/j.amc.2022.127402}}.
+
+\bibitem{zhao2019nonconforming}
+J~Zhao, B~Zhang, and X~Zhu.
+\newblock The nonconforming virtual element method for parabolic problems.
+\newblock {\em Applied Numerical Mathematics}, 143:97--111, 2019.
+\newblock \href {https://doi.org/10.1016/j.apnum.2019.04.002}
+  {\path{doi:10.1016/j.apnum.2019.04.002}}.
+
+\end{thebibliography}

@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2021)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: VEMCOMP.aux
+The style file: plainurl.bst
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=200001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: bibliography.bib
+You've used 40 entries,
+            2882 wiz_defined-function locations,
+            906 strings with 12885 characters,
+and the built_in function-call counts, 20526 in all, are:
+= -- 2182
+> -- 857
+< -- 0
++ -- 320
+- -- 264
+* -- 1488
+:= -- 2960
+add.period$ -- 159
+call.type$ -- 40
+change.case$ -- 252
+chr.to.int$ -- 0
+cite$ -- 40
+duplicate$ -- 437
+empty$ -- 1780
+format.name$ -- 264
+if$ -- 5086
+int.to.chr$ -- 0
+int.to.str$ -- 40
+missing$ -- 39
+newline$ -- 242
+num.names$ -- 80
+pop$ -- 343
+preamble$ -- 1
+purify$ -- 212
+quote$ -- 0
+skip$ -- 1278
+stack$ -- 0
+substring$ -- 1174
+swap$ -- 116
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 160
+warning$ -- 0
+while$ -- 152
+width$ -- 42
+write$ -- 518
