@@ -16,20 +16,20 @@
 % - Elements: polyhedral elements in element3ddummy format
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [P, h, K, M, KS, MS, boundarynode, EGamma, Elements] = plot_mesh_step_2(Nx)
+function [P, h, boundarynode, EGamma, Elements] = plot_mesh_step_2(Nx)
 
 hx = 2/(Nx-1); % Discretisation step along each dimension
 h = hx*sqrt(3); % Meshsize
-Nsurf = 6*Nx^2-12*Nx-8; % Amount of nodes on the boundary of the bounding box
+% Nsurf = 6*Nx^2-12*Nx-8; % Amount of nodes on the boundary of the bounding box
 Ncube = Nx^3; % Amount of nodes of the bounding box
 
 % COMPUTE MATRICES ON REFERENCE CUBE
-K = spalloc(2*Ncube,2*Ncube,57*Ncube); % Stiffness matrix in the bulk
-M = spalloc(2*Ncube,2*Ncube,57*Ncube); % Mass matrix in the bulk
+% K = spalloc(2*Ncube,2*Ncube,57*Ncube); % Stiffness matrix in the bulk
+% M = spalloc(2*Ncube,2*Ncube,57*Ncube); % Mass matrix in the bulk
 % Twice the amount of nodes of the bounding box to allow for extrusion
 
-KS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Stiffness matrix on the surf
-MS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Mass matrix on the surf
+% KS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Stiffness matrix on the surf
+% MS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Mass matrix on the surf
 
 P1S = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*hx; % bottom face
 P2S = [0 0 1; 0 1 1; 1 1 1; 1 0 1]*hx; % top face
@@ -46,10 +46,10 @@ E5S = element2ddummy(P5S, true);
 E6S = element2ddummy(P6S, true);
 PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
 ESD = element3ddummy(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
-EC = dummy2element(ESD);
+% EC = dummy2element(ESD);
 
-KC = EC.K;
-MC = EC.M;
+% KC = EC.K;
+% MC = EC.M;
 
 % CREATING GRIDPOINTS OF BOUNDING BOX
 
@@ -93,8 +93,8 @@ for i=0:Nx-2 % For each element of the bounding box
                        Nx^2*(i+1)+Nx*(j+1)+k+1
                        Nx^2*(i+1)+Nx*(j+1)+k+2];
                 acceptednode(indexes,1) = true(8,1);
-                M(indexes, indexes) = M(indexes, indexes) + MC; %#ok
-                K(indexes, indexes) = K(indexes, indexes) + KC; %#ok
+%                 M(indexes, indexes) = M(indexes, indexes) + MC; %#ok
+%                 K(indexes, indexes) = K(indexes, indexes) + KC; %#ok
                     
                 NewCubicElement = shiftElement(ESD, P(indexes(1),:));
                 Elements = [Elements; NewCubicElement]; %#ok 
@@ -105,10 +105,10 @@ end
 
 
 P = newP(acceptednode,:);
-M = M(acceptednode, acceptednode);
-K = K(acceptednode, acceptednode);
-MS = MS(boundarynode, boundarynode);
-KS = KS(boundarynode, boundarynode);
+% M = M(acceptednode, acceptednode);
+% K = K(acceptednode, acceptednode);
+% MS = MS(boundarynode, boundarynode);
+% KS = KS(boundarynode, boundarynode);
 boundarynode = find(boundarynode(acceptednode));
 acceptedindexes = zeros(2*Ncube,1);
 acceptedindexes(acceptednode,1) = linspace(1,length(P),length(P))';
@@ -118,10 +118,10 @@ EGamma = acceptedindexes(EGamma);
 end
 
 % Extracts smallest magnitude element from array
-function y = minabs(x)
-    [m,mind] = min(abs(x));
-    y = m * sign(x(mind));
-end
+% function y = minabs(x)
+%     [m,mind] = min(abs(x));
+%     y = m * sign(x(mind));
+% end
 
 function y = maxabs(x)
     [m,maxd] = max(abs(x));

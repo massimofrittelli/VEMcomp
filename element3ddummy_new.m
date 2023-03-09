@@ -30,7 +30,7 @@ classdef element3ddummy_new
            for i=1:size(newFaces,1)
               newFaces(i) = shiftElement(obj.Faces(i), v); 
            end
-           E =  element3ddummy_new(obj.P+repmat(v,length(obj.P),1), newFaces, obj.iscube);
+           E =  element3ddummy_new(obj.P+repmat(v,length(obj.P),1), newFaces, obj.iscube,obj.Pind);
         end
         
         function EE = extrude(obj, Ncube)

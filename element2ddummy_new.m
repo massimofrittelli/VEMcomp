@@ -20,12 +20,15 @@ classdef element2ddummy_new
     end
     
     methods
-        function obj = element2ddummy_new(P,issquare,boundary)     
+        function obj = element2ddummy_new(P,issquare,boundary,Pind)     
             obj.P = P;
             obj.NVert = size(P,1);
             obj.issquare = issquare;
             if nargin >= 3
                 obj.boundary = boundary;
+            end
+            if nargin >= 4
+                obj.Pind = Pind;
             end
         end
         
@@ -38,7 +41,7 @@ classdef element2ddummy_new
         end
         
         function E = shiftElement(obj, v)
-           E =  element2ddummy_new(obj.P+repmat(v,length(obj.P),1),obj.issquare);
+           E =  element2ddummy_new(obj.P+repmat(v,length(obj.P),1),obj.issquare,false,obj.Pind);
         end
         
         
@@ -67,7 +70,7 @@ classdef element2ddummy_new
            % CREATE LATERAL SQUARE FACES
            for i=1:obj.NVert
               LP = unique([obj.P([i 1+rem(i,obj.NVert)],:); EP([1+rem(i,obj.NVert) i],:)],'rows','stable');
-              NewExtrudedFace = element2ddummy_new(LP, false);
+              NewExtrudedFace = element2ddummy_new(LP, false, false);
               EPind = unique([obj.Pind([i 1+rem(i,obj.NVert)],1); extruded_ind([1+rem(i,obj.NVert) i],1)],'stable');
               NewExtrudedFace.Pind = EPind;
               ExtrudedFaces = [ExtrudedFaces; NewExtrudedFace]; %#ok 

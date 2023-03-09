@@ -2,13 +2,21 @@
 % FOR THE BSVEM 3D ELLIPTIC PAPER
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% OLD ALGORITHM: EXTRUSION WITH TRIANGULAR LATERAL FACES (LEAVES HOLES AND
+% SUFFERS FROM DUPLICATED NODES)
 %[P, h, K, M, KS, MS, boundarynode, EGamma, Elements] = plot_mesh_step_3(8);
-[P, h, K, M, KS, MS, boundarynode, EGamma, Elements] = plot_mesh_step_3(6);
+
+% NEW ALGORITHM: EXTRUSION WITH QUADRILATERAL LATERAL FACES (DOES NOT LEAVE
+% HOLES, DOES NOT HAVE DUPLICATE NODES, AND HAS TWO NODE EXTRUSION OPTIONS)
+% - option 1: radial projection. This mahes mesh more uniform, but extruded
+% lateral faces are not guaranteed to be flat
+% - option 2: orthant-wise constant extrusion direction. This makes mesh
+% less uniform, but all internal faces are guaranteed to be flat.
+[P, h, boundarynode, EGamma, Elements] = plot_mesh_step_3_new(6);
 
 figure
 set(gcf,'color','white')
 hold on
-%i = 2;
 i = 2;
 plot(Elements(i)); 
 view(3)

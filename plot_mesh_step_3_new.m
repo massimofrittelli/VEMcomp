@@ -12,24 +12,23 @@
 %
 % - P: array of nodes
 % - h: meshsize
-% - K,M: stiffness and mass matrices
 % - Elements: polyhedral elements in element3ddummy format
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [P, h, K, M, KS, MS, boundarynode, EGamma, Elements] = plot_mesh_step_3_new(Nx)
+function [P, h, boundarynode, EGamma, Elements] = plot_mesh_step_3_new(Nx)
 
 hx = 2/(Nx-1); % Discretisation step along each dimension
 h = hx*sqrt(3); % Meshsize
-Nsurf = 6*Nx^2-12*Nx-8; % Amount of nodes on the boundary of the bounding box
+% Nsurf = 6*Nx^2-12*Nx-8; % Amount of nodes on the boundary of the bounding box
 Ncube = Nx^3; % Amount of nodes of the bounding box
 
 % COMPUTE MATRICES ON REFERENCE CUBE
-K = spalloc(2*Ncube,2*Ncube,57*Ncube); % Stiffness matrix in the bulk
-M = spalloc(2*Ncube,2*Ncube,57*Ncube); % Mass matrix in the bulk
+% K = spalloc(2*Ncube,2*Ncube,57*Ncube); % Stiffness matrix in the bulk
+% M = spalloc(2*Ncube,2*Ncube,57*Ncube); % Mass matrix in the bulk
 % Twice the amount of nodes of the bounding box to allow for extrusion
 
-KS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Stiffness matrix on the surf
-MS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Mass matrix on the surf
+% KS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Stiffness matrix on the surf
+% MS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Mass matrix on the surf
 
 P1S = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*hx; % bottom face
 P2S = [0 0 1; 0 1 1; 1 1 1; 1 0 1]*hx; % top face
@@ -45,11 +44,20 @@ E4S = element2ddummy_new(P4S, true);
 E5S = element2ddummy_new(P5S, true);
 E6S = element2ddummy_new(P6S, true);
 PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
-ESD = element3ddummy_new(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
-EC = dummy2element(ESD);
 
-KC = EC.K;
-MC = EC.M;
+[~, E1S.Pind] = intersect(PS, P1S, 'rows', 'stable');
+[~, E2S.Pind] = intersect(PS, P2S, 'rows', 'stable');
+[~, E3S.Pind] = intersect(PS, P3S, 'rows', 'stable');
+[~, E4S.Pind] = intersect(PS, P4S, 'rows', 'stable');
+[~, E5S.Pind] = intersect(PS, P5S, 'rows', 'stable');
+[~, E6S.Pind] = intersect(PS, P6S, 'rows', 'stable');
+
+ESD = element3ddummy_new(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
+ESD.Pind = (1:8)';
+% EC = dummy2element(ESD);
+
+% KC = EC.K;
+% MC = EC.M;
 
 % CREATING GRIDPOINTS OF BOUNDING BOX
 
@@ -91,8 +99,8 @@ for i=0:Nx-2 % For each element of the bounding box
                        Nx^2*(i+1)+Nx*(j+1)+k+1
                        Nx^2*(i+1)+Nx*(j+1)+k+2];
                 acceptednode(indexes,1) = true(8,1);
-                M(indexes, indexes) = M(indexes, indexes) + MC; %#ok
-                K(indexes, indexes) = K(indexes, indexes) + KC; %#ok
+%                 M(indexes, indexes) = M(indexes, indexes) + MC; %#ok
+%                 K(indexes, indexes) = K(indexes, indexes) + KC; %#ok
                     
                 NewCubicElement = shiftElement(ESD, P(indexes(1),:));
                 Elements = [Elements; NewCubicElement]; %#ok
@@ -110,21 +118,21 @@ for i=0:Nx-2 % For each element of the bounding box
                     eind_boundary = Element.Pind_boundary;
                     eind_boundary_1 = Element.Faces(2).Pind;
                     eind_boundary_2 = Element.Faces(3).Pind;
-                    E = dummy2element(Element);
+%                     E = dummy2element(Element);
                     acceptednode(eind, 1) = true(length(eind),1);
                     boundarynode(eind_boundary,1) = true(4,1);
                     EGamma = [EGamma; eind_boundary_1'; eind_boundary_2']; %#ok
                     [~,idx] = intersect(eind,eind_boundary,'stable');
                     newP(eind_boundary,:) = Element.P(idx,:);
-                    M(eind, eind) = M(eind, eind) + E.M; %#ok
-                    K(eind, eind) = K(eind, eind) + E.K; %#ok
+%                     M(eind, eind) = M(eind, eind) + E.M; %#ok
+%                     K(eind, eind) = K(eind, eind) + E.K; %#ok
 %                     if abs(sum(sum(E.M)) - newP(eind,:)'*E.K*newP(eind,:)) > 1e-14
 %                         error('Error!')
 %                     end
-                    MS(eind_boundary_1, eind_boundary_1) = MS(eind_boundary_1, eind_boundary_1) + E.Faces(2).M; %#ok
-                    MS(eind_boundary_2, eind_boundary_2) = MS(eind_boundary_2, eind_boundary_2) + E.Faces(3).M; %#ok
-                    KS(eind_boundary_1, eind_boundary_1) = KS(eind_boundary_1, eind_boundary_1) + E.Faces(2).K; %#ok
-                    KS(eind_boundary_2, eind_boundary_2) = KS(eind_boundary_2, eind_boundary_2) + E.Faces(3).K; %#ok
+%                     MS(eind_boundary_1, eind_boundary_1) = MS(eind_boundary_1, eind_boundary_1) + E.Faces(2).M; %#ok
+%                     MS(eind_boundary_2, eind_boundary_2) = MS(eind_boundary_2, eind_boundary_2) + E.Faces(3).M; %#ok
+%                     KS(eind_boundary_1, eind_boundary_1) = KS(eind_boundary_1, eind_boundary_1) + E.Faces(2).K; %#ok
+%                     KS(eind_boundary_2, eind_boundary_2) = KS(eind_boundary_2, eind_boundary_2) + E.Faces(3).K; %#ok
                 end
             end
         end
@@ -133,10 +141,10 @@ end
 
 
 P = newP(acceptednode,:);
-M = M(acceptednode, acceptednode);
-K = K(acceptednode, acceptednode);
-MS = MS(boundarynode, boundarynode);
-KS = KS(boundarynode, boundarynode);
+% M = M(acceptednode, acceptednode);
+% K = K(acceptednode, acceptednode);
+% MS = MS(boundarynode, boundarynode);
+% KS = KS(boundarynode, boundarynode);
 boundarynode = find(boundarynode(acceptednode));
 acceptedindexes = zeros(2*Ncube,1);
 acceptedindexes(acceptednode,1) = linspace(1,length(P),length(P))';
