@@ -1,5 +1,5 @@
-classdef element3ddummy_new
-    %ELEMENT3DDUMMY is a bare-bone class that models a convex 3D element:
+classdef element3d_dummy
+    %ELEMENT3D_DUMMY is a bare-bone class that models a convex 3D element:
     % 1) contains minimal information on the element
     % 2) allows for element translation/shifting
     % 3) allows for element plotting
@@ -8,12 +8,12 @@ classdef element3ddummy_new
         P(:,3) double % Vertexes
         Pind(:,1) double = [] % Indexes of vertexes
         Pind_boundary(:,1) = [] % Indexes of vertexes on boundary
-        Faces(:,1) element2ddummy_new % Faces
+        Faces(:,1) element2d_dummy % Faces
         iscube(1,1) logical
     end
     
     methods
-        function obj = element3ddummy_new(P,Faces,iscube,Pind,Pind_boundary)
+        function obj = element3d_dummy(P,Faces,iscube,Pind,Pind_boundary)
             obj.P = P;
             obj.Faces = Faces;
             obj.iscube = iscube;
@@ -30,7 +30,7 @@ classdef element3ddummy_new
            for i=1:size(newFaces,1)
               newFaces(i) = shiftElement(obj.Faces(i), v); 
            end
-           E =  element3ddummy_new(obj.P+repmat(v,length(obj.P),1), newFaces, obj.iscube,obj.Pind);
+           E =  element3d_dummy(obj.P+repmat(v,length(obj.P),1), newFaces, obj.iscube,obj.Pind);
         end
         
         function EE = extrude(obj, Ncube)

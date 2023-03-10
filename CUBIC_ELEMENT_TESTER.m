@@ -43,13 +43,13 @@ toc
 tic
 PD = unique([P1; P2; P3; P4; P5; P6],'rows');
 
-E1D = element2ddummy(P1, true); E1D.Pind = find(ismember(PD, P1,'rows'));
-E2D = element2ddummy(P2, true); E2D.Pind = find(ismember(PD, P2,'rows'));
-E3D = element2ddummy(P3, true); E3D.Pind = find(ismember(PD, P3,'rows'));
-E4D = element2ddummy(P4, true); E4D.Pind = find(ismember(PD, P4,'rows'));
-E5D = element2ddummy(P5, true); E5D.Pind = find(ismember(PD, P5,'rows'));
-E6D = element2ddummy(P6, true); E6D.Pind = find(ismember(PD, P6,'rows'));
+E1D = element2d_dummy(P1, true); E1D.Pind = find(ismember(PD, P1,'rows'));
+E2D = element2d_dummy(P2, true); E2D.Pind = find(ismember(PD, P2,'rows'));
+E3D = element2d_dummy(P3, true); E3D.Pind = find(ismember(PD, P3,'rows'));
+E4D = element2d_dummy(P4, true); E4D.Pind = find(ismember(PD, P4,'rows'));
+E5D = element2d_dummy(P5, true); E5D.Pind = find(ismember(PD, P5,'rows'));
+E6D = element2d_dummy(P6, true); E6D.Pind = find(ismember(PD, P6,'rows'));
 
-ED = element3ddummy(PD, [E1D;E2D;E3D;E4D;E5D;E6D], true, 1:8);
+ED = element3d_dummy(PD, [E1D;E2D;E3D;E4D;E5D;E6D], true, 1:8);
 EE = extrude(E2D, 8);
 toc

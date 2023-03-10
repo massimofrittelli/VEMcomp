@@ -2,12 +2,10 @@
 % FOR THE BSVEM 3D ELLIPTIC PAPER
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%[P, h, K, M, KS, MS, boundarynode, EGamma, Elements] = plot_mesh_step_1(8);
-[P, h, boundarynode, EGamma, Elements] = plot_mesh_step_1(6);
+[P, h, boundarynode, Elements] = plot_mesh_step_1(6);
 
 figure
 set(gcf,'color','white')
-%ii = 176:343;
 ii = 66:125;
 hold on
 for i=1:length(ii)

@@ -12,11 +12,15 @@
 %
 % - P: array of nodes
 % - h: meshsize
-% - K,M: stiffness and mass matrices
-% - Elements: polyhedral elements in element3ddummy format
+% - Elements: polyhedral elements in element3d_dummy format
+% - EGamma: all elements of the surface
+% - ElementsCut: elements of the bulk. Not all of them, just the ones in
+%   proximity of the cut (sphere is cut to see inside)
+% - EGammaCut: elements of the surface. Not all of them, just the one that
+%   survive after the sphere is cut.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [P, h, boundarynode, EGamma, Elements] = plot_mesh_step_3(Nx)
+function [P, h, boundarynode, EGamma, Elements, EGammaCut, ElementsCut] = plot_mesh_step_3(Nx)
 
 hx = 2/(Nx-1); % Discretisation step along each dimension
 h = hx*sqrt(3); % Meshsize
@@ -31,21 +35,38 @@ Ncube = Nx^3; % Amount of nodes of the bounding box
 % KS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Stiffness matrix on the surf
 % MS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Mass matrix on the surf
 
+
 P1S = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*hx; % bottom face
-P2S = [0 0 1; 0 1 1; 1 1 1; 1 0 1]*hx; % top face
-P3S = [0 0 0; 0 1 0; 0 1 1; 0 0 1]*hx; % back face
+P2S = [0 0 1; 1 0 1; 1 1 1; 0 1 1]*hx; % top face
+P3S = [0 0 0; 0 0 1; 0 1 1; 0 1 0]*hx; % back face
 P4S = [1 0 0; 1 1 0; 1 1 1; 1 0 1]*hx; % front face
 P5S = [0 0 0; 1 0 0; 1 0 1; 0 0 1]*hx; % left face
-P6S = [0 1 0; 1 1 0; 1 1 1; 0 1 1]*hx; % right face
+P6S = [0 1 0; 0 1 1; 1 1 1; 1 1 0]*hx; % right face
 
-E1S = element2ddummy(P1S, true);
-E2S = element2ddummy(P2S, true);
-E3S = element2ddummy(P3S, true);
-E4S = element2ddummy(P4S, true);
-E5S = element2ddummy(P5S, true);
-E6S = element2ddummy(P6S, true);
+E1S = element2d_dummy(P1S, true);
+E2S = element2d_dummy(P2S, true);
+E3S = element2d_dummy(P3S, true);
+E4S = element2d_dummy(P4S, true);
+E5S = element2d_dummy(P5S, true);
+E6S = element2d_dummy(P6S, true);
 PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
-ESD = element3ddummy(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
+
+[~, p1, q1] = intersect(PS, P1S, 'rows', 'stable');
+[~, p2, q2] = intersect(PS, P2S, 'rows', 'stable');
+[~, p3, q3] = intersect(PS, P3S, 'rows', 'stable');
+[~, p4, q4] = intersect(PS, P4S, 'rows', 'stable');
+[~, p5, q5] = intersect(PS, P5S, 'rows', 'stable');
+[~, p6, q6] = intersect(PS, P6S, 'rows', 'stable');
+
+E1S.Pind = p1(q1);
+E2S.Pind = p2(q2);
+E3S.Pind = p3(q3);
+E4S.Pind = p4(q4);
+E5S.Pind = p5(q5);
+E6S.Pind = p6(q6);
+
+ESD = element3d_dummy(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
+ESD.Pind = (1:8)';
 % EC = dummy2element(ESD);
 
 % KC = EC.K;
@@ -72,6 +93,9 @@ newP = [P; zeros(size(P))];
 EGamma = [];
 % Twice the amount of nodes of the bounding box to allow for extrusion
 Elements = [];
+EGammaCut = [];
+% Twice the amount of nodes of the bounding box to allow for extrusion
+ElementsCut = [];
 for i=0:Nx-2 % For each element of the bounding box
     for j=0:Nx-2
         for k=0:Nx-2
@@ -95,6 +119,10 @@ for i=0:Nx-2 % For each element of the bounding box
 %                 K(indexes, indexes) = K(indexes, indexes) + KC; %#ok
                     
                 NewCubicElement = shiftElement(ESD, P(indexes(1),:));
+                if i == ceil((Nx-2)/2) || j == ceil((Nx-2)/2)
+                    NewCubicElement.Pind = indexes;
+                    ElementsCut = [ElementsCut; NewCubicElement]; %#ok
+                end
                 Elements = [Elements; NewCubicElement]; %#ok
                 
                 % Extrude element, if it has an external face
@@ -103,23 +131,34 @@ for i=0:Nx-2 % For each element of the bounding box
                 end
                 NewCubicElement.Pind = indexes;
                 NewElements = extrude(NewCubicElement,Ncube);
+                if i == ceil((Nx-2)/2) || j == ceil((Nx-2)/2)
+                    ElementsCut = [ElementsCut; NewElements]; %#ok
+                end
                 Elements = [Elements; NewElements]; %#ok
                 for l=1:length(NewElements)
-                    eind = NewElements(l).Pind;
-%                     E = dummy2element(NewElements(l));
-                    acceptednode(eind, 1) = true(8,1);
-                    boundarynode(eind(5:8),1) = true(4,1);
-                    EGamma = [EGamma; eind(5:7)'; eind([5 7:8])']; %#ok
-                    newP(eind(5:8),:) = NewElements(l).P(5:8,:);
+                    Element = NewElements(l);
+                    eind = Element.Pind;
+                    eind_boundary = Element.Pind_boundary;
+                    eind_boundary_1 = Element.Faces(2).Pind;
+                    eind_boundary_2 = Element.Faces(3).Pind;
+%                     E = dummy2element(Element);
+                    acceptednode(eind, 1) = true(length(eind),1);
+                    boundarynode(eind_boundary,1) = true(4,1);
+                    EGamma = [EGamma; eind_boundary_1'; eind_boundary_2']; %#ok
+                    if i >= ceil((Nx-2)/2) || j >= ceil((Nx-2)/2)
+                        EGammaCut = [EGammaCut; eind_boundary_1'; eind_boundary_2']; %#ok
+                    end
+                    [~,id1, id2] = intersect(eind,eind_boundary,'stable');
+                    newP(eind_boundary,:) = Element.P(id1(id2),:);
 %                     M(eind, eind) = M(eind, eind) + E.M; %#ok
 %                     K(eind, eind) = K(eind, eind) + E.K; %#ok
 %                     if abs(sum(sum(E.M)) - newP(eind,:)'*E.K*newP(eind,:)) > 1e-14
 %                         error('Error!')
 %                     end
-%                     MS(eind(5:7), eind(5:7)) = MS(eind(5:7), eind(5:7)) + E.Faces(2).M; %#ok
-%                     MS(eind([5 7:8]), eind([5 7:8])) = MS(eind([5 7:8]), eind([5 7:8])) + E.Faces(3).M; %#ok
-%                     KS(eind(5:7), eind(5:7)) = KS(eind(5:7), eind(5:7)) + E.Faces(2).K; %#ok
-%                     KS(eind([5 7:8]), eind([5 7:8])) = KS(eind([5 7:8]), eind([5 7:8])) + E.Faces(3).K; %#ok
+%                     MS(eind_boundary_1, eind_boundary_1) = MS(eind_boundary_1, eind_boundary_1) + E.Faces(2).M; %#ok
+%                     MS(eind_boundary_2, eind_boundary_2) = MS(eind_boundary_2, eind_boundary_2) + E.Faces(3).M; %#ok
+%                     KS(eind_boundary_1, eind_boundary_1) = KS(eind_boundary_1, eind_boundary_1) + E.Faces(2).K; %#ok
+%                     KS(eind_boundary_2, eind_boundary_2) = KS(eind_boundary_2, eind_boundary_2) + E.Faces(3).K; %#ok
                 end
             end
         end
@@ -136,11 +175,18 @@ boundarynode = find(boundarynode(acceptednode));
 acceptedindexes = zeros(2*Ncube,1);
 acceptedindexes(acceptednode,1) = linspace(1,length(P),length(P))';
 EGamma = acceptedindexes(EGamma);
+EGammaCut = acceptedindexes(EGammaCut);
 
+for i=1:length(ElementsCut)
+   ElementsCut(i).Pind = acceptedindexes(ElementsCut(i).Pind); %#ok
+   for j=1:length(ElementsCut(i).Faces)
+       ElementsCut(i).Faces(j).Pind = acceptedindexes(ElementsCut(i).Faces(j).Pind);
+   end
+end
 
 end
 
-% Extracts largest magnitude element from array
+% Extracts largest magnitude entry from array
 function y = maxabs(x)
     [m,mind] = max(abs(x));
     y = m * sign(x(mind));

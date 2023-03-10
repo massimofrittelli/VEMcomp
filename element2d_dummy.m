@@ -1,5 +1,5 @@
-classdef element2ddummy_new
-    %ELEMENT2DDUMMY is a bare-bone class that models a convex 2D element:
+classdef element2d_dummy
+    %ELEMENT2D_DUMMY is a bare-bone class that models a convex 2D element:
     % 1) contains minimal information on the element
     % 2) allows for element extrusion in the unit sphere
     % 3) allows for element translation/shifting
@@ -20,7 +20,7 @@ classdef element2ddummy_new
     end
     
     methods
-        function obj = element2ddummy_new(P,issquare,boundary,Pind)     
+        function obj = element2d_dummy(P,issquare,boundary,Pind)     
             obj.P = P;
             obj.NVert = size(P,1);
             obj.issquare = issquare;
@@ -41,7 +41,7 @@ classdef element2ddummy_new
         end
         
         function E = shiftElement(obj, v)
-           E =  element2ddummy_new(obj.P+repmat(v,length(obj.P),1),obj.issquare,false,obj.Pind);
+           E =  element2d_dummy(obj.P+repmat(v,length(obj.P),1),obj.issquare,false,obj.Pind);
         end
         
         
@@ -62,26 +62,26 @@ classdef element2ddummy_new
            
            % CREATE TRIANGULAR FACES LYING ON THE SURFACE
            if norm(EP(1,:) + EP(3,:)) >= norm(EP(2,:) + EP(4,:))
-               NewExtrudedFace1 = element2ddummy_new(EP([1 2 3],:), false, true);
+               NewExtrudedFace1 = element2d_dummy(EP([1 2 3],:), false, true);
                NewExtrudedFace1.Pind = extruded_ind([1 2 3],1);
-               NewExtrudedFace2 = element2ddummy_new(EP([1 3 4],:), false, true);
+               NewExtrudedFace2 = element2d_dummy(EP([1 3 4],:), false, true);
                NewExtrudedFace2.Pind = extruded_ind([1 3 4],1);
            else
-               NewExtrudedFace1 = element2ddummy_new(EP([1 2 4],:), false, true);
+               NewExtrudedFace1 = element2d_dummy(EP([1 2 4],:), false, true);
                NewExtrudedFace1.Pind = extruded_ind([1 2 4],1);
-               NewExtrudedFace2 = element2ddummy_new(EP([2 3 4],:), false, true);
+               NewExtrudedFace2 = element2d_dummy(EP([2 3 4],:), false, true);
                NewExtrudedFace2.Pind = extruded_ind([2 3 4],1);
            end
                ExtrudedFaces = [ExtrudedFaces; NewExtrudedFace1; NewExtrudedFace2];
            % CREATE LATERAL SQUARE FACES
            for i=1:obj.NVert
               LP = unique([obj.P([i 1+rem(i,obj.NVert)],:); EP([1+rem(i,obj.NVert) i],:)],'rows','stable');
-              NewExtrudedFace = element2ddummy_new(LP, false, false);
+              NewExtrudedFace = element2d_dummy(LP, false, false);
               EPind = unique([obj.Pind([i 1+rem(i,obj.NVert)],1); extruded_ind([1+rem(i,obj.NVert) i],1)],'stable');
               NewExtrudedFace.Pind = EPind;
               ExtrudedFaces = [ExtrudedFaces; NewExtrudedFace]; %#ok 
            end
-           EE = element3ddummy_new([obj.P; EP(actuallyExtruded,:)], ExtrudedFaces, false, [obj.Pind; extruded_ind(actuallyExtruded)], extruded_ind);
+           EE = element3d_dummy([obj.P; EP(actuallyExtruded,:)], ExtrudedFaces, false, [obj.Pind; extruded_ind(actuallyExtruded)], extruded_ind);
         end
         
         function Earray = dummy2element(EDarray)

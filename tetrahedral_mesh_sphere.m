@@ -14,7 +14,7 @@
 % - h: meshsize
 % - K,M: stiffness and mass matrices in the bulk
 % - KS,MS,CMS: stiffness, mass, and consistency matrices on the surface
-% - Elements: polyhedral elements in element3ddummy format
+% - Elements: polyhedral elements in element3d_dummy format
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %function [P, h, K, M, KS, MS, CMS, boundarynode, EGamma] = tetrahedral_mesh_sphere(N)

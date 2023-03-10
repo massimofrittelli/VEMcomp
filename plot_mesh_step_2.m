@@ -13,10 +13,10 @@
 % - P: array of nodes
 % - h: meshsize
 % - K,M: stiffness and mass matrices
-% - Elements: polyhedral elements in element3ddummy format
+% - Elements: polyhedral elements in element3d_dummy format
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [P, h, boundarynode, EGamma, Elements] = plot_mesh_step_2(Nx)
+function [P, h, boundarynode, Elements] = plot_mesh_step_2(Nx)
 
 hx = 2/(Nx-1); % Discretisation step along each dimension
 h = hx*sqrt(3); % Meshsize
@@ -38,14 +38,14 @@ P4S = [1 0 0; 1 1 0; 1 1 1; 1 0 1]*hx; % front face
 P5S = [0 0 0; 1 0 0; 1 0 1; 0 0 1]*hx; % left face
 P6S = [0 1 0; 1 1 0; 1 1 1; 0 1 1]*hx; % right face
 
-E1S = element2ddummy(P1S, true);
-E2S = element2ddummy(P2S, true);
-E3S = element2ddummy(P3S, true);
-E4S = element2ddummy(P4S, true);
-E5S = element2ddummy(P5S, true);
-E6S = element2ddummy(P6S, true);
+E1S = element2d_dummy(P1S, true);
+E2S = element2d_dummy(P2S, true);
+E3S = element2d_dummy(P3S, true);
+E4S = element2d_dummy(P4S, true);
+E5S = element2d_dummy(P5S, true);
+E6S = element2d_dummy(P6S, true);
 PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
-ESD = element3ddummy(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
+ESD = element3d_dummy(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
 % EC = dummy2element(ESD);
 
 % KC = EC.K;
@@ -69,7 +69,6 @@ end
 acceptednode = false(2*size(P,1),1);
 boundarynode = false(2*size(P,1),1);
 newP = [P; zeros(size(P))];
-EGamma = [];
 % Twice the amount of nodes of the bounding box to allow for extrusion
 Elements = [];
 for i=0:Nx-2 % For each element of the bounding box
@@ -110,9 +109,6 @@ P = newP(acceptednode,:);
 % MS = MS(boundarynode, boundarynode);
 % KS = KS(boundarynode, boundarynode);
 boundarynode = find(boundarynode(acceptednode));
-acceptedindexes = zeros(2*Ncube,1);
-acceptedindexes(acceptednode,1) = linspace(1,length(P),length(P))';
-EGamma = acceptedindexes(EGamma);
 
 
 end
