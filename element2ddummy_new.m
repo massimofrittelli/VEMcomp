@@ -54,6 +54,12 @@ classdef element2ddummy_new
            extruded_ind = obj.Pind + Ncube;
            extruded_ind(not(actuallyExtruded)) = obj.Pind(not(actuallyExtruded));
            ExtrudedFaces = obj;
+           
+           % Re-ordering vertexes of square face of extruded element, in
+           % such a wat that the normal is outward
+           ExtrudedFaces.P = flipud(ExtrudedFaces.P);
+           ExtrudedFaces.Pind = flipud(ExtrudedFaces.Pind);
+           
            % CREATE TRIANGULAR FACES LYING ON THE SURFACE
            if norm(EP(1,:) + EP(3,:)) >= norm(EP(2,:) + EP(4,:))
                NewExtrudedFace1 = element2ddummy_new(EP([1 2 3],:), false, true);

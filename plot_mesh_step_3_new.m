@@ -31,11 +31,11 @@ Ncube = Nx^3; % Amount of nodes of the bounding box
 % MS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Mass matrix on the surf
 
 P1S = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*hx; % bottom face
-P2S = [0 0 1; 0 1 1; 1 1 1; 1 0 1]*hx; % top face
-P3S = [0 0 0; 0 1 0; 0 1 1; 0 0 1]*hx; % back face
+P2S = [0 0 1; 1 0 1; 1 1 1; 0 1 1]*hx; % top face
+P3S = [0 0 0; 0 0 1; 0 1 1; 0 1 0]*hx; % back face
 P4S = [1 0 0; 1 1 0; 1 1 1; 1 0 1]*hx; % front face
 P5S = [0 0 0; 1 0 0; 1 0 1; 0 0 1]*hx; % left face
-P6S = [0 1 0; 1 1 0; 1 1 1; 0 1 1]*hx; % right face
+P6S = [0 1 0; 0 1 1; 1 1 1; 1 1 0]*hx; % right face
 
 E1S = element2ddummy_new(P1S, true);
 E2S = element2ddummy_new(P2S, true);
@@ -45,12 +45,19 @@ E5S = element2ddummy_new(P5S, true);
 E6S = element2ddummy_new(P6S, true);
 PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
 
-[~, E1S.Pind] = intersect(PS, P1S, 'rows', 'stable');
-[~, E2S.Pind] = intersect(PS, P2S, 'rows', 'stable');
-[~, E3S.Pind] = intersect(PS, P3S, 'rows', 'stable');
-[~, E4S.Pind] = intersect(PS, P4S, 'rows', 'stable');
-[~, E5S.Pind] = intersect(PS, P5S, 'rows', 'stable');
-[~, E6S.Pind] = intersect(PS, P6S, 'rows', 'stable');
+[~, p1, q1] = intersect(PS, P1S, 'rows', 'stable');
+[~, p2, q2] = intersect(PS, P2S, 'rows', 'stable');
+[~, p3, q3] = intersect(PS, P3S, 'rows', 'stable');
+[~, p4, q4] = intersect(PS, P4S, 'rows', 'stable');
+[~, p5, q5] = intersect(PS, P5S, 'rows', 'stable');
+[~, p6, q6] = intersect(PS, P6S, 'rows', 'stable');
+
+E1S.Pind = p1(q1);
+E2S.Pind = p2(q2);
+E3S.Pind = p3(q3);
+E4S.Pind = p4(q4);
+E5S.Pind = p5(q5);
+E6S.Pind = p6(q6);
 
 ESD = element3ddummy_new(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
 ESD.Pind = (1:8)';
@@ -122,8 +129,8 @@ for i=0:Nx-2 % For each element of the bounding box
                     acceptednode(eind, 1) = true(length(eind),1);
                     boundarynode(eind_boundary,1) = true(4,1);
                     EGamma = [EGamma; eind_boundary_1'; eind_boundary_2']; %#ok
-                    [~,idx] = intersect(eind,eind_boundary,'stable');
-                    newP(eind_boundary,:) = Element.P(idx,:);
+                    [~,id1, id2] = intersect(eind,eind_boundary,'stable');
+                    newP(eind_boundary,:) = Element.P(id1(id2),:);
 %                     M(eind, eind) = M(eind, eind) + E.M; %#ok
 %                     K(eind, eind) = K(eind, eind) + E.K; %#ok
 %                     if abs(sum(sum(E.M)) - newP(eind,:)'*E.K*newP(eind,:)) > 1e-14

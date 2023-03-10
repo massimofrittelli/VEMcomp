@@ -39,11 +39,11 @@ MS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Mass matrix on the surf
 CMS = spalloc(2*Ncube,2*Ncube,9*Nsurf); % Consistency matrix on the surf
 
 P1S = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*hx; % bottom face
-P2S = [0 0 1; 0 1 1; 1 1 1; 1 0 1]*hx; % top face
-P3S = [0 0 0; 0 1 0; 0 1 1; 0 0 1]*hx; % back face
+P2S = [0 0 1; 1 0 1; 1 1 1; 0 1 1]*hx; % top face
+P3S = [0 0 0; 0 0 1; 0 1 1; 0 1 0]*hx; % back face
 P4S = [1 0 0; 1 1 0; 1 1 1; 1 0 1]*hx; % front face
 P5S = [0 0 0; 1 0 0; 1 0 1; 0 0 1]*hx; % left face
-P6S = [0 1 0; 1 1 0; 1 1 1; 0 1 1]*hx; % right face
+P6S = [0 1 0; 0 1 1; 1 1 1; 1 1 0]*hx; % right face
 
 E1S = element2ddummy_new(P1S, true);
 E2S = element2ddummy_new(P2S, true);
@@ -130,8 +130,8 @@ for i=0:Nx-2 % For each element of the bounding box
                     if i >= ceil((Nx-2)/2) || j >= ceil((Nx-2)/2)
                         EGammaCut = [EGammaCut; eind_boundary_1'; eind_boundary_2']; %#ok
                     end
-                    [~,idx] = intersect(eind,eind_boundary,'stable');
-                    newP(eind_boundary,:) = Element.P(idx,:);
+                    [~,id1, id2] = intersect(eind,eind_boundary,'stable');
+                    newP(eind_boundary,:) = Element.P(id1(id2),:);
                     M(eind, eind) = M(eind, eind) + E.M; %#ok
                     K(eind, eind) = K(eind, eind) + E.K; %#ok
 %                     if abs(sum(sum(E.M)) - newP(eind,:)'*E.K*newP(eind,:)) > 1e-14

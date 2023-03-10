@@ -1,6 +1,9 @@
-[P, h, boundarynode, EGamma, Elements] = plot_mesh_step_3_new(5);
+clearvars
+close all
 
-file = fopen('mesh.voro','w');
+[P, h, boundarynode, EGamma, Elements] = plot_mesh_step_3_new(33);
+
+file = fopen('mesh4.voro','w');
 
 boundaryFaceCounter = 0;
 internalFaceCounter = 0;
@@ -11,14 +14,15 @@ for i=1:length(Elements)
     nfaces = length(Element.Faces);
     fprintf(file, 'VoronoiCell %d\n%d\n', i-1, npoints);
     for j=1:npoints
-        fprintf(file, '%.14f %.14f %.14f\n', Element.P(j,1), Element.P(j,2), Element.P(j,3));
+        fprintf(file, '%.16f %.16f %.16f\n', Element.P(j,1), Element.P(j,2), Element.P(j,3));
     end
     fprintf(file,'\n%d\n', nfaces);
     for j=1:nfaces
-        [~, Pind_loc] = intersect(Pind, Element.Faces(j).Pind,'stable');
-        Pind_loc = Pind_loc - 1;
+        [~,p1,p2] = intersect(Pind, Element.Faces(j).Pind,'stable');
+        Pind_loc = p1(p2) - 1;
         for k=1:length(Pind_loc)
-           fprintf(file, '%d ', Pind_loc(k)); 
+            % ho cambiato l'orientamento delle facce
+           fprintf(file, '%d ', Pind_loc(length(Pind_loc)-k+1)); 
         end
         fprintf(file, '#\n');
     end

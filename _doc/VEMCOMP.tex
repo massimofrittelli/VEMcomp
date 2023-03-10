@@ -83,9 +83,65 @@ where $\Delta$ and $\Delta_\Gamma$ represents the Laplace operator in $\Omega$ a
 In the next Sections we will illustrate in detail the three main facilities of VEMcomp: (i) polygonal and polyhedral mesh generation, (ii) computation of local VEM matrices, and (iii)  matrix assembly and user-friendly solver for problems \eqref{bulk_only_problem}, \eqref{surface_problems}, and \eqref{bulk_surface_problems}.}
 
 
-\section{\red{Mesh generation}}
+\section{\red{Mesh generation and representation}}
 \label{sec:mesh_generation}
-\red{[TO WRITE]}
+
+
+Polygonal and polyhedral mesh generation is a niche topic, and very little software is available.  For domains in two space dimensions, we mention PolyMesher \cite{Talischi_2012}. To the best of the authors' knowledge, there is no open-source software for polyhedral mesh generation in three space dimensions. For special three dimensional domains,  VEMcomp fills this gap. We point out that, when restricted to triangular (in 2D) or tetrahedral meshes (in 3D), the Virtual Element Method of low polynomial order $k=1$ boils down to the Finite Element Method. This means that VEMcomp can be used as a FEM solver for surface and bulk-surface PDEs, when provided with triangular/tetrahedral meshes,  for which countless open-source generators exist.  We start by presenting basic classes that allow to represent single elements in two and three space dimensions. 
+
+\subsection{The class \texttt{element2d\_dummy}}
+The class \texttt{element2d\_dummy} represent a polygonal element in 2D. It contains minimal information that uniquely identify the element. To create an element with \texttt{NVert} vertexes, use the following constructor
+\begin{lstlisting}
+	obj = element2d_dummy(P);
+\end{lstlisting}
+where \texttt{P} is a $\texttt{NVert} \times 3$ array containing the coordinates of the vertexes, ordered clockwise or counterclockwise. The vertexes have three coordinates, because two-dimensional elements are also faces of three-dimensional elements. When an \texttt{element2d\_dummy} is created, the following properties are set by the above constructor
+\begin{lstlisting}
+properties (SetAccess = private)
+        P(:,3) double % Coordinates of vertexes
+        NVert(1,1) double % Number of vertexes
+end
+\end{lstlisting}
+When needed, an \texttt{element2d\_dummy} can be provided with optional information contained in the following optional properties:
+\begin{lstlisting}
+properties (SetAccess = private)
+        P_ind(:,1) double = []
+        is_boundary(1,1) logical
+        is_square(1,1) logical
+end
+\end{lstlisting}
+defined as follows:
+\begin{itemize}
+\item If the \texttt{element2d\_dummy} is part of a mesh, and the array $\texttt{PP}$ of size $\texttt{NMesh} \times 3$ contains the coordinates of all the nodes, then the property \texttt{P\_ind} contains the indexes of the nodes \texttt{P} of the \texttt{element2d\_dummy}, i.e. $\texttt{PP(P\_ind,:) = P}$;
+\item The logical \texttt{is\_boundary} determines if the \texttt{element2d\_dummy} is a face of a three-dimensional element lying on the boundary $\Gamma$ of the bulk domain $\Omega$. This information is necessary for the assembly of VEM matrices; 
+\item The logical \texttt{is\_square} determines if the \texttt{element2d\_dummy} is a square (for which the local VEM matrices are known in closed form).
+\end{itemize}
+
+\subsection{The class \texttt{element3d\_dummy}}
+The class \texttt{element3d\_dummy} represent a polyhedral element in 3D. It contains minimal information that uniquely identify the element. To create an element with \texttt{NVert} vertexes and \texttt{NFaces} faces, use the following constructor
+\begin{lstlisting}
+	obj = element3d_dummy(P,Faces)
+\end{lstlisting}
+where \texttt{P} is a $\texttt{NVert} \times 3$ array containing the coordinates of the vertexes in any order and \texttt{Faces} is a $\texttt{NFaces} \times 1$ array of \texttt{element2d\_dummy}.  When an \texttt{element3d\_dummy} is created, the following properties are set by the above constructor
+\begin{lstlisting}
+properties (SetAccess = private)
+	P(:,3) double % Coordinates of vertexes
+	Faces(:,1) element2d_dummy % Faces
+end
+\end{lstlisting}
+When needed, an \texttt{element3d\_dummy} can be provided, through the above constructor, with the following optional properties:
+\begin{lstlisting}
+properties (SetAccess = private)
+        Pind(:,1) double = []
+        iscube(1,1) logical
+end
+\end{lstlisting}
+defined as follows:
+\begin{itemize}
+\item If the \texttt{element3d\_dummy} is part of a mesh, and the array $\texttt{PP}$ of size $\texttt{NMesh} \times 3$ contains the coordinates of all the nodes, then the property \texttt{P\_ind} contains the indexes of the nodes \texttt{P} of the \texttt{element3d\_dummy}, i.e. $\texttt{PP(P\_ind,:) = P}$;
+\item The logical \texttt{is\_cube} determines if the \texttt{element3d\_dummy} is a cube (for which the local VEM matrices are known in closed form).
+\end{itemize}
+
+\subsection{Generating meshes for special geometries}
 
 
 \section{Computation of local matrices}
