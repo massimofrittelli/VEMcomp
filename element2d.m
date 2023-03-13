@@ -4,8 +4,10 @@ classdef element2d < element2dabstract
     properties(SetAccess = private)
         
         % CONSTRUCTOR INPUTS
-        P % Nodes
+        P % Vertexes
         P0 % Element is star-shaped wrt P0
+        Pind % Indexes of vertexes
+        is_boundary
         
         % COMPUTED BY CONSTRUCTOR
         NVert
@@ -174,10 +176,16 @@ classdef element2d < element2dabstract
     end
     
     methods
-        function obj = element2d(P, P0)
+        function obj = element2d(P, P0, Pind, is_boundary)
             % ELEMENT Construct an instance of this class
             obj.P = P;
             obj.P0 = P0;
+            if nargin >= 3
+               obj.Pind = Pind;
+            end
+            if nargin >= 4
+               obj.is_boundary = is_boundary;
+            end
             obj = initElement(obj);
             obj = setLocalMatrices(obj);
         end

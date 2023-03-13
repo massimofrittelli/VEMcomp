@@ -11,6 +11,11 @@ classdef element3d_dummy
         iscube(1,1) logical
     end
     
+    properties (SetAccess = private)
+        NVert(1,1) double
+        NFaces(1,1) double
+    end
+    
     methods
         function obj = element3d_dummy(P,Faces,iscube,Pind)
             obj.P = P;
@@ -19,6 +24,9 @@ classdef element3d_dummy
             if nargin >= 4
                obj.Pind = Pind; 
             end
+            
+            obj.NVert = length(P);
+            obj.NFaces = length(Faces);
         end
         
         function P_ind_boundary = get_P_indexes_boundary(obj)
@@ -72,9 +80,9 @@ classdef element3d_dummy
         
         function E = dummy2element(obj)
             if obj.iscube
-               E = element3dcube(dummy2element(obj.Faces), obj.P); 
+               E = element3dcube(dummy2element(obj.Faces), obj.P, obj.Pind); 
             else
-               E = element3d(dummy2element(obj.Faces), obj.P, mean(obj.P)); 
+               E = element3d(dummy2element(obj.Faces), obj.P, mean(obj.P), obj.Pind); 
             end
         end
         

@@ -87,9 +87,9 @@ classdef element2d_dummy
         function Earray = dummy2element(EDarray)
             for ei = 1:length(EDarray)
                 if EDarray(ei).is_square
-                    Earray(ei) = element2dsquare(EDarray(ei).P); %#ok
+                    Earray(ei) = element2dsquare(EDarray(ei).P, EDarray(ei).Pind, EDarray(ei).is_boundary); %#ok
                 else
-                    Earray(ei) = element2d(EDarray(ei).P, mean(EDarray(ei).P)); %#ok
+                    Earray(ei) = element2d(EDarray(ei).P, mean(EDarray(ei).P), EDarray(ei).Pind, EDarray(ei).is_boundary); %#ok
                 end
             end
         end

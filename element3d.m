@@ -5,7 +5,8 @@ classdef element3d < element3dabstract
         
         % INITIALISED VIA CONSTRUCTOR
         Faces
-        P % Vertices
+        P % Vertexes
+        Pind %Indexes of vertexes
         
         % INITIALISED VIA CONSTRUCTOR - SUBCLASS SPECIFIC
         P0(1,3) double % The element is star-shaped wrt P0
@@ -158,11 +159,14 @@ classdef element3d < element3dabstract
     end
     
     methods
-        function obj = element3d(Faces, P, P0)
+        function obj = element3d(Faces, P, P0, Pind)
             % ELEMENT3D Construct an instance of this class
             obj.Faces = Faces;
             obj.P = P;
             obj.P0 = P0;
+            if nargin >= 4
+               obj.Pind = Pind; 
+            end
             obj = initElement(obj);
             obj = setLocalMatrices(obj);
         end

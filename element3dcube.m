@@ -4,8 +4,9 @@ classdef element3dcube < element3dabstract
     properties (SetAccess = private)
         
         % INITIALISED VIA CONSTRUCTOR
-        Faces
-        P % Vertices
+        Faces % Element2dsquare
+        P % Vertexes
+        Pind % Indexes of vertexes
         
         % COMPUTED UPON INITIALISATION
         NVert
@@ -73,10 +74,13 @@ classdef element3dcube < element3dabstract
     end
     
     methods
-        function obj = element3dcube(Faces, P)
+        function obj = element3dcube(Faces, P, Pind)
             % ELEMENT3D Construct an instance of this class
             obj.Faces = Faces;
             obj.P = P;
+            if nargin >= 3
+               obj.Pind = Pind; 
+            end
             obj = initElement(obj);
             obj = setLocalMatrices(obj);
         end

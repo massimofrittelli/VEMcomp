@@ -2,7 +2,7 @@
 % FOR THE BSVEM 3D ELLIPTIC PAPER
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[P, h, boundarynode, Elements] = plot_mesh_step_2(6);
+[P, h, boundarynode, Elements] = generate_mesh_sphere_inner_cubes(6);
 
 figure
 set(gcf,'color','white')

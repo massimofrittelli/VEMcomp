@@ -5,6 +5,8 @@ classdef element2dsquare < element2dabstract
         
         % CONSTRUCTOR INPUT
         P % Nodes
+        Pind % Indexes of vertexes
+        is_boundary
         
         % COMPUTED BY CONSTRUCTOR
         P0 % Element is star-shaped wrt P0
@@ -63,9 +65,15 @@ classdef element2dsquare < element2dabstract
     end
     
     methods
-        function obj = element2dsquare(P)
+        function obj = element2dsquare(P, Pind, is_boundary)
            % ELEMENT2DSQUARE Construct an instance of this class
             obj.P = P;
+            if nargin >= 2
+               obj.Pind = Pind;
+            end
+            if nargin >= 3
+               obj.is_boundary = is_boundary; 
+            end
             obj = initElement(obj);
             obj = setLocalMatrices(obj);
         end

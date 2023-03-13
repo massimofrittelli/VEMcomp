@@ -87,8 +87,8 @@ for i=1:NES
             h(3,:)/sum(h(3,:).^2)];
    Aloc = nabla*nabla';     %local discrete laplace-beltrami
    S = norm(cross(v1,v2));  %double area of the given triangle
-   KS(e,e) = KS(e,e) + Aloc*S;
-   MS(e,e) = MS(e,e) + MrefS*S;
+   KS(e,e) = KS(e,e) + Aloc*S; %#ok
+   MS(e,e) = MS(e,e) + MrefS*S; %#ok
 end
 
 KS = KS/2;
