@@ -8,14 +8,14 @@
 % lateral faces are not guaranteed to be flat
 % - option 2: orthant-wise constant extrusion direction. This makes mesh
 % less uniform, but all internal faces are guaranteed to be flat.
-[P, h, boundarynode, EGamma, Elements, EGammaCut, ElementsCut] = plot_mesh_step_3(5);
+[P, h, boundarynode, EGamma, Elements, EGammaCut, ElementsCut] = plot_mesh_step_3(7);
 
 figure
 set(gcf,'color','white')
-ii = 1:16;
+ii = 1:30;
 hold on
 for i=1:length(ii)
-   plot(ElementsCut(ii(i))); 
+   plot(Elements(ii(i))); 
 end
 view(3)
 axis equal tight

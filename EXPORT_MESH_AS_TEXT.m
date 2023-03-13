@@ -28,9 +28,9 @@ for i=1:length(Elements)
     end
     fprintf(file, '\n');
     for j=1:nfaces
-       boundaryFaceCounter = boundaryFaceCounter - Element.Faces(j).boundary;
-       internalFaceCounter = internalFaceCounter + (1- Element.Faces(j).boundary);
-       marker = Element.Faces(j).boundary*boundaryFaceCounter + (1- Element.Faces(j).boundary)*internalFaceCounter;
+       boundaryFaceCounter = boundaryFaceCounter - Element.Faces(j).is_boundary;
+       internalFaceCounter = internalFaceCounter + (1- Element.Faces(j).is_boundary);
+       marker = Element.Faces(j).boundary*boundaryFaceCounter + (1- Element.Faces(j).is_boundary)*internalFaceCounter;
        fprintf(file, '%d ', marker); 
     end
     fprintf(file,'\n\n');

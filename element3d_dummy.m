@@ -7,22 +7,28 @@ classdef element3d_dummy
     properties
         P(:,3) double % Vertexes
         Pind(:,1) double = [] % Indexes of vertexes
-        Pind_boundary(:,1) = [] % Indexes of vertexes on boundary
         Faces(:,1) element2d_dummy % Faces
         iscube(1,1) logical
     end
     
     methods
-        function obj = element3d_dummy(P,Faces,iscube,Pind,Pind_boundary)
+        function obj = element3d_dummy(P,Faces,iscube,Pind)
             obj.P = P;
             obj.Faces = Faces;
             obj.iscube = iscube;
             if nargin >= 4
                obj.Pind = Pind; 
             end
-            if nargin >= 5
-                obj.Pind_boundary = Pind_boundary;
+        end
+        
+        function P_ind_boundary = get_P_indexes_boundary(obj)
+            P_ind_boundary = [];
+            for i=1:length(obj.Faces)
+                if obj.Faces(i).is_boundary
+                   P_ind_boundary = [P_ind_boundary; obj.Faces(i).Pind]; %#ok
+                end
             end
+            P_ind_boundary = unique(P_ind_boundary);
         end
         
         function E = shiftElement(obj, v)

@@ -44,13 +44,6 @@ P3S = [0 0 0; 0 0 1; 0 1 1; 0 1 0]*hx; % back face
 P4S = [1 0 0; 1 1 0; 1 1 1; 1 0 1]*hx; % front face
 P5S = [0 0 0; 1 0 0; 1 0 1; 0 0 1]*hx; % left face
 P6S = [0 1 0; 0 1 1; 1 1 1; 1 1 0]*hx; % right face
-
-E1S = element2d_dummy(P1S, true);
-E2S = element2d_dummy(P2S, true);
-E3S = element2d_dummy(P3S, true);
-E4S = element2d_dummy(P4S, true);
-E5S = element2d_dummy(P5S, true);
-E6S = element2d_dummy(P6S, true);
 PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
 
 [~, p1, q1] = intersect(PS, P1S, 'rows', 'stable');
@@ -60,12 +53,13 @@ PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
 [~, p5, q5] = intersect(PS, P5S, 'rows', 'stable');
 [~, p6, q6] = intersect(PS, P6S, 'rows', 'stable');
 
-E1S.Pind = p1(q1);
-E2S.Pind = p2(q2);
-E3S.Pind = p3(q3);
-E4S.Pind = p4(q4);
-E5S.Pind = p5(q5);
-E6S.Pind = p6(q6);
+
+E1S = element2d_dummy(P1S, true, false, p1(q1));
+E2S = element2d_dummy(P2S, true, false, p2(q2));
+E3S = element2d_dummy(P3S, true, false, p3(q3));
+E4S = element2d_dummy(P4S, true, false, p4(q4));
+E5S = element2d_dummy(P5S, true, false, p5(q5));
+E6S = element2d_dummy(P6S, true, false, p6(q6));
 
 ESD = element3d_dummy(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
 ESD.Pind = (1:8)';
@@ -136,7 +130,7 @@ for i=0:Nx-2 % For each element of the bounding box
                 for l=1:length(NewElements)
                     Element = NewElements(l);
                     eind = Element.Pind;
-                    eind_boundary = Element.Pind_boundary;
+                    eind_boundary = get_P_indexes_boundary(Element);
                     eind_boundary_1 = Element.Faces(2).Pind;
                     eind_boundary_2 = Element.Faces(3).Pind;
                     E = dummy2element(Element);

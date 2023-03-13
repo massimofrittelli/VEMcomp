@@ -6,13 +6,13 @@ classdef element2d_dummy
     
     properties
         Pind(:,1) double = [] % Indexes of vertexes
-        boundary(1,1) logical
     end
     
     properties (SetAccess = private)
         P(:,3) double % Vertexes
         NVert(1,1) double % Number of vertexes
-        issquare(1,1) logical
+        is_square(1,1) logical
+        is_boundary(1,1) logical
     end
     
     properties (Dependent)
@@ -20,12 +20,12 @@ classdef element2d_dummy
     end
     
     methods
-        function obj = element2d_dummy(P,issquare,boundary,Pind)     
+        function obj = element2d_dummy(P,is_square,is_boundary,Pind)     
             obj.P = P;
             obj.NVert = size(P,1);
-            obj.issquare = issquare;
+            obj.is_square = is_square;
             if nargin >= 3
-                obj.boundary = boundary;
+                obj.is_boundary = is_boundary;
             end
             if nargin >= 4
                 obj.Pind = Pind;
@@ -33,7 +33,7 @@ classdef element2d_dummy
         end
         
         function ND = get.NormalDirection(obj)
-           if not(obj.issquare)
+           if not(obj.is_square)
               error('Normal direction is supported square elements only') 
            end
            direction = cross(obj.P(3,:)-obj.P(2,:) , obj.P(2,:)-obj.P(1,:));
@@ -41,7 +41,7 @@ classdef element2d_dummy
         end
         
         function E = shiftElement(obj, v)
-           E =  element2d_dummy(obj.P+repmat(v,length(obj.P),1),obj.issquare,false,obj.Pind);
+           E =  element2d_dummy(obj.P+repmat(v,length(obj.P),1),obj.is_square,false,obj.Pind);
         end
         
         
@@ -81,12 +81,12 @@ classdef element2d_dummy
               NewExtrudedFace.Pind = EPind;
               ExtrudedFaces = [ExtrudedFaces; NewExtrudedFace]; %#ok 
            end
-           EE = element3d_dummy([obj.P; EP(actuallyExtruded,:)], ExtrudedFaces, false, [obj.Pind; extruded_ind(actuallyExtruded)], extruded_ind);
+           EE = element3d_dummy([obj.P; EP(actuallyExtruded,:)], ExtrudedFaces, false, [obj.Pind; extruded_ind(actuallyExtruded)]);
         end
         
         function Earray = dummy2element(EDarray)
             for ei = 1:length(EDarray)
-                if EDarray(ei).issquare
+                if EDarray(ei).is_square
                     Earray(ei) = element2dsquare(EDarray(ei).P); %#ok
                 else
                     Earray(ei) = element2d(EDarray(ei).P, mean(EDarray(ei).P)); %#ok
