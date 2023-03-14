@@ -17,7 +17,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [K, M, KS, MS, CMS] = assemble_matrices(P, EGamma, Elements)
+function [K, M, KS, MS, CMS] = assemble_matrices_VEM_3D(P, EGamma, Elements)
 
 Nbulk = length(P);
 Nsurf = max(max(EGamma));

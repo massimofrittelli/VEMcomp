@@ -94,6 +94,10 @@ classdef element2d_dummy
             end
         end
         
+        function plot(obj)
+           fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), obj.P(:,1)*0 + 1 - obj.is_square);
+        end
+        
     end
 end
 

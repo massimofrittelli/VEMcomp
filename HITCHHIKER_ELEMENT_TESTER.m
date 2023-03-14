@@ -15,5 +15,7 @@ P0 = [1 1 0];
 E = element2d(P, P0);
 
 figure
+set(gcf,'Color', 'white')
 fill(P(:,1), P(:,2), 1)
+set(gca,'FontSize',18)
 axis equal

@@ -8,7 +8,7 @@
 % lateral faces are not guaranteed to be flat
 % - option 2: orthant-wise constant extrusion direction. This makes mesh
 % less uniform, but all internal faces are guaranteed to be flat.
-[P, h, boundarynode, EGamma, Elements] = plot_mesh_step_3(9);
+[P, h, boundarynode, EGamma, Elements] = generate_mesh_sphere(9);
 
 figure
 set(gcf,'color','white')

@@ -51,7 +51,7 @@ for i=0:Nx-1
     end
 end
 
-% MATRIX ASSEMBLY
+% GENERATE ELEMENTS
 boundarynode = false(2*size(P,1),1);
 % Twice the amount of nodes of the bounding box to allow for extrusion
 Elements = [];

@@ -20,7 +20,7 @@
 %   survive after the sphere is cut.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [P, h, boundarynode, EGamma, Elements, EGammaCut, ElementsCut] = plot_mesh_step_3(Nx)
+function [P, h, boundarynode, EGamma, Elements, EGammaCut, ElementsCut] = generate_mesh_sphere(Nx)
 
 hx = 2/(Nx-1); % Discretisation step along each dimension
 h = hx*sqrt(3); % Meshsize
