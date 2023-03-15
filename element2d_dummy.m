@@ -5,11 +5,11 @@ classdef element2d_dummy
     % 3) allows for element translation/shifting
     
     properties
+        P(:,3) double % Vertexes
         Pind(:,1) double = [] % Indexes of vertexes
     end
     
     properties (SetAccess = private)
-        P(:,3) double % Vertexes
         NVert(1,1) double % Number of vertexes
         is_square(1,1) logical
         is_boundary(1,1) logical

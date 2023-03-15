@@ -1,10 +1,10 @@
-function [P, h, SquareElements, NonSquareElements] = generate_mesh_flat_domain(fun, xmax, Nx)
+function [P, h, SquareElements, NonSquareElements] = generate_mesh_flat_domain(fun, xmax, Nx, tol)
 %GENERATE_MESH_FLAT_DOMAIN Summary of this function goes here
 %   Detailed explanation goes here
 
 Nsquare = Nx^2;
 hx = 2*xmax/(Nx-1); % Discretisation step along each dimension
-h = hx*sqrt(3); % Meshsize
+h = hx*sqrt(2); % Meshsize
 
 % GENERATE ONE SQUARE ELEMENT
 PS = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*hx;
@@ -43,7 +43,7 @@ for i=0:Nx-2 % For each element of the bounding box
         % Store non-square elements obtained by cutting square elements
         % with boundary. Such non-square elements are not endowed with node
         % indexes yet.
-        NewElement = cut(NewSquareElement, fun);
+        NewElement = cut(NewSquareElement, fun, tol);
         NonSquareElements = [NonSquareElements; NewElement]; %#ok 
     end
 end
@@ -57,14 +57,24 @@ for i=1:length(SquareElements)
    SquareElements(i).Pind = acceptedindexes(SquareElements(i).Pind); %#ok
 end
 
+% DETERMINE SET OF NON-REPEATED NODES UP TO SMALL TOLERANCE
 for i=1:length(NonSquareElements)
    P = [P; NonSquareElements(i).P]; %#ok 
 end
-P = unique(P,'rows','stable');
+P = uniquetol(P,tol,'ByRows',true);
+
+% FIX ELEMENTS BY ASSIGNING NODE INDEXES AND ELIMINATING DUPLICATE NODES UP
+% TO SMALL TOLERANCE
+for i=1:length(SquareElements)
+   [~, ind] = ismembertol(SquareElements(i).P,P,tol,'ByRows',true);
+   SquareElements(i).Pind = ind; %#ok 
+   SquareElements(i).P = P(ind,:); %#ok
+end
 
 for i=1:length(NonSquareElements)
-   [~,ind1, ind2] = intersect(P,NonSquareElements(i).P,'rows','legacy');
-   NonSquareElements(i).Pind = nonzeros(ind1(ind2)); %#ok 
+   [~, ind] = ismembertol(NonSquareElements(i).P,P,tol,'ByRows',true);
+   NonSquareElements(i).Pind = ind; %#ok 
+   NonSquareElements(i).P = P(ind,:); %#ok
 end
 
 
@@ -93,20 +103,25 @@ function inside = is_inside(Element, fun)
 end
 
 % CUTS GIVEN ELEMENT BY BOUNDARY OF DOMAIN
-function CutElement = cut(Element, fun)
+function CutElement = cut(Element, fun, tol)
     P = Element.P;
-    strictly_inside = fun(P) < 0;
+    inside_or_boundary = fun(P) <= 0;
     Pnew = [];
     for i=1:length(P)
        j = rem(i, length(P)) + 1;
-       if strictly_inside(i)
+       if inside_or_boundary(i)
            Pnew = [Pnew; P(i,:)]; %#ok
        end
-       if sum(strictly_inside([i j])) == 1
+       if sum(inside_or_boundary([i j])) == 1
            Pnew = [Pnew; intersectEdge(P(i,:), P(j,:), fun)]; %#ok
        end
     end
-    CutElement = element2d_dummy(Pnew, false);
+    [~, ind] = uniquetol(Pnew,tol,'Byrows',true);
+    if length(ind) < 3
+        CutElement = [];
+        return
+    end
+    CutElement = element2d_dummy(Pnew(sort(ind),:), false);
 end
 
 % COMPUTES INTERSECTION POINT BETWEEN AN EDGE AND THE BOUNDARY OF THE
