@@ -1,18 +1,30 @@
-function [P, h, CubicElements, NonCubicElements] = generate_mesh_3D_domain(fun, xmax, Nx, tol)
+function [P, h, CubicElements, NonCubicElements, CubicElementsToPlot] = generate_mesh_3D_domain(fun, range, Nx, tol)
 %GENERATE_MESH_3D_DOMAIN Summary of this function goes here
 %   Detailed explanation goes here
 
-Ncube = Nx^3;
-hx = 2*xmax/(Nx-1); % Discretisation step along each dimension
-h = hx*sqrt(3); % Meshsize
+hx_requested = (range(1,2)-range(1,1))/(Nx-1); % Requested discretisation step along x
+hy_requested = (range(2,2)-range(2,1))/(Nx-1); % Requested discretisation step along y
+hz_requested = (range(3,2)-range(3,1))/(Nx-1); % Requested discretisation step along z
+
+h_mono = min([hx_requested,hy_requested,hz_requested]); % Actual discretization step along each dimension
+h = h_mono*sqrt(3); % Meshsize
+
+Nx = ceil((range(1,2)-range(1,1))/h_mono)+1; % Corrected number of discretization nodes along x
+Ny = ceil((range(2,2)-range(2,1))/h_mono)+1; % Corrected number of discretization nodes along y
+Nz = ceil((range(3,2)-range(3,1))/h_mono)+1; % Corrected number of discretization nodes along z
+N = Nx*Ny*Nz; % Number of nodes of bounding box
+
+range(1,:) = range(1,:) - (h_mono*(Nx-1) - (range(1,2)-range(1,1)))/2; % Corrected range of bounding box along x
+range(2,:) = range(2,:) - (h_mono*(Ny-1) - (range(2,2)-range(2,1)))/2; % Corrected range of bounding box along y
+range(3,:) = range(3,:) - (h_mono*(Nz-1) - (range(3,2)-range(3,1)))/2; % Corrected range of bounding box along z
 
 % GENERATE ONE CUBIC ELEMENT
-P1S = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*hx; % bottom face
-P2S = [0 0 1; 1 0 1; 1 1 1; 0 1 1]*hx; % top face
-P3S = [0 0 0; 0 0 1; 0 1 1; 0 1 0]*hx; % back face
-P4S = [1 0 0; 1 1 0; 1 1 1; 1 0 1]*hx; % front face
-P5S = [0 0 0; 1 0 0; 1 0 1; 0 0 1]*hx; % left face
-P6S = [0 1 0; 0 1 1; 1 1 1; 1 1 0]*hx; % right face
+P1S = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*h_mono; % bottom face
+P2S = [0 0 1; 1 0 1; 1 1 1; 0 1 1]*h_mono; % top face
+P3S = [0 0 0; 0 0 1; 0 1 1; 0 1 0]*h_mono; % back face
+P4S = [1 0 0; 1 1 0; 1 1 1; 1 0 1]*h_mono; % front face
+P5S = [0 0 0; 1 0 0; 1 0 1; 0 0 1]*h_mono; % left face
+P6S = [0 1 0; 0 1 1; 1 1 1; 1 1 0]*h_mono; % right face
 
 E1S = element2d_dummy(P1S, true);
 E2S = element2d_dummy(P2S, true);
@@ -40,12 +52,14 @@ ESD = element3d_dummy(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
 ESD.Pind = (1:8)';
 
 % CREATING GRIDPOINTS OF BOUNDING BOX
-x = linspace(-xmax,xmax,Nx); % Gridpoints in [-1,1]
-P = zeros(Ncube,3); % Gridpoints of bounding box
+x = linspace(range(1,1),range(1,2),Nx); % Gridpoints in [-1,1]
+y = linspace(range(2,1),range(2,2),Ny); % Gridpoints in [-1,1]
+z = linspace(range(3,1),range(3,2),Nz); % Gridpoints in [-1,1]
+P = zeros(N,3); % Gridpoints of bounding box
 for i=0:Nx-1
-    for j=0:Nx-1
-        for k=0:Nx-1
-            P(Nx^2*i+Nx*j+k+1,:) = [x(i+1) x(j+1) x(k+1)];
+    for j=0:Ny-1
+        for k=0:Nz-1
+            P(Ny*Nz*i+Nz*j+k+1,:) = [x(i+1) y(j+1) z(k+1)];
         end
     end
 end
@@ -53,53 +67,48 @@ end
 
 % GENERATE ELEMENTS
 CubicElements = [];
+CubicElementsToPlot = [];
 NonCubicElements = [];
-accepted_node = false(Ncube,1);
+accepted_node = false(N,1);
+newP = [];
 for i=0:Nx-2 % For each element of the bounding box
-    for j=0:Nx-2
-        for k=0:Nx-2
-            indexes = [Nx^2*i+Nx*j+k+1
-                       Nx^2*i+Nx*j+k+2
-                       Nx^2*i+Nx*(j+1)+k+1
-                       Nx^2*i+Nx*(j+1)+k+2
-                       Nx^2*(i+1)+Nx*j+k+1
-                       Nx^2*(i+1)+Nx*j+k+2
-                       Nx^2*(i+1)+Nx*(j+1)+k+1
-                       Nx^2*(i+1)+Nx*(j+1)+k+2];
-            NewCubicElement = shiftElement(ESD, P(indexes(1),:));
+    for j=0:Ny-2
+        for k=0:Nz-2
+            NewCubicElement = shiftElement(ESD, [x(i+1) y(j+1) z(k+1)]);
             if is_outside(NewCubicElement, fun)
                 continue
             end
             if is_inside(NewCubicElement, fun)
+                indexes = [Nz*Ny*i+Nz*j+k+1
+                           Nz*Ny*i+Nz*j+k+2
+                           Nz*Ny*i+Nz*(j+1)+k+1
+                           Nz*Ny*i+Nz*(j+1)+k+2
+                           Nz*Ny*(i+1)+Nz*j+k+1
+                           Nz*Ny*(i+1)+Nz*j+k+2
+                           Nz*Ny*(i+1)+Nz*(j+1)+k+1
+                           Nz*Ny*(i+1)+Nz*(j+1)+k+2];
                 % Store cubic elements that are inside domain
                 accepted_node(indexes) = true(8,1);
-                NewCubicElement.Pind = indexes;
-                CubicElements = [CubicElements; NewCubicElement]; %#ok 
+                CubicElements = [CubicElements; NewCubicElement]; %#ok
+                if i== round((Nx-3)/2) || (i<= round((Nx-3)/2) && k == Nz-2)
+                    CubicElementsToPlot = [CubicElementsToPlot; NewCubicElement];  %#ok
+                end
                 continue
             end
             % Store non-cubic elements obtained by cutting cubic elements
             % with boundary. Such non-cunic elements are not endowed with 
             % node indexes yet.
             NewElement = cutElement(NewCubicElement, fun, tol);
-            NonCubicElements = [NonCubicElements; NewElement]; %#ok 
+            if not(isempty(NewElement))
+                NonCubicElements = [NonCubicElements; NewElement]; %#ok
+                newP = [newP; NewElement.P];  %#ok
+            end
         end
     end
 end
 
-% AFTER ELIMINATING CUBIC ELEMENTS THAT ARE OUTSIDE DOMAIN, RE-DETERMINE
-% INDEXES OF NODES OF CUBIC ELEMENTS
-P = P(accepted_node,:);
-acceptedindexes = zeros(Ncube,1);
-acceptedindexes(accepted_node,1) = linspace(1,length(P),length(P))';
-for i=1:length(CubicElements)
-   CubicElements(i).Pind = acceptedindexes(CubicElements(i).Pind); %#ok
-end
-
 % DETERMINE SET OF NON-REPEATED NODES UP TO SMALL TOLERANCE
-for i=1:length(NonCubicElements)
-   P = [P; NonCubicElements(i).P]; %#ok 
-end
-P = uniquetol(P,tol,'ByRows',true);
+P = uniquetol([P(accepted_node,:); newP],tol,'ByRows',true);
 
 % FIX ELEMENTS BY ASSIGNING NODE INDEXES AND ELIMINATING DUPLICATE NODES UP
 % TO SMALL TOLERANCE
@@ -169,11 +178,16 @@ function CutElement = cutElement(CubicElement, fun, tol)
         end
     end
     CutFacesP = uniquetol(CutFacesP,tol,'ByRows',true);
-    if length(CutFacesP) < 4
+    if length(CutFacesP) < 4 % Element has zero volume -> discard
         CutElement = [];
         return
     end
-    chull = convhull(CutFacesP,'simplify',true); 
+    try
+        chull = convhull(CutFacesP,'simplify',true); 
+    catch % Element has zero volume -> discard
+        CutElement = [];
+        return
+    end
     for i=1:size(chull,1)
         contained = false;
         for j=1:length(CutFaces)
