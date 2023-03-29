@@ -1,6 +1,8 @@
-function [P, h, CubicElements, NonCubicElements, CubicElementsToPlot] = generate_mesh_3D_domain(fun, range, Nx, tol)
+function [P, h, CubicElements, NonCubicElements, EGamma, EGammaPlot, ElementsToPlot] = generate_mesh_3D_domain(fun, range, Nx, tol)
 %GENERATE_MESH_3D_DOMAIN Summary of this function goes here
 %   Detailed explanation goes here
+
+i_cut = 3;
 
 hx_requested = (range(1,2)-range(1,1))/(Nx-1); % Requested discretisation step along x
 hy_requested = (range(2,2)-range(2,1))/(Nx-1); % Requested discretisation step along y
@@ -14,9 +16,9 @@ Ny = ceil((range(2,2)-range(2,1))/h_mono)+1; % Corrected number of discretizatio
 Nz = ceil((range(3,2)-range(3,1))/h_mono)+1; % Corrected number of discretization nodes along z
 N = Nx*Ny*Nz; % Number of nodes of bounding box
 
-range(1,:) = range(1,:) - (h_mono*(Nx-1) - (range(1,2)-range(1,1)))/2; % Corrected range of bounding box along x
-range(2,:) = range(2,:) - (h_mono*(Ny-1) - (range(2,2)-range(2,1)))/2; % Corrected range of bounding box along y
-range(3,:) = range(3,:) - (h_mono*(Nz-1) - (range(3,2)-range(3,1)))/2; % Corrected range of bounding box along z
+range(1,:) = range(1,:) + (h_mono*(Nx-1) - (range(1,2)-range(1,1)))/2*[-1,1]; % Corrected range of bounding box along x
+range(2,:) = range(2,:) + (h_mono*(Ny-1) - (range(2,2)-range(2,1)))/2*[-1,1]; % Corrected range of bounding box along y
+range(3,:) = range(3,:) + (h_mono*(Nz-1) - (range(3,2)-range(3,1)))/2*[-1,1]; % Corrected range of bounding box along z
 
 % GENERATE ONE CUBIC ELEMENT
 P1S = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*h_mono; % bottom face
@@ -67,8 +69,8 @@ end
 
 % GENERATE ELEMENTS
 CubicElements = [];
-CubicElementsToPlot = [];
 NonCubicElements = [];
+ElementsToPlot = [];
 accepted_node = false(N,1);
 newP = [];
 for i=0:Nx-2 % For each element of the bounding box
@@ -89,9 +91,16 @@ for i=0:Nx-2 % For each element of the bounding box
                            Nz*Ny*(i+1)+Nz*(j+1)+k+2];
                 % Store cubic elements that are inside domain
                 accepted_node(indexes) = true(8,1);
+                if i == i_cut
+                   for fc =1:6
+                      if max(NewCubicElement.Faces(fc).P(:,1)) == x(1+i_cut)
+                         NewCubicElement.Faces(fc).to_plot = true;
+                      end
+                   end
+                end
                 CubicElements = [CubicElements; NewCubicElement]; %#ok
-                if i== round((Nx-3)/2) || (i<= round((Nx-3)/2) && k == Nz-2)
-                    CubicElementsToPlot = [CubicElementsToPlot; NewCubicElement];  %#ok
+                if i >= i_cut || j >= i_cut
+                    ElementsToPlot = [ElementsToPlot; NewCubicElement]; %#ok
                 end
                 continue
             end
@@ -100,6 +109,23 @@ for i=0:Nx-2 % For each element of the bounding box
             % node indexes yet.
             NewElement = cutElement(NewCubicElement, fun, tol);
             if not(isempty(NewElement))
+                if i >= i_cut
+                    for fc = 1:NewElement.NFaces
+                       if NewElement.Faces(fc).is_boundary
+                           NewElement.Faces(fc).to_plot = true;
+                       end
+                    end
+                end
+                if i == i_cut
+                    for fc = 1:NewElement.NFaces
+                       if (max(NewElement.Faces(fc).P(:,1)) - x(1+i_cut)) < tol
+                           NewElement.Faces(fc).to_plot = true;
+                       end
+                    end
+                end
+                if i >= i_cut || j >= i_cut
+                    ElementsToPlot = [ElementsToPlot; NewElement]; %#ok
+                end
                 NonCubicElements = [NonCubicElements; NewElement]; %#ok
                 newP = [newP; NewElement.P];  %#ok
             end
@@ -110,6 +136,7 @@ end
 % DETERMINE SET OF NON-REPEATED NODES UP TO SMALL TOLERANCE
 P = uniquetol([P(accepted_node,:); newP],tol,'ByRows',true);
 
+EGammaPlot = [];
 % FIX ELEMENTS BY ASSIGNING NODE INDEXES AND ELIMINATING DUPLICATE NODES UP
 % TO SMALL TOLERANCE
 for i=1:length(CubicElements)
@@ -120,9 +147,13 @@ for i=1:length(CubicElements)
        [~, ind] = ismembertol(CubicElements(i).Faces(j).P,P,tol,'ByRows',true);
        CubicElements(i).Faces(j).Pind = ind;
        CubicElements(i).Faces(j).P = P(ind,:);
+       if CubicElements(i).Faces(j).to_plot
+           EGammaPlot = [EGammaPlot; CubicElements(i).Faces(j)]; %#ok
+       end
    end
 end
 
+EGamma = [];
 for i=1:length(NonCubicElements)
    [~, ind] = ismembertol(NonCubicElements(i).P,P,tol,'ByRows',true);
    NonCubicElements(i).Pind = ind; %#ok 
@@ -131,8 +162,15 @@ for i=1:length(NonCubicElements)
        [~, ind] = ismembertol(NonCubicElements(i).Faces(j).P,P,tol,'ByRows',true);
        NonCubicElements(i).Faces(j).Pind = ind;
        NonCubicElements(i).Faces(j).P = P(ind,:);
+       if NonCubicElements(i).Faces(j).is_boundary
+           EGamma = [EGamma; ind']; %#ok
+       end
+       if NonCubicElements(i).Faces(j).to_plot
+           EGammaPlot = [EGammaPlot; NonCubicElements(i).Faces(j)]; %#ok
+       end
    end
 end
+
 
 
 end
@@ -160,7 +198,7 @@ function inside = is_inside(Element, fun)
 end
 
 % CUTS A CUBIC ELEMENT BY BOUNDARY OF DOMAIN
-function CutElement = cutElement(CubicElement, fun, tol)
+function [CutElement] = cutElement(CubicElement, fun, tol)
     CutFaces = [];
     CutFacesP = [];
     for i=1:6
@@ -198,7 +236,7 @@ function CutElement = cutElement(CubicElement, fun, tol)
             end
         end
         if not(contained)
-            CutFaces = [CutFaces; element2d_dummy(CutFacesP(chull(i,:),:), false)]; %#ok
+            CutFaces = [CutFaces; element2d_dummy(CutFacesP(chull(i,:),:), false, true)]; %#ok
         end
     end
     CutElement = element3d_dummy(CutFacesP, CutFaces, false);

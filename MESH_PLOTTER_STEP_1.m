@@ -6,10 +6,9 @@
 
 figure
 set(gcf,'color','white')
-ii = 66:125;
 hold on
-for i=1:length(ii)
-   plot(Elements(ii(i))); 
+for i=66:125
+   plot(Elements(i)); 
 end
 view(3)
 axis equal tight
@@ -19,7 +18,7 @@ zlabel('z','rot',0)
 set(gca,'FontSize',18, 'Position', [0 0 1 1])
 
 colormap jet
-caxis([-1.2,1.3]);
+caxis([-1.5,2]);
 
 [x,y,z] = sphere(40);      %# Makes a 21-by-21 point sphere
 r = 1;                 %# A radius value

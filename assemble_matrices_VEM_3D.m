@@ -62,6 +62,11 @@ for i=1:length(Elements) % For each bulk element
         end
     end
 end
+
+boundarynodes = unique(EGamma(:));
+MS = MS(boundarynodes,boundarynodes);
+CMS = CMS(boundarynodes,boundarynodes);
+KS = KS(boundarynodes,boundarynodes);
             
         
 end

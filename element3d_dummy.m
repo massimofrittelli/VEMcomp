@@ -86,12 +86,15 @@ classdef element3d_dummy
             end
         end
         
-        function plot(obj)
+        function plot(obj, pert)
+            if nargin == 1
+               pert = 0; 
+            end
            hold on
            for i=1:size(obj.Faces,1)
                PF = obj.Faces(i).P;
                % radii = vecnorm(PF')';
-               fill3(PF(:,1), PF(:,2), PF(:,3), PF(:,1)*0 + 1 - obj.iscube);
+               fill3(PF(:,1), PF(:,2), PF(:,3), PF(:,1)*0 + 1 -pert - obj.iscube);
            end
         end
         

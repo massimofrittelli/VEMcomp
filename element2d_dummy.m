@@ -7,6 +7,7 @@ classdef element2d_dummy
     properties
         P(:,3) double % Vertexes
         Pind(:,1) double = [] % Indexes of vertexes
+        to_plot logical
     end
     
     properties (SetAccess = private)
@@ -94,8 +95,16 @@ classdef element2d_dummy
             end
         end
         
-        function plot(obj)
-           fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), obj.P(:,1)*0 + 1 - obj.is_square);
+        function plot(obj, col)
+            if nargin == 1
+                fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), obj.P(:,1)*0 + 1 - obj.is_square);
+            else
+                if obj.is_boundary
+                    fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), col,'EdgeColor','none');
+                else
+                    fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), col);
+                end
+            end
         end
         
     end

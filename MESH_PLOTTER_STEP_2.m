@@ -2,14 +2,13 @@
 % FOR THE BSVEM 3D ELLIPTIC PAPER
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[P, h, boundarynode, Elements] = generate_mesh_sphere_inner_cubes(6);
+[P, h, boundarynode, Elements] = generate_mesh_sphere_inner_and_boundary_cubes(6);
 
 figure
 set(gcf,'color','white')
-ii = 1:19;
 hold on
-for i=1:length(ii)
-   plot(Elements(ii(i))); 
+for i=62:117
+   plot(Elements(i)); 
 end
 view(3)
 axis equal tight
@@ -20,7 +19,7 @@ set(gca,'FontSize',18, 'Position', [0 0 1 1])
 
 
 colormap jet
-caxis([-1.2,1.3]);
+caxis([-1.5,2]);
 
 [x,y,z] = sphere(40);      %# Makes a 21-by-21 point sphere
 %x = x(21:end,:);       %# Keep top 11 x points
