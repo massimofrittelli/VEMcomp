@@ -48,6 +48,8 @@
 \citation{frittelli2018virtual}
 \citation{frittelli2021bulk}
 \citation{frittelli2023bsrds}
+\citation{frittelli2023elliptic}
+\citation{wells2022velocitybased}
 \citation{Sutton_2016}
 \citation{Herrera_2022}
 \citation{Dhanush_2018}
@@ -83,55 +85,60 @@
 \@writefile{toc}{\contentsline {section}{\numberline {3}\leavevmode {\color  {red}Mesh generation and representation}}{3}{section.3}\protected@file@percent }
 \newlabel{sec:mesh_generation}{{3}{3}{\red {Mesh generation and representation}}{section.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}\leavevmode {\color  {red}The class \texttt  {element2d\_dummy}}}{3}{subsection.3.1}\protected@file@percent }
+\citation{lorensen1987marching}
+\citation{frittelli2021bulk}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}\leavevmode {\color  {red}The class \texttt  {element3d\_dummy}}}{4}{subsection.3.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3}\leavevmode {\color  {red}Generating meshes for special geometries}}{4}{subsection.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4}Computation of local matrices}{4}{section.4}\protected@file@percent }
-\newlabel{sec:computation_local_matrices}{{4}{4}{Computation of local matrices}{section.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}The class \texttt  {element2d}}{5}{subsection.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}The class \texttt  {element3d}}{5}{subsection.4.2}\protected@file@percent }
+\newlabel{sec:mesh_generation}{{3.3}{4}{\red {Generating meshes for special geometries}}{subsection.3.3}{}}
+\newlabel{level_set_2d}{{4}{4}{\red {Generating meshes for special geometries}}{equation.3.4}{}}
+\citation{lorensen1987marching}
+\citation{frittelli2023elliptic}
+\newlabel{level_set_3d}{{5}{5}{\red {Generating meshes for special geometries}}{equation.3.5}{}}
+\citation{Beirao_da_Veiga_2017_stability}
+\citation{da2017high}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Computation of local \leavevmode {\color  {red}and global} matrices}{6}{section.4}\protected@file@percent }
+\newlabel{sec:computation_local_matrices}{{4}{6}{Computation of local \red {and global} matrices}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}The class \texttt  {element2d}}{6}{subsection.4.1}\protected@file@percent }
 \citation{hitchhikers}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}The class \texttt  {element3d}}{7}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}A worked example in 2D: the unit square}{7}{subsection.4.3}\protected@file@percent }
 \citation{hitchhikers}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}A worked example in 2D: the unit square}{6}{subsection.4.3}\protected@file@percent }
-\newlabel{stiffness_2d}{{13}{7}{A worked example in 2D: the unit square}{equation.4.13}{}}
-\newlabel{mass_2d}{{14}{7}{A worked example in 2D: the unit square}{equation.4.14}{}}
+\newlabel{stiffness_2d}{{15}{8}{A worked example in 2D: the unit square}{equation.4.15}{}}
+\newlabel{mass_2d}{{16}{8}{A worked example in 2D: the unit square}{equation.4.16}{}}
 \citation{hitchhikers}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}A worked example in 3D: the unit cube}{8}{subsection.4.4}\protected@file@percent }
-\newlabel{cube_vertex_ordering}{{15}{8}{A worked example in 3D: the unit cube}{equation.4.15}{}}
-\newlabel{stiffness_3d}{{24}{10}{A worked example in 3D: the unit cube}{equation.4.24}{}}
-\newlabel{mass_3d}{{25}{10}{A worked example in 3D: the unit cube}{equation.4.25}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}\leavevmode {\color  {red}Matrix assembly and user-friendly solver}}{11}{section.5}\protected@file@percent }
-\newlabel{sec:user_friendly_solver}{{5}{11}{\red {Matrix assembly and user-friendly solver}}{section.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Numerical examples}{12}{section.6}\protected@file@percent }
-\newlabel{sec:numerical_examples}{{6}{12}{Numerical examples}{section.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Bulk-only problems}{12}{subsection.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.1}\leavevmode {\color  {red}Poisson problem on two-dimensional domain}}{12}{subsubsection.6.1.1}\protected@file@percent }
-\newlabel{sec:laplace_twodim}{{6.1.1}{12}{\red {Poisson problem on two-dimensional domain}}{subsubsection.6.1.1}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.2}Poisson equation on the cube}{12}{subsubsection.6.1.2}\protected@file@percent }
-\newlabel{sec:laplace_cube}{{6.1.2}{12}{Poisson equation on the cube}{subsubsection.6.1.2}{}}
-\newlabel{experiment_laplace_equation_3d}{{26}{12}{Poisson equation on the cube}{equation.6.26}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Poisson equation \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {experiment_laplace_equation_3d}\unskip \@@italiccorr )}} on the unit cube $\Omega = [0,1]^3$. The VEM implemented in VEMcomp shows optimal quadratic convergence in $L^2(\Omega )$ norm.}}{12}{table.1}\protected@file@percent }
-\newlabel{tab:laplace_3d_convergence}{{1}{12}{Poisson equation \eqref {experiment_laplace_equation_3d} on the unit cube $\Omega = [0,1]^3$. The VEM implemented in VEMcomp shows optimal quadratic convergence in $L^2(\Omega )$ norm}{table.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Poisson equation \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {experiment_laplace_equation_3d}\unskip \@@italiccorr )}} on the unit cube $\Omega = [0,1]^3$: numerical solution obtained on the finest mesh for $i=9$ with $N= 97336$ nodes.}}{13}{figure.1}\protected@file@percent }
-\newlabel{fig:laplace_3d_numsol}{{1}{13}{Poisson equation \eqref {experiment_laplace_equation_3d} on the unit cube $\Omega = [0,1]^3$: numerical solution obtained on the finest mesh for $i=9$ with $N= 97336$ nodes}{figure.1}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.3}Poisson equation on the sphere}{13}{subsubsection.6.1.3}\protected@file@percent }
-\newlabel{sec:laplace_sphere}{{6.1.3}{13}{Poisson equation on the sphere}{subsubsection.6.1.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}A worked example in 3D: the unit cube}{9}{subsection.4.4}\protected@file@percent }
+\newlabel{cube_vertex_ordering}{{17}{9}{A worked example in 3D: the unit cube}{equation.4.17}{}}
+\newlabel{stiffness_3d}{{26}{11}{A worked example in 3D: the unit cube}{equation.4.26}{}}
+\newlabel{mass_3d}{{27}{11}{A worked example in 3D: the unit cube}{equation.4.27}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}\leavevmode {\color  {red}Global matrix assembly}}{12}{subsection.4.5}\protected@file@percent }
+\citation{frittelli2021bulk}
+\citation{frittelli2023elliptic}
+\@writefile{toc}{\contentsline {section}{\numberline {5}\leavevmode {\color  {red}User-friendly solver and plotter}}{13}{section.5}\protected@file@percent }
+\newlabel{sec:user_friendly_solver}{{5}{13}{\red {User-friendly solver and plotter}}{section.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Numerical examples}{13}{section.6}\protected@file@percent }
+\newlabel{sec:numerical_examples}{{6}{13}{Numerical examples}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Bulk-only problems}{13}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.1}\leavevmode {\color  {red}Poisson problem on two-dimensional domain}}{13}{subsubsection.6.1.1}\protected@file@percent }
+\newlabel{sec:laplace_twodim}{{6.1.1}{13}{\red {Poisson problem on two-dimensional domain}}{subsubsection.6.1.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.2}Poisson equation on the sphere}{13}{subsubsection.6.1.2}\protected@file@percent }
+\newlabel{sec:laplace_sphere}{{6.1.2}{13}{Poisson equation on the sphere}{subsubsection.6.1.2}{}}
 \newlabel{experiment_laplace_equation_3d_sphere}{{28}{13}{Poisson equation on the sphere}{equation.6.28}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Example of an extruded cubic mesh on the unit sphere. The outermost elements, highlighted in yellow are irregular (but still star-shaped or even convex) $8$-vertex polyhedra. The interior is filled with cubes (red).}}{14}{figure.2}\protected@file@percent }
-\newlabel{fig:extruded_mesh_sphere}{{2}{14}{Example of an extruded cubic mesh on the unit sphere. The outermost elements, highlighted in yellow are irregular (but still star-shaped or even convex) $8$-vertex polyhedra. The interior is filled with cubes (red)}{figure.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Poisson equation \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {experiment_laplace_equation_3d_sphere}\unskip \@@italiccorr )}} on the unit sphere $\Omega $ in 3D. The VEM implemented in VEMcomp shows optimal quadratic convergence in $L^2(\Omega )$ norm.}}{14}{table.2}\protected@file@percent }
-\newlabel{tab:laplace_3d_convergence_sphere}{{2}{14}{Poisson equation \eqref {experiment_laplace_equation_3d_sphere} on the unit sphere $\Omega $ in 3D. The VEM implemented in VEMcomp shows optimal quadratic convergence in $L^2(\Omega )$ norm}{table.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Example of an extruded cubic mesh on the unit sphere. The outermost elements, highlighted in yellow are irregular (but still star-shaped or even convex) $8$-vertex polyhedra. The interior is filled with cubes (red).}}{14}{figure.1}\protected@file@percent }
+\newlabel{fig:extruded_mesh_sphere}{{1}{14}{Example of an extruded cubic mesh on the unit sphere. The outermost elements, highlighted in yellow are irregular (but still star-shaped or even convex) $8$-vertex polyhedra. The interior is filled with cubes (red)}{figure.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Poisson equation \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {experiment_laplace_equation_3d_sphere}\unskip \@@italiccorr )}} on the unit sphere $\Omega $ in 3D. The VEM implemented in VEMcomp shows optimal quadratic convergence in $L^2(\Omega )$ norm.}}{14}{table.1}\protected@file@percent }
+\newlabel{tab:laplace_3d_convergence_sphere}{{1}{14}{Poisson equation \eqref {experiment_laplace_equation_3d_sphere} on the unit sphere $\Omega $ in 3D. The VEM implemented in VEMcomp shows optimal quadratic convergence in $L^2(\Omega )$ norm}{table.1}{}}
 \citation{elliott2013finite}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Poisson equation \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {experiment_laplace_equation_3d_sphere}\unskip \@@italiccorr )}} on the unit sphere $\Omega $ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes.}}{15}{figure.3}\protected@file@percent }
-\newlabel{fig:laplace_3d_numsol_sphere}{{3}{15}{Poisson equation \eqref {experiment_laplace_equation_3d_sphere} on the unit sphere $\Omega $ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Poisson equation \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {experiment_laplace_equation_3d_sphere}\unskip \@@italiccorr )}} on the unit sphere $\Omega $ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes.}}{15}{figure.2}\protected@file@percent }
+\newlabel{fig:laplace_3d_numsol_sphere}{{2}{15}{Poisson equation \eqref {experiment_laplace_equation_3d_sphere} on the unit sphere $\Omega $ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes}{figure.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Numerical examples for bulk-surface problems}{15}{subsection.6.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {6.2.1}Elliptic bulk-surface problem on the sphere}{15}{subsubsection.6.2.1}\protected@file@percent }
 \newlabel{sec:example_elliptic_bs_sphere}{{6.2.1}{15}{Elliptic bulk-surface problem on the sphere}{subsubsection.6.2.1}{}}
 \newlabel{experiment_bs_3d_sphere}{{30}{15}{Elliptic bulk-surface problem on the sphere}{equation.6.30}{}}
 \citation{frittelli2021bulk}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Elliptic bulk-surface problem \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {experiment_bs_3d_sphere}\unskip \@@italiccorr )}} on the unit sphere $\Omega $ in 3D. The VEM implemented in VEMcomp shows optimal quadratic convergence in $L^2(\Omega ) \times L^2(\Gamma )$ norm. Times required for the solution of the linear system are shown.}}{16}{table.3}\protected@file@percent }
-\newlabel{tab:bs_3d_convergence_sphere}{{3}{16}{Elliptic bulk-surface problem \eqref {experiment_bs_3d_sphere} on the unit sphere $\Omega $ in 3D. The VEM implemented in VEMcomp shows optimal quadratic convergence in $L^2(\Omega ) \times L^2(\Gamma )$ norm. Times required for the solution of the linear system are shown}{table.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Elliptic bulk-surface problem \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {experiment_bs_3d_sphere}\unskip \@@italiccorr )}} on the unit sphere $\Omega $ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes. Left: bulk component $u$. Right: surface component $v$.}}{16}{figure.4}\protected@file@percent }
-\newlabel{fig:bs_3d_numsol_sphere}{{4}{16}{Elliptic bulk-surface problem \eqref {experiment_bs_3d_sphere} on the unit sphere $\Omega $ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes. Left: bulk component $u$. Right: surface component $v$}{figure.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Elliptic bulk-surface problem \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {experiment_bs_3d_sphere}\unskip \@@italiccorr )}} on the unit sphere $\Omega $ in 3D. The VEM implemented in VEMcomp shows optimal quadratic convergence in $L^2(\Omega ) \times L^2(\Gamma )$ norm. Times required for the solution of the linear system are shown.}}{16}{table.2}\protected@file@percent }
+\newlabel{tab:bs_3d_convergence_sphere}{{2}{16}{Elliptic bulk-surface problem \eqref {experiment_bs_3d_sphere} on the unit sphere $\Omega $ in 3D. The VEM implemented in VEMcomp shows optimal quadratic convergence in $L^2(\Omega ) \times L^2(\Gamma )$ norm. Times required for the solution of the linear system are shown}{table.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Elliptic bulk-surface problem \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {experiment_bs_3d_sphere}\unskip \@@italiccorr )}} on the unit sphere $\Omega $ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes. Left: bulk component $u$. Right: surface component $v$.}}{16}{figure.3}\protected@file@percent }
+\newlabel{fig:bs_3d_numsol_sphere}{{3}{16}{Elliptic bulk-surface problem \eqref {experiment_bs_3d_sphere} on the unit sphere $\Omega $ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes. Left: bulk component $u$. Right: surface component $v$}{figure.3}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {6.2.2}Parabolic bulk-surface problem on the sphere}{16}{subsubsection.6.2.2}\protected@file@percent }
 \newlabel{sec:example_parabolic_bs_sphere}{{6.2.2}{16}{Parabolic bulk-surface problem on the sphere}{subsubsection.6.2.2}{}}
 \newlabel{experiment_bs_3d_sphere_parabolic}{{31}{16}{Parabolic bulk-surface problem on the sphere}{equation.6.31}{}}
@@ -142,46 +149,52 @@
 \bibcite{adak2019convergence}{2}
 \bibcite{aldakheel2018phase}{3}
 \bibcite{aldakheel2019virtual}{4}
-\bibcite{antonietti2016c}{5}
-\bibcite{bachini2021arbitrary}{6}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Parabolic bulk-surface problem \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {experiment_bs_3d_sphere_parabolic}\unskip \@@italiccorr )}} on the unit sphere $\Omega $ in 3D. The VEM implemented in VEMcomp shows optimal quadratic convergence in $L^2(\Omega ) \times L^2(\Gamma )$ norm. Times required for the time integration are shown.}}{17}{table.4}\protected@file@percent }
-\newlabel{tab:bs_3d_convergence_sphere_parabolic}{{4}{17}{Parabolic bulk-surface problem \eqref {experiment_bs_3d_sphere_parabolic} on the unit sphere $\Omega $ in 3D. The VEM implemented in VEMcomp shows optimal quadratic convergence in $L^2(\Omega ) \times L^2(\Gamma )$ norm. Times required for the time integration are shown}{table.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Parabolic bulk-surface problem \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {experiment_bs_3d_sphere_parabolic}\unskip \@@italiccorr )}} on the unit sphere $\Omega $ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes and timestep $\tau = 1.5625e-2$. Left: bulk component $u$. Right: surface component $v$.}}{17}{figure.5}\protected@file@percent }
-\newlabel{fig:bs_3d_numsol_sphere_parabolic}{{5}{17}{Parabolic bulk-surface problem \eqref {experiment_bs_3d_sphere_parabolic} on the unit sphere $\Omega $ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes and timestep $\tau = 1.5625e-2$. Left: bulk component $u$. Right: surface component $v$}{figure.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Parabolic bulk-surface problem \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {experiment_bs_3d_sphere_parabolic}\unskip \@@italiccorr )}} on the unit sphere $\Omega $ in 3D. The VEM implemented in VEMcomp shows optimal quadratic convergence in $L^2(\Omega ) \times L^2(\Gamma )$ norm. Times required for the time integration are shown.}}{17}{table.3}\protected@file@percent }
+\newlabel{tab:bs_3d_convergence_sphere_parabolic}{{3}{17}{Parabolic bulk-surface problem \eqref {experiment_bs_3d_sphere_parabolic} on the unit sphere $\Omega $ in 3D. The VEM implemented in VEMcomp shows optimal quadratic convergence in $L^2(\Omega ) \times L^2(\Gamma )$ norm. Times required for the time integration are shown}{table.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Parabolic bulk-surface problem \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces \ref  {experiment_bs_3d_sphere_parabolic}\unskip \@@italiccorr )}} on the unit sphere $\Omega $ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes and timestep $\tau = 1.5625e-2$. Left: bulk component $u$. Right: surface component $v$.}}{17}{figure.4}\protected@file@percent }
+\newlabel{fig:bs_3d_numsol_sphere_parabolic}{{4}{17}{Parabolic bulk-surface problem \eqref {experiment_bs_3d_sphere_parabolic} on the unit sphere $\Omega $ in 3D: numerical solution obtained on the finest mesh for $i=4$ with $N= 40381$ nodes and timestep $\tau = 1.5625e-2$. Left: bulk component $u$. Right: surface component $v$}{figure.4}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {6.2.3}\leavevmode {\color  {red}Bulk-surface reaction-diffusion system on the sphere}}{17}{subsubsection.6.2.3}\protected@file@percent }
 \newlabel{sec:example_bsrds_sphere}{{6.2.3}{17}{\red {Bulk-surface reaction-diffusion system on the sphere}}{subsubsection.6.2.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusions}{17}{section.7}\protected@file@percent }
+\newlabel{sec:conclusions}{{7}{17}{Conclusions}{section.7}{}}
+\bibcite{antonietti2016c}{5}
+\bibcite{bachini2021arbitrary}{6}
 \bibcite{da2013virtual}{7}
 \bibcite{beirao2013basic}{8}
 \bibcite{hitchhikers}{9}
 \bibcite{da2017high}{10}
 \bibcite{da2020c1}{11}
-\bibcite{da2018virtual}{12}
-\bibcite{da2014virtual}{13}
-\bibcite{beirao2019stokes}{14}
-\bibcite{da2019virtual}{15}
-\bibcite{benedetto2014virtual}{16}
-\bibcite{bertoluzza2019high}{17}
-\bibcite{cangiani2017posteriori}{18}
-\bibcite{dassi2022virtual}{19}
-\bibcite{dassi2022bend}{20}
-\bibcite{Dhanush_2018}{21}
-\bibcite{elliott2013finite}{22}
-\bibcite{frittelli2021bulk}{23}
-\bibcite{frittelli2023bsrds}{24}
-\bibcite{Frittelli2017cross}{25}
-\bibcite{Frittelli2017preserving}{26}
-\bibcite{frittelli2018virtual}{27}
-\bibcite{gain2014virtual}{28}
-\bibcite{Herrera_2022}{29}
-\bibcite{huang2021posteriori}{30}
-\bibcite{lacitignola2017turing}{31}
-\bibcite{lacitignola2022pattern}{32}
-\bibcite{VEMLAB}{33}
-\bibcite{Ortiz_Bernardin_2019}{34}
-\bibcite{Sutton_2016}{35}
-\bibcite{Talischi_2012}{36}
-\bibcite{vacca2015virtual}{37}
-\bibcite{van2022mesh}{38}
-\bibcite{xiao2022nonconforming}{39}
-\bibcite{zhao2019nonconforming}{40}
+\bibcite{Beirao_da_Veiga_2017_stability}{12}
+\bibcite{da2018virtual}{13}
+\bibcite{da2014virtual}{14}
+\bibcite{beirao2019stokes}{15}
+\bibcite{da2019virtual}{16}
+\bibcite{benedetto2014virtual}{17}
+\bibcite{bertoluzza2019high}{18}
+\bibcite{cangiani2017posteriori}{19}
+\bibcite{dassi2022virtual}{20}
+\bibcite{dassi2022bend}{21}
+\bibcite{Dhanush_2018}{22}
+\bibcite{elliott2013finite}{23}
+\bibcite{frittelli2021bulk}{24}
+\bibcite{frittelli2023bsrds}{25}
+\bibcite{frittelli2023elliptic}{26}
+\bibcite{Frittelli2017cross}{27}
+\bibcite{Frittelli2017preserving}{28}
+\bibcite{frittelli2018virtual}{29}
+\bibcite{gain2014virtual}{30}
+\bibcite{Herrera_2022}{31}
+\bibcite{huang2021posteriori}{32}
+\bibcite{lacitignola2017turing}{33}
+\bibcite{lacitignola2022pattern}{34}
+\bibcite{lorensen1987marching}{35}
+\bibcite{VEMLAB}{36}
+\bibcite{Ortiz_Bernardin_2019}{37}
+\bibcite{Sutton_2016}{38}
+\bibcite{Talischi_2012}{39}
+\bibcite{vacca2015virtual}{40}
+\bibcite{van2022mesh}{41}
+\bibcite{wells2022velocitybased}{42}
+\bibcite{xiao2022nonconforming}{43}
+\bibcite{zhao2019nonconforming}{44}
 \gdef \@abspage@last{20}

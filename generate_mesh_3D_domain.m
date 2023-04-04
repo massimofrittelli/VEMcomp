@@ -1,4 +1,4 @@
-function [P, h, CubicElements, NonCubicElements, EGamma, EGammaPlot, ElementsToPlot] = generate_mesh_3D_domain(fun, range, Nx, tol)
+function [P, h, BulkElements, SurfaceElements, SurfaceElementsToPlot] = generate_mesh_3D_domain(fun, range, Nx, tol, xcut)
 %GENERATE_MESH_3D_DOMAIN Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -68,9 +68,7 @@ end
 
 
 % GENERATE ELEMENTS
-CubicElements = [];
-NonCubicElements = [];
-ElementsToPlot = [];
+BulkElements = [];
 accepted_node = false(N,1);
 newP = [];
 for i=0:Nx-2 % For each element of the bounding box
@@ -98,10 +96,7 @@ for i=0:Nx-2 % For each element of the bounding box
                       end
                    end
                 end
-                CubicElements = [CubicElements; NewCubicElement]; %#ok
-                if i >= i_cut || j >= i_cut
-                    ElementsToPlot = [ElementsToPlot; NewCubicElement]; %#ok
-                end
+                BulkElements = [BulkElements; NewCubicElement]; %#ok
                 continue
             end
             % Store non-cubic elements obtained by cutting cubic elements
@@ -123,10 +118,7 @@ for i=0:Nx-2 % For each element of the bounding box
                        end
                     end
                 end
-                if i >= i_cut || j >= i_cut
-                    ElementsToPlot = [ElementsToPlot; NewElement]; %#ok
-                end
-                NonCubicElements = [NonCubicElements; NewElement]; %#ok
+                BulkElements = [BulkElements; NewElement]; %#ok
                 newP = [newP; NewElement.P];  %#ok
             end
         end
@@ -136,37 +128,23 @@ end
 % DETERMINE SET OF NON-REPEATED NODES UP TO SMALL TOLERANCE
 P = uniquetol([P(accepted_node,:); newP],tol,'ByRows',true);
 
-EGammaPlot = [];
+SurfaceElementsToPlot = [];
 % FIX ELEMENTS BY ASSIGNING NODE INDEXES AND ELIMINATING DUPLICATE NODES UP
 % TO SMALL TOLERANCE
-for i=1:length(CubicElements)
-   [~, ind] = ismembertol(CubicElements(i).P,P,tol,'ByRows',true);
-   CubicElements(i).Pind = ind; %#ok 
-   CubicElements(i).P = P(ind,:); %#ok
-   for j=1:length(CubicElements(i).Faces)
-       [~, ind] = ismembertol(CubicElements(i).Faces(j).P,P,tol,'ByRows',true);
-       CubicElements(i).Faces(j).Pind = ind;
-       CubicElements(i).Faces(j).P = P(ind,:);
-       if CubicElements(i).Faces(j).to_plot
-           EGammaPlot = [EGammaPlot; CubicElements(i).Faces(j)]; %#ok
+SurfaceElements = [];
+for i=1:length(BulkElements)
+   [~, ind] = ismembertol(BulkElements(i).P,P,tol,'ByRows',true);
+   BulkElements(i).Pind = ind; %#ok 
+   BulkElements(i).P = P(ind,:); %#ok
+   for j=1:length(BulkElements(i).Faces)
+       [~, ind] = ismembertol(BulkElements(i).Faces(j).P,P,tol,'ByRows',true);
+       BulkElements(i).Faces(j).Pind = ind;
+       BulkElements(i).Faces(j).P = P(ind,:);
+       if BulkElements(i).Faces(j).is_boundary
+           SurfaceElements = [SurfaceElements; ind']; %#ok
        end
-   end
-end
-
-EGamma = [];
-for i=1:length(NonCubicElements)
-   [~, ind] = ismembertol(NonCubicElements(i).P,P,tol,'ByRows',true);
-   NonCubicElements(i).Pind = ind; %#ok 
-   NonCubicElements(i).P = P(ind,:); %#ok
-   for j=1:length(NonCubicElements(i).Faces)
-       [~, ind] = ismembertol(NonCubicElements(i).Faces(j).P,P,tol,'ByRows',true);
-       NonCubicElements(i).Faces(j).Pind = ind;
-       NonCubicElements(i).Faces(j).P = P(ind,:);
-       if NonCubicElements(i).Faces(j).is_boundary
-           EGamma = [EGamma; ind']; %#ok
-       end
-       if NonCubicElements(i).Faces(j).to_plot
-           EGammaPlot = [EGammaPlot; NonCubicElements(i).Faces(j)]; %#ok
+       if BulkElements(i).Faces(j).to_plot
+           SurfaceElementsToPlot = [SurfaceElementsToPlot; BulkElements(i).Faces(j)]; %#ok
        end
    end
 end

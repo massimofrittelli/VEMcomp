@@ -90,6 +90,14 @@ L~Beir{\~a}o~da Veiga, F~Dassi, and A~Russo.
 \newblock \href {https://doi.org/10.1016/j.camwa.2019.06.019}
   {\path{doi:10.1016/j.camwa.2019.06.019}}.
 
+\bibitem{Beirao_da_Veiga_2017_stability}
+L~Beir{\~{a}}o~da Veiga, C~Lovadina, and A~Russo.
+\newblock Stability analysis for the virtual element method.
+\newblock {\em Mathematical Models and Methods in Applied Sciences},
+  27(13):2557--2594, 2017.
+\newblock \href {https://doi.org/10.1142/s021820251750052x}
+  {\path{doi:10.1142/s021820251750052x}}.
+
 \bibitem{da2018virtual}
 L~Beir{\~a}o Da~Veiga, C~Lovadina, and G~Vacca.
 \newblock Virtual elements for the {Navier--Stokes} problem on polygonal
@@ -186,6 +194,15 @@ M~Frittelli, A~Madzvamuse, and I~Sgura.
 \newblock The bulk-surface virtual element method for reaction-diffusion
   {PDEs}: analysis and applications.
 \newblock {\em Communications in Computational Physics}, Accepted, 2023.
+\newblock \href {https://doi.org/10.4208/cicp.OA-2022-0204}
+  {\path{doi:10.4208/cicp.OA-2022-0204}}.
+
+\bibitem{frittelli2023elliptic}
+M~Frittelli, A~Madzvamuse, and I~Sgura.
+\newblock Virtual element method for elliptic bulk-surface {PDEs} in three
+  space dimensions.
+\newblock {\em Numerical Methods for Partial Differential Equations}, Under
+  minor revision, 2023.
 
 \bibitem{Frittelli2017cross}
 M~Frittelli, A~Madzvamuse, I~Sgura, and C~Venkataraman.
@@ -255,6 +272,13 @@ D~Lacitignola, M~Frittelli, V~Cusimano, and A~De~Gaetano.
 \newblock \href {https://doi.org/10.3934/jcd.2021027}
   {\path{doi:10.3934/jcd.2021027}}.
 
+\bibitem{lorensen1987marching}
+W~E Lorensen and H~E Cline.
+\newblock Marching cubes: A high resolution 3d surface construction algorithm.
+\newblock {\em ACM siggraph computer graphics}, 21(4):163--169, 1987.
+\newblock \href {https://doi.org/10.1145/37402.37422}
+  {\path{doi:10.1145/37402.37422}}.
+
 \bibitem{VEMLAB}
 A~Ortiz-Bernardin.
 \newblock Vemlab version 2.4.1.
@@ -302,6 +326,11 @@ D~van Huyssteen, F~L Rivarola, G~Etse, and P~Steinmann.
   393:114849, 2022.
 \newblock \href {https://doi.org/10.1016/j.cma.2022.114849}
   {\path{doi:10.1016/j.cma.2022.114849}}.
+
+\bibitem{wells2022velocitybased}
+H~Wells, M~E Hubbard, and A~Cangiani.
+\newblock A velocity-based moving mesh virtual element method, 2022.
+\newblock \href {http://arxiv.org/abs/2211.13521} {\path{arXiv:2211.13521}}.
 
 \bibitem{xiao2022nonconforming}
 L~Xiao, M~Zhou, and J~Zhao.
