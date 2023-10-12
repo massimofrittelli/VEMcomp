@@ -47,21 +47,26 @@ clc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % LOAD MESH
-load('cube33.mat')
-L = 10;         % cube edge length
-P = P*L;        % rescaled  nodes
+%load('cube9.mat')
+load('graded_cube_128_2_5.mat')
+% L = 10;         % cube edge length
+% P = P*L;        % rescaled  nodes
+L = max(max(P));
 % Non-Lumped version
 % M = M*L^3;      % rescaled bulk mass matrix
 % Mbot = Mbot*L^2;    % rescaled surface mass matrix
 % Lumped version
-M = spdiags(sum(M*L^3,2),0,length(M),length(M));      % rescaled bulk mass matrix
-Mbot = spdiags(sum(Mbot*L^2,2),0,length(Mbot),length(Mbot));    % rescaled surface mass matrix
-K = K*L;        % rescaled bulk stiffness matrix
+%M = spdiags(sum(M*L^3,2),0,length(M),length(M));      % rescaled bulk mass matrix
+%Mbot = spdiags(sum(Mbot*L^2,2),0,length(Mbot),length(Mbot));    % rescaled surface mass matrix
+%K = K*L;        % rescaled bulk stiffness matrix
 % no rescaling needed for surface stiffness matrix
 
+M = spdiags(sum(M,2),0,length(M),length(M));      % lumping
+Mbot = spdiags(sum(Mbot,2),0,length(Mbot),length(Mbot));    % lumping
+
 % SET FINAL TIME AND TIME STEP
-T = 100; % 100
-tau = 5e-3;
+T = 50; % 100
+tau = 2e-3;
 
 % SET DIFFUSION COEFFICIENTS
 d_bulk = 1;
@@ -74,15 +79,15 @@ k_b = 1;
 k_q = 1;
 
 % SET DIB REACTION KINETICS
-rho = 1.5; %1
+rho = 1; %1
 A_1 = 10;
 A_2 = 1;
 alpha = 0.5;
 k2 = 2.5;
 k3 = 1.5;
-B = 30;
+B = 66;
 C = 3;
-gamma = .2;
+gamma = 0.2;
 D = C*(1-alpha)*(1-gamma+gamma*alpha)/(alpha*(1+gamma*alpha));
 
 % FIGURA 4b EJAM
@@ -90,7 +95,7 @@ D = C*(1-alpha)*(1-gamma+gamma*alpha)/(alpha*(1+gamma*alpha));
 
 % IL SEGUENTE E' UN PARAMETRO DI PERTURBAZIONE DEL PROBLEMA B-S RISPETTO AL
 % PROBLEMA 1D
-pert_param = 1.1e-1;
+pert_param = 2e-1;
 
 % SET BULK-SURFACE COUPLING PARAMETERS
 psi_eta = pert_param;
@@ -105,7 +110,7 @@ eta0 = @(x) ampl*(1+rand(size(x(:,1))))/2;
 theta0 = @(x) ampl*rand(size(x(:,1))) + alpha;
 
 % SET PLOT FREQUENCY (ONE FRAME PER 'freq' ITERATIONS)
-plot_freq = 100;
+plot_freq = ceil(50/tau);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %       END INPUT
@@ -189,38 +194,43 @@ Pcut = P(cut,:);
 TRIcut = convhull(Pcut);
 TRI = delaunay(Abot'*P(:,1), Abot'*P(:,2));
 
-figure(1)
-set(gcf, 'Renderer', 'zbuffer', 'color','white','Position', [100 100 500 400])
-b = Atop*bdir + b_bulk;
-trisurf(TRIcut, Pcut(:,1), Pcut(:,2), Pcut(:,3), b(cut),'EdgeColor','none','FaceColor', 'interp');
-hold on
-trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta,'EdgeColor','none','FaceColor', 'interp');
-colorbar('FontSize', 18)
-colormap jet
-xlim([0,L])
-ylim([0,L])
-zlim([0,L])
-set(gca, 'fontsize',18)
-title('$\eta, b$', 'interpreter', 'latex')
-caxis([min([min(b),min(eta),min(eta_pure)]), max([max(b),max(eta),max(eta_pure)])])
-
-figure(3)
-set(gcf, 'Renderer', 'zbuffer', 'color','white','Position', [100 100 500 400])
-trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta_pure,'EdgeColor','none','FaceColor', 'interp');
-xlim([0,L])
-ylim([0,L])
-zlim([0,L])
-set(gca, 'fontsize',18)
-caxis([min([min(bdir+b_bulk),min(eta),min(eta_pure)]), max([max(bdir+b_bulk),max(eta),max(eta_pure)])])
-colorbar('FontSize', 18)
-title('$\eta$', 'interpreter', 'latex')
-colormap jet
-view(2)
+% figure(1)
+% set(gcf, 'Renderer', 'zbuffer', 'color','white','Position', [100 100 500 400])
+% b = Atop*bdir + b_bulk;
+% trisurf(TRIcut, Pcut(:,1), Pcut(:,2), Pcut(:,3), b(cut),'EdgeColor','none','FaceColor', 'interp');
+% hold on
+% trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta,'EdgeColor','none','FaceColor', 'interp');
+% colorbar('FontSize', 18)
+% colormap jet
+% xlim([0,L])
+% ylim([0,L])
+% zlim([0,L])
+% set(gca, 'fontsize',18)
+% title('$\eta, b$', 'interpreter', 'latex')
+% caxis([min([min(b),min(eta),min(eta_pure)]), max([max(b),max(eta),max(eta_pure)])])
+% 
+% figure(3)
+% set(gcf, 'Renderer', 'zbuffer', 'color','white','Position', [100 100 500 400])
+% trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta_pure,'EdgeColor','none','FaceColor', 'interp');
+% xlim([0,L])
+% ylim([0,L])
+% zlim([0,L])
+% set(gca, 'fontsize',18)
+% caxis([min([min(bdir+b_bulk),min(eta),min(eta_pure)]), max([max(bdir+b_bulk),max(eta),max(eta_pure)])])
+% colorbar('FontSize', 18)
+% title('$\eta$', 'interpreter', 'latex')
+% colormap jet
+% view(2)
     
 % for i=1:10
 %     MOV(i) = getframe(gcf);
 % end
 
+Nx = sqrt(min(size(Abot)))-1;
+Ntop = max(size(Atop)) - min(size(Atop));
+
+increments_eta = zeros(ceil(T/tau),1);
+increments_eta_pure = zeros(ceil(T/tau),1);
 tic
 %COMPUTING NUMERICAL SOLUTION
 for i=1:ceil(T/tau)
@@ -232,62 +242,85 @@ for i=1:ceil(T/tau)
     Ftheta_pure = M3*(theta_pure + tau*f_theta(eta_pure, theta_pure));
     bdir(perm1) = U1\(L1\Fb(perm1));
     qdir(perm1d) = U1d\(L1d\Fq(perm1d));
-    eta(perm3) = U3\(L3\Feta(perm3));
+    eta_succ = U3\(L3\Feta(perm3));
     theta(perm3d) = U3d\(L3d\Ftheta(perm3d));
-    eta_pure(perm3) = U3\(L3\Feta_pure(perm3));
+    eta_pure_succ = U3\(L3\Feta_pure(perm3));
     theta_pure(perm3d) = U3d\(L3d\Ftheta_pure(perm3d));
-
     
+    eta_succ(perm3d) = eta_succ;
+    eta_pure_succ(perm3d) = eta_pure_succ;
+    increments_eta(i) = sum(abs(eta_succ-eta),'all');
+    increments_eta_pure(i) = sum(abs(eta_pure_succ-eta_pure),'all');
+    eta_pure = eta_pure_succ;
+    eta = eta_succ;
+
     if rem(i,plot_freq) == 0
         
         fprintf('t=%d\n', tau*i)
         
-        % PLOTTING b,eta OF COUPLED BSRDS MODEL
-        figure(1)
-        cla
-        b = Atop*bdir + b_bulk;
-        trisurf(TRIcut, Pcut(:,1), Pcut(:,2), Pcut(:,3), b(cut),'EdgeColor','none','FaceColor', 'interp');
-        hold on
-        trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta,'EdgeColor','none','FaceColor', 'interp');
-        xlim([0,L])
-        ylim([0,L])
-        zlim([0,L])
-        set(gca, 'fontsize',18)
-        colorbar('FontSize', 18)
-        title('$\eta, b$', 'interpreter', 'latex')
-        caxis([min([min(b),min(eta),min(eta_pure)]), max([max(b),max(eta),max(eta_pure)])])
+        plot_dib_bs(P,Nx,Ntop,eta,bdir,b_bulk, i*tau,'b,$\eta $');
+        plot_dib_bs(P,Nx,Ntop,theta,qdir,q_bulk, i*tau,'q,$\theta $');
+        plot_comparison(P(1:(Nx+1)^2,:), eta, eta_pure, i*tau, '$\eta$');
+        plot_comparison(P(1:(Nx+1)^2,:), theta, theta_pure, i*tau, '$\theta$');
         
-        % PLOTTING eta OF UNCOUPLED SRDS MODEL
-        figure(3)
-        cla
-        trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta_pure,'EdgeColor','none','FaceColor', 'interp');
-        xlim([0,L])
-        ylim([0,L])
-        set(gca, 'fontsize',18)
-        colorbar('FontSize', 18)
-        title('$\eta$', 'interpreter', 'latex')
-        caxis([min([min(bdir+b_bulk),min(eta),min(eta_pure)]), max([max(bdir+b_bulk),max(eta),max(eta_pure)])])
-        view(2)
+        pause(1)
+        
+%         % PLOTTING b,eta OF COUPLED BSRDS MODEL
+%         figure(1)
+%         cla
+%         b = Atop*bdir + b_bulk;
+%         trisurf(TRIcut, Pcut(:,1), Pcut(:,2), Pcut(:,3), b(cut),'EdgeColor','none','FaceColor', 'interp');
+%         hold on
+%         trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta,'EdgeColor','none','FaceColor', 'interp');
+%         xlim([0,L])
+%         ylim([0,L])
+%         zlim([0,L])
+%         set(gca, 'fontsize',18)
+%         colorbar('FontSize', 18)
+%         title('$\eta, b$', 'interpreter', 'latex')
+%         caxis([min([min(b),min(eta),min(eta_pure)]), max([max(b),max(eta),max(eta_pure)])])
+%         
+%         % PLOTTING eta OF UNCOUPLED SRDS MODEL
+%         figure(3)
+%         cla
+%         trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta_pure,'EdgeColor','none','FaceColor', 'interp');
+%         xlim([0,L])
+%         ylim([0,L])
+%         set(gca, 'fontsize',18)
+%         colorbar('FontSize', 18)
+%         title('$\eta$', 'interpreter', 'latex')
+%         caxis([min([min(bdir+b_bulk),min(eta),min(eta_pure)]), max([max(bdir+b_bulk),max(eta),max(eta_pure)])])
+%         view(2)
     end
 end
 toc
 
-% PLOTTING b,eta OF COUPLED BSRDS MODEL AT FINAL TIME WITN NON_SCALED COLORMAPS
-figure(4)
-set(gcf, 'Renderer', 'zbuffer', 'color','white','Position', [100 100 500 400])
-b = Atop*bdir + b_bulk;
-b = b(cut)*(max([max(eta),max(eta_pure)])-min([min(eta),min(eta_pure)]))/(max(b(cut))-min(b(cut)));
-b = b-min(b) + min([min(eta),min(eta_pure)]);
-trisurf(TRIcut, Pcut(:,1), Pcut(:,2), Pcut(:,3), b,'EdgeColor','none','FaceColor', 'interp');
+figure
+set(gcf, 'Renderer', 'zbuffer', 'color','white')
+semilogy(tau*(1:ceil(T/tau)), increments_eta, 'LineWidth', 3)
 hold on
-trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta,'EdgeColor','none','FaceColor', 'interp');
-xlim([0,L])
-ylim([0,L])
-zlim([0,L])
+semilogy(tau*(1:ceil(T/tau)), increments_eta_pure, 'LineWidth', 3)
+legend('3D', '2D')
+xlabel('t')
+title('$\|\eta(t_{n+1})-\eta(t_n)\|_{L^2(\Gamma)}$', 'interpreter', 'latex')
 set(gca, 'fontsize',18)
-title('$\eta, b$', 'interpreter', 'latex')
-caxis([min([min(eta),min(eta_pure)]), max([max(eta),max(eta_pure)])])
-colormap jet  
-colorbar off
+
+% % PLOTTING b,eta OF COUPLED BSRDS MODEL AT FINAL TIME WITN NON_SCALED COLORMAPS
+% figure(4)
+% set(gcf, 'Renderer', 'zbuffer', 'color','white','Position', [100 100 500 400])
+% b = Atop*bdir + b_bulk;
+% b = b(cut)*(max([max(eta),max(eta_pure)])-min([min(eta),min(eta_pure)]))/(max(b(cut))-min(b(cut)));
+% b = b-min(b) + min([min(eta),min(eta_pure)]);
+% trisurf(TRIcut, Pcut(:,1), Pcut(:,2), Pcut(:,3), b,'EdgeColor','none','FaceColor', 'interp');
+% hold on
+% trisurf(TRI, Abot'*P(:,1), Abot'*P(:,2), Abot'*P(:,3), eta,'EdgeColor','none','FaceColor', 'interp');
+% xlim([0,L])
+% ylim([0,L])
+% zlim([0,L])
+% set(gca, 'fontsize',18)
+% title('$\eta, b$', 'interpreter', 'latex')
+% caxis([min([min(eta),min(eta_pure)]), max([max(eta),max(eta_pure)])])
+% colormap jet  
+% colorbar off
 
 % movie2avi(MOV, 'BS_DIB_3D_cube.avi')

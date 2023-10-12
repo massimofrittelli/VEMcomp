@@ -1,9 +1,11 @@
-clearvars
+%clearvars
 close all
 
-[P, h, boundarynode, EGamma, Elements] = plot_mesh_step_3_new(33);
+%[P, h, boundarynode, EGamma, Elements] = plot_mesh_step_3_new(33);
+% Elements = [CubicElements; NonCubicElements];
+Elements = BulkElements;
 
-file = fopen('mesh4.voro','w');
+file = fopen('mesh1graph.voro','w');
 
 boundaryFaceCounter = 0;
 internalFaceCounter = 0;
@@ -14,7 +16,7 @@ for i=1:length(Elements)
     nfaces = length(Element.Faces);
     fprintf(file, 'VoronoiCell %d\n%d\n', i-1, npoints);
     for j=1:npoints
-        fprintf(file, '%.16f %.16f %.16f\n', Element.P(j,1), Element.P(j,2), Element.P(j,3));
+        fprintf(file, '%.10f %.10f %.10f\n', Element.P(j,1), Element.P(j,2), Element.P(j,3));
     end
     fprintf(file,'\n%d\n', nfaces);
     for j=1:nfaces
@@ -30,7 +32,7 @@ for i=1:length(Elements)
     for j=1:nfaces
        boundaryFaceCounter = boundaryFaceCounter - Element.Faces(j).is_boundary;
        internalFaceCounter = internalFaceCounter + (1- Element.Faces(j).is_boundary);
-       marker = Element.Faces(j).boundary*boundaryFaceCounter + (1- Element.Faces(j).is_boundary)*internalFaceCounter;
+       marker = Element.Faces(j).is_boundary*boundaryFaceCounter + (1- Element.Faces(j).is_boundary)*internalFaceCounter;
        fprintf(file, '%d ', marker); 
     end
     fprintf(file,'\n\n');

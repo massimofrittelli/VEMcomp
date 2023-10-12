@@ -22,76 +22,77 @@
 
 \begin{document}
  
-\title{\red{VEMcomp: A MATLAB tool for semilinear parabolic PDEs in 2D and 3D}}
+\title{VEMcomp: A Virtual Element MATLAB tool for semilinear parabolic PDEs in 2D and 3D}
 \author{Massimo Frittelli, Anotida Madzvamuse, Ivonne Sgura}
 
 \maketitle
 
 \begin{abstract}
-\red{We present a Virtual Element MATLAB solver for elliptic or parabolic, linear or semilinear PDEs in two or three space dimensions., which we call VEMcomp. The library covers PDEs posed on different geometries, such as bulk, surface, or bulk-surface PDE probems. The solver employs the Virtual Element Method of lowest polynomial order $k=1$ on general polygonal or polyhedral meshes.  VEMcomp has three purposes.
+We present a Virtual Element MATLAB solver for elliptic and parabolic, linear and semilinear PDEs in two and three space dimensions, which is coined VEMcomp.  Such PDEs are widely applicable to describing problems in material sciences, engineering, cellular and developmental biology, among many other applications. The library covers PDEs posed on different simple and complex geometries,  involving  bulk, surface,  and bulk-surface PDE probems. The solver employs the Virtual Element Method of lowest polynomial order $k=1$ on general polygonal and polyhedral meshes.  VEMcomp has three purposes.
 First,  for special geometries,  VEMcomp generates polygonal and polyhedral meshes optimized for fast matrix assembly. Second, given a mesh for the considered geometry, possibly generated with an external program, VEMcomp computes all the matrices of the method.
-Third, for multiple classes of PDEs, surface and bulk-surface PDEs,  VEMcomp solves the considered PDE problem with the Virtual Element method with a user-friendly interface.  An extensive set of examples illustrates the usage of the library and the optimal convergence rate of the method.}
+Third, for multiple classes of bulk, surface and bulk-surface PDEs,  VEMcomp solves the considered PDE problem with the VEM,  through a user-friendly interface.  An extensive set of examples illustrates the usage of the library and the optimal convergence rate of the method.
 \end{abstract}
 
-\section{\red{Introduction}}
+\section{Introduction}
 
-
-\red{The Virtual Element Method (VEM) was first proposed in \cite{beirao2013basic} for elliptic problems in two space dimensions as a generalization of the Finite Element Method, where the mesh elements can be general polygons instead of triangles.  The usage of polygons with arbitrarily many edges is made possible by enriching the local space of polynomials with suitable non-polynomial functions defined as solutions of an element-wise problem.  This elegant idea ensures the optimal polynomial accuracy of the method.\\
+The Virtual Element Method (VEM) was first proposed in \cite{beirao2013basic} for elliptic problems in two space dimensions as a generalization of the Finite Element Method, where the mesh elements can be general polygons instead of triangles.  The usage of polygons with arbitrarily many edges is made possible by enriching the local space of polynomials with suitable non-polynomial functions defined as solutions of an element-wise problem.  This elegant idea ensures the optimal polynomial accuracy of the method.\\
 The immediate success of VEM is due to the multiple benefits of its geometric flexibility. Among such benefits, we mention: (i) efficient mesh refinement techniques \cite{cangiani2017posteriori, van2022mesh}, (ii) numerical solutions with high global regularity \cite{da2020c1,da2014virtual}, (iii) accurate approximation of boundaries 
 \cite{da2019virtual, bertoluzza2019high, dassi2022bend},  (iv) easy mesh pasting \cite{da2018virtual, frittelli2018virtual}, and (v) easy handling of complex domain shapes and cuts \cite{benedetto2014virtual, dassi2022virtual}.\\
-Motivated by its multiple benefits, the VEM was quickly extended to numerous PDE problems and applications. A non-exhaustive list of models for which VEMs are now available comprises (i) linear elliptic problems in two \cite{beirao2013basic, da2019virtual} and three \cite{da2017high} space dimensions,  (ii) semilinear elliptic problems in two or three space dimensions \cite{xiao2022nonconforming}, (iii) linear heat equation in two \cite{vacca2015virtual} and three \cite{zhao2019nonconforming} space dimensions, (iv) semilinear parabolic equations \cite{adak2019convergence} and reaction-diffusion systems \cite{huang2021posteriori}, (v) elasticity \cite{da2013virtual, gain2014virtual} and plasticity \cite{aldakheel2019virtual} problems,  (vi) phase-field models \cite{aldakheel2018phase, antonietti2016c}, (vii) fluid dynamics \cite{adak2021virtual, beirao2019stokes},
+Motivated by its multiple benefits, the VEM was quickly extended to numerous PDE problems and applications. A non-exhaustive list of models for which the VEMs has been employed comprises of (i) linear elliptic problems in two \cite{beirao2013basic, da2019virtual} and three \cite{da2017high} space dimensions,  (ii) semilinear elliptic problems in two and three space dimensions \cite{xiao2022nonconforming}, (iii) linear heat equation in two \cite{vacca2015virtual} and three \cite{zhao2019nonconforming} space dimensions, (iv) semilinear parabolic equations \cite{adak2019convergence} and reaction-diffusion systems \cite{huang2021posteriori}, (v) elasticity \cite{da2013virtual, gain2014virtual} and plasticity \cite{aldakheel2019virtual} problems,  (vi) phase-field models \cite{aldakheel2018phase, antonietti2016c}, (vii) fluid dynamics \cite{adak2021virtual, beirao2019stokes},
 (viii) fracture models \cite{benedetto2014virtual}, 
 (ix) surface \cite{bachini2021arbitrary, frittelli2018virtual} and bulk-surface \cite{frittelli2021bulk,  frittelli2023bsrds, frittelli2023elliptic} PDEs, and recently (x) PDEs on evolving flat domains \cite{wells2022velocitybased}.\\
 %
-Over ten years of its existence, the VEM has established itself as a reliable technology with desirable properties. This has stimulated the development of the first open-source VEM libraries and codes.  Here will will recall some of these libraries.  The  work in \cite{Sutton_2016} presents a MATLAB implementation of the baseline VEM application: the lowest order VEM for the Poisson problem in 2D. For the same problem, a high order VEM code in MATLAB is then provided in \cite{Herrera_2022}. An Abaqus-MATLAB VEM code for coupled thermo-elasticity problems in 2D is presented in \cite{Dhanush_2018}.  VEM libraries for elasticity problems in 2D are available in MATLAB/Octave \cite{VEMLAB} and C++ \cite{Ortiz_Bernardin_2019}. All the mentioned libraries are dedicated to specific use cases or applications and are confined to the two space dimensional setting. \\
+Over ten years of its existence, the VEM has established itself as a reliable technology with desirable properties. This has stimulated the development of the first open-source VEM libraries and codes.  Here we will recall some of these libraries.  The  work in \cite{Sutton_2016} presents a MATLAB implementation of the baseline VEM application: the lowest order VEM for the Poisson problem in 2D. For the same problem, a high order VEM code in MATLAB is then provided in \cite{Herrera_2022}. An Abaqus-MATLAB VEM code for coupled thermo-elasticity problems in 2D is presented in \cite{Dhanush_2018}.  VEM libraries for elasticity problems in 2D are available in MATLAB/Octave \cite{VEMLAB} and C++ \cite{Ortiz_Bernardin_2019}. All the mentioned libraries are dedicated to specific cases or applications and are confined to the two space dimensional setting. \\
 To the best of the authors' knowledge, there is no open-source VEM library so far for PDE problems in three space dimensions and/or of surface or bulk-surface type. In this work,  we contribute to the field of VEM open-source libraries. We propose a MATLAB library,  which we call VEMcomp, for elliptic and parabolic PDE problems in 2D and 3D, including bulk, surface and bulk-surface PDE problems.  VEMcomp has three purposes:
 \begin{enumerate}
 \item For special geometries, both in 2D and 3D, such as rectangles, ellipses, parallelepipeds and ellipsoids, the library generates polygonal and polyhedral meshes specifically optimized for fast matrix assembly, following \cite{frittelli2021bulk, frittelli2023bsrds};
 \item Given any polygonal or polyhedral mesh -not necessarily generated with VEMcomp itself-, the library generates all the matrices involved in the method (e.g. mass, stiffness).  For polygonal mesh generation, it is worth recalling the MATLAB library \texttt{PolyMesher} \cite{Talischi_2012};
-\item For multiple classes of PDE problems,  the library performs matrix assembly and provides a black-box interface that allows the user to set the problem parameters, and returns the VEM numerical solution. For time-dependent problems, the time discretization is carried out with the Implicit-Explicit (IMEX) Euler method,  which is proven to be simple and effective in combination with FEMs and VEMs for surface \cite{Frittelli2017preserving, Frittelli2017cross} and bulk-surface PDEs \cite{frittelli2021bulk, frittelli2023bsrds}.
+\item For multiple classes of PDE problems,  the library performs matrix assembly and provides a black-box interface that allows the user to set the problem parameters, and returns the VEM numerical solution. For time-dependent problems, the time discretization is carried out with the Implicit-Explicit (IMEX) Euler method,  which has been proven to be simple and effective in combination with FEMs and VEMs for surface \cite{Frittelli2017preserving, Frittelli2017cross} and bulk-surface PDEs \cite{frittelli2021bulk, frittelli2023bsrds}.
 \end{enumerate}
 %
-The structure of the paper is as follows. In Section \ref{sec:overview} we state the multiple model problems to be addressed in this work, thereby motivating the functionalities of VEMcomp.  In Section \ref{sec:meshes} we illustrate how VEMcomp generates polygonal and polyhedral meshes. Section \ref{sec:computation_local_matrices} showcases VEMcomp's ability to compute local and global VEM matrices. In Section \ref{sec:user_friendly_solver} we present VEMcomp's user-friendly solvers and solution plotters for the model problems outlined in Section \ref{sec:overview}.  Section \ref{sec:numerical_examples} lists several numerical examples that illustrate at once the usage of VEMcomp and the optimal convergence of the Virtual Element Method. In Section \ref{sec:conclusions} we draw our conclusions and outline future research directions.}
+The structure of our paper is as follows. In Section \ref{sec:overview} we state the multiple model problems to be addressed in this work, thereby motivating the functionalities of VEMcomp.  In Section \ref{sec:meshes} we illustrate how VEMcomp generates polygonal and polyhedral meshes. Section \ref{sec:computation_local_matrices} showcases VEMcomp's ability to compute local and global VEM matrices. In Section \ref{sec:user_friendly_solver} we present VEMcomp's user-friendly solvers and solution plotters for the model problems outlined in Section \ref{sec:overview}.  Section \ref{sec:numerical_examples} lists several numerical examples that illustrate at once the usage of VEMcomp and the optimal convergence of the Virtual Element Method. In Section \ref{sec:conclusions} we draw our conclusions and outline future research directions.
 
 
 
-\section{\red{Overview}}
+\section{Overview}
 \label{sec:overview}
-\red{VEMcomp is an object-oriented VEM library written in MATLAB.  Compared to other existing VEM libraries, VEMcomp aims to fill the gap for (i) PDE problems in three space dimensions and (ii) PDE problems on complex geometries, such as surface or bulk-surface PDEs. In the remainder of this section, let $\Omega \subset \mathbb{R}^d$, $d=2,3$, be a compact domain in the $d$-dimensional Euclidean space.  The first class of PDE problems covered by VEMcomp comprises elliptic and parabolic, linear and semilinear, bulk-only PDE systems of $n\in\mathbb{N}$ equations, and is given by
+VEMcomp is an object-oriented VEM library written in MATLAB.  Compared to other existing VEM libraries, VEMcomp aims to fill the gap for (i) PDE problems in three space dimensions and (ii) PDE problems on complex geometries, such as surface or bulk-surface PDEs. In the remainder of this section, let $\Omega \subset \mathbb{R}^d$, $d=2,3$, be a compact domain in the $d$-dimensional Euclidean space.  The first class of PDE problems covered by VEMcomp comprises elliptic and parabolic, linear and semilinear, bulk-only PDE systems of $n\in\mathbb{N}$ equations, and is given by
 \begin{equation}
 \label{bulk_only_problem}
 \begin{cases}
-\left[\dfrac{\partial u_i}{\partial t}\right] - d_i^\Omega\Delta u_i = f_i(u_1,\dots, u_n, \boldx, [t]), \qquad \boldx \in \Omega \qquad  i=1,\dots,n;\\
-u_{i} = 0 \quad \text{or} \quad \dfrac{\partial u_i}{\partial \boldn} = 0,  \qquad \boldx \in \partial \Omega\qquad  i=1,\dots,n,
+\left[\dfrac{\partial u_i}{\partial t}\right] - d_i^\Omega\Delta u_i = f_i(u_1,\dots, u_n, \boldx, [t]), \qquad \boldx \in \Omega, \qquad  i=1,\dots,n;\\
+u_{i} = 0 \quad \text{or} \quad \dfrac{\partial u_i}{\partial \boldn} = 0,  \qquad \boldx \in \partial \Omega,\qquad  i=1,\dots,n,
 \end{cases}
 \end{equation}
-where $\Delta$ denotes the Laplace operator in $\Omega$, $d_1^\Omega,\dots, d_n^\Omega > 0$ are diffusion coefficients $T>0$ is the final time, $f_1, \dots, f_n$ are smooth enough linear or nonlinear functions. In \eqref{bulk_only_problem}, the expressions between square brackets appear in the parabolic (time-dependent) case, but not in the elliptic (stationary) case. The general model \eqref{bulk_only_problem} comprises several notable bulk-only PDE problems that were solved with VEM in the literature, such as (i) linear \cite{beirao2013basic, da2017high,da2019virtual} and semilinear elliptic problems \cite{xiao2022nonconforming},  (ii) linear \cite{vacca2015virtual} and semilinear parabolic problems \cite{adak2019convergence} including reaction-diffusion systems \cite{huang2021posteriori}.\\
-If $\Gamma = \partial \Omega$ is a sufficiently smooth manifold, a second class of PDEs that fall in VEMcomp's domain is the following class of surface PDEs or systems of $m\in\mathbb{N}$ surface PDEs:
+where $\Delta$ denotes the Laplace operator in $\Omega$, $d_1^\Omega,\dots, d_n^\Omega > 0$ are diffusion coefficients, $T>0$ is the final time, $f_1, \dots, f_n$ are smooth enough linear or nonlinear functions. In \eqref{bulk_only_problem}, the expressions between square brackets appear in the parabolic (time-dependent) case, but not in the elliptic (stationary) case. The general model \eqref{bulk_only_problem} comprises several notable bulk-only PDE problems that were solved with VEM in the literature, such as (i) linear \cite{beirao2013basic, da2017high,da2019virtual} and semilinear elliptic problems \cite{xiao2022nonconforming},  (ii) linear \cite{vacca2015virtual} and semilinear parabolic problems \cite{adak2019convergence} including reaction-diffusion systems \cite{huang2021posteriori}.\\
+If $\Gamma = \partial \Omega$ is a sufficiently smooth manifold with empty boundary, a second class of PDEs that fall in VEMcomp's domain is the following class of surface PDEs or systems of $m\in\mathbb{N}$ surface PDEs:
 \begin{equation}
 \label{surface_problems}
 \left[\frac{\partial u_j}{\partial t}\right] - d_j^\Gamma \Delta_\Gamma u_j = g_j(u_1,\dots,u_n, \boldx, [t]), \qquad \boldx \in \Gamma, \qquad j=1,\dots,m,
 \end{equation}
-where $\Delta_\Gamma$ represents the Laplace operator on $\Gamma$, $d_1^\Gamma,\dots, d_m^\Gamma > 0$ are diffusion coefficients,  $g_1, \dots, g_m$ are smooth enough linear or nonlinear functions, $T>0$ is the final time. In \eqref{surface_problems}, the expressions between square brackets appear only in the time-dependent case. The general model \eqref{surface_problems} encompasses several surface PDE (SPDE) models of interest, such as elliptic SPDEs \cite{bachini2021arbitrary, frittelli2018virtual} and surface reaction-diffusion systems (SRDSs) \cite{lacitignola2017turing, lacitignola2022pattern}.\\
+where $\Delta_\Gamma$ represents the Laplace operator on $\Gamma$, $d_1^\Gamma,\dots, d_m^\Gamma > 0$ are diffusion coefficients,  $g_1, \dots, g_m$ are smooth enough linear or nonlinear functions, $T>0$ is the final time.  In \eqref{surface_problems}, no boundary conditions are needed since, as we mentioned, $\Gamma$ has no boundary. In \eqref{surface_problems}, the expressions between square brackets appear only in the time-dependent case. The general model \eqref{surface_problems} encompasses several surface PDE (SPDE) models of interest, such as elliptic SPDEs \cite{bachini2021arbitrary, frittelli2018virtual} and surface reaction-diffusion systems (SRDSs) \cite{lacitignola2017turing, lacitignola2022pattern}.\\
 The third and most complex class of PDE problems addressed in this work is given by bulk-surface PDEs of the following form:
 \begin{equation}
 \label{bulk_surface_problems}
 \begin{cases}
+\vspace*{2mm}
 \left[\dfrac{\partial u_i}{\partial t}\right] - d_i^\Omega \Delta u_i = f_i(u_1,\dots,u_n, \boldx, [t]),  \qquad \boldx \in\Omega,\qquad i=1,\dots, n;\\
+\vspace*{2mm}
 \left[\dfrac{\partial v_j}{\partial t}\right] - d_j^\Gamma \Delta_\Gamma v_j = g_j(u_1,\dots,u_n, v_1,\dots, v_m,\boldx, [t]), \qquad \boldx \in \Gamma,\qquad j=1,\dots,m;\\
 \dfrac{\partial u_i}{\partial \boldn} = h_i(u_1,\dots,u_n,v_1,\dots,v_m,\boldx, [t]), \qquad \boldx \in \Gamma,\qquad i=1,\dots,n,
 \end{cases}
 \end{equation}
 where $\Delta$ and $\Delta_\Gamma$ represents the Laplace operator in $\Omega$ and the Laplace-Beltrami operator on $\Gamma$, $d_1^\Omega,\dots, d_n^\Omega,  d_1^\Gamma,\dots, d_m^\Gamma > 0$ are diffusion coefficients,  $f_1, \dots, f_n, g_1,\dots,g_m,h_1,\dots,h_n$ are smooth enough linear or nonlinear functions, and $T>0$ is the final time.  In \eqref{bulk_surface_problems}, the expressions between square brackets appear only in the time-dependent case.  We recall that the VEM was extended to bulk-surface reaction-diffusion systems (BSRDSs) in two \cite{frittelli2021bulk} and three \cite{frittelli2023bsrds} space dimensions, which fall within the general class \eqref{bulk_surface_problems}. \\
-In the next Sections we will illustrate in detail the three main facilities of VEMcomp: (i) polygonal and polyhedral mesh generation, (ii) computation of local VEM matrices, and (iii)  matrix assembly and user-friendly solver for problems \eqref{bulk_only_problem}, \eqref{surface_problems}, and \eqref{bulk_surface_problems}.}
+In the next Sections we will illustrate in detail the three main facilities of VEMcomp: (i) polygonal and polyhedral mesh generation, (ii) computation of local VEM matrices, and (iii)  matrix assembly and user-friendly solver for problems \eqref{bulk_only_problem}, \eqref{surface_problems} and \eqref{bulk_surface_problems}.
 
 
-\section{\red{Mesh generation and representation}}
+\section{Mesh generation and representation}
 \label{sec:meshes}
 
-\red{Polygonal and polyhedral mesh generation is a niche topic, and very little software is available.  For domains in two space dimensions, we mention PolyMesher \cite{Talischi_2012}. To the best of the authors' knowledge, there is no open-source software for polyhedral mesh generation in three space dimensions. For special three dimensional domains,  VEMcomp fills this gap. We point out that, when restricted to triangular (in 2D) or tetrahedral meshes (in 3D), the Virtual Element Method of low polynomial order $k=1$ boils down to the Finite Element Method. This means that VEMcomp can be used as a FEM solver for surface and bulk-surface PDEs, when provided with triangular/tetrahedral meshes,  for which countless open-source generators exist.  We start by presenting basic classes that allow to represent single elements in two and three space dimensions. }
+Polygonal and polyhedral mesh generation is a niche topic, and very little easy to use software is available.  For domains in two space dimensions, we mention the software PolyMesher \cite{Talischi_2012}. To the best of the authors' knowledge, there is no open-source software for polyhedral mesh generation in three space dimensions. For special three dimensional domains,  VEMcomp fills this gap. We point out that, when restricted to triangular (in 2D) or tetrahedral meshes (in 3D), the Virtual Element Method (VEM) of low polynomial order $k=1$ boils down to the Finite Element Method (FEM).  This means that VEMcomp can be used as a FEM solver for surface and bulk-surface PDEs, when provided with triangular/tetrahedral meshes,  for which countless open-source generators exist.  We start by presenting basic classes that allow to represent single elements in two and three space dimensions. 
 
-\subsection{\red{The class \texttt{element2d\_dummy}}}
-The class \texttt{element2d\_dummy} represent a polygonal element in 2D. It contains minimal information that uniquely identify the element. To create an element with \texttt{NVert} vertexes, use the following constructor
+\subsection{The class \texttt{element2d\_dummy}}
+The class \texttt{element2d\_dummy} represents a polygonal element in 2D. It contains minimal information that uniquely identify the element. To create an element with \texttt{NVert} vertexes, use the following constructor
 \begin{lstlisting}
 	obj = element2d_dummy(P);
 \end{lstlisting}
@@ -117,7 +118,7 @@ defined as follows:
 \item The logical \texttt{is\_square} determines if the \texttt{element2d\_dummy} is a square (for which the local VEM matrices are known in closed form).
 \end{itemize}
 
-\subsection{\red{The class \texttt{element3d\_dummy}}}
+\subsection{The class \texttt{element3d\_dummy}}
 The class \texttt{element3d\_dummy} represent a polyhedral element in 3D. It contains minimal information that uniquely identify the element. To create an element with \texttt{NVert} vertexes and \texttt{NFaces} faces, use the following constructor
 \begin{lstlisting}
 	obj = element3d_dummy(P,Faces)
@@ -142,19 +143,19 @@ defined as follows:
 \item The logical \texttt{is\_cube} determines if the \texttt{element3d\_dummy} is a cube (for which the local VEM matrices are known in closed form).
 \end{itemize}
 
-\subsection{\red{Generating meshes for special geometries}}
+\subsection{Generating meshes for special geometries}
 \label{sec:mesh_generation}
-\red{We can now state that any polygonal mesh in 2D can be represented as a collection of \texttt{element2d\_dummy}, while any polthedral mesh in 3D can be represented as a collection of \texttt{element3d\_dummy}.  Even if the user is free to write custom code to generate meshes as collections of \texttt{element2d\_dummy} or \texttt{element3d\_dummy},  VEMcomp comes with two functions for the generation of meshes in this form, for domains that are defined as level sets of Lipschitz functions.  We will start with the 2D case. Let $Q \subset\mathbb{R}^2$ be a closed rectangle and let $f: Q \rightarrow\mathbb{R}$ be a Lipschitz function.  Let $\Omega \subset\mathbb{R}^2$ and $\Gamma = \partial \Omega$ be defined respectively as
+We can now state that any polygonal mesh in 2D can be represented as a collection of \texttt{element2d\_dummy}, while any polthedral mesh in 3D can be represented as a collection of \texttt{element3d\_dummy}.  Even if the user is free to write custom code to generate meshes as collections of \texttt{element2d\_dummy} or \texttt{element3d\_dummy},  VEMcomp comes with two functions for the generation of meshes in this form, for domains that are defined as level sets of Lipschitz functions.  We will start with the 2D case. Let $Q \subset\mathbb{R}^2$ be a closed rectangle and let $f: Q \rightarrow\mathbb{R}$ be a Lipschitz function.  Let $\Omega \subset\mathbb{R}^2$ and $\Gamma = \partial \Omega$ be defined respectively as
 \begin{equation}
 \label{level_set_2d}
 \Omega = \{\boldx\in\mathbb{R}^2\ |\ f(\boldx) \le 0\}, \quad \text{and}\quad \Gamma = \{\boldx\in\mathbb{R}^2\ |\ f(\boldx) = 0\}.
 \end{equation}
-The rectangle $Q$ is subdivided with a Cartesian grid composed of rectangular elements. Then, the rectangles that intersect the boundary $\Gamma$ are cut. This well-known algorithm,  called	\emph{marching squares}, produces a piecewise linear approximation $\Gamma_h$ of the boundary $\Gamma$ \cite{lorensen1987marching}. However, our purpose is to produce a polygonal bulk-surface mesh of $\Omega$. To this end,  the rectangles and the cut rectangles produced as a by-product of the marching squares algorithm, constitute a polygonal approximation $\Omega_h$ of the bulk $\Omega$, such that the approximate boundary $\Gamma_h$ is exactly the boundary of $\Omega_h$, i.e. $\Gamma_h = \partial \Omega_h$. In other words,  we adopt a bulk-surface variant of the marching square algorithm that produces a conforming bulk-surface mesh. This approach improves and generalizes the strategy proposed in our previous work in \cite{frittelli2021bulk}. VEMcomp implements the proposed algorithm in the function \texttt{generate\_mesh\_2d}, whose syntax is as follows}
+The rectangle $Q$ is subdivided with a Cartesian grid composed of rectangular elements. Then, the rectangles that intersect the boundary $\Gamma$ are cut. This well-known algorithm,  called	\emph{marching squares}, produces a piecewise linear approximation $\Gamma_h$ of the boundary $\Gamma$ \cite{lorensen1987marching}. However, our purpose is to produce a polygonal bulk-surface mesh of $\Omega$. To this end,  the rectangles and the cut rectangles produced as a by-product of the marching squares algorithm, constitute a polygonal approximation $\Omega_h$ of the bulk $\Omega$, such that the approximate boundary $\Gamma_h$ is exactly the boundary of $\Omega_h$, i.e. $\Gamma_h = \partial \Omega_h$. In other words,  we adopt a bulk-surface variant of the marching square algorithm that produces a conforming bulk-surface mesh. This approach improves and generalizes the strategy proposed in our previous work in \cite{frittelli2021bulk}. VEMcomp implements the proposed algorithm in the function \texttt{generate\_mesh\_2d}, whose syntax is as follows
 \begin{lstlisting}
 [P, h, BulkElements, SurfaceElements] =
      generate_mesh_2d(fun, box, Nx, tol);
 \end{lstlisting}
-\red{
+
 In the above, the inputs and outputs are defined as follows:
 \begin{itemize}
 \item \texttt{fun} is the level function used in \eqref{level_set_2d}, represented as an inline function of the type \texttt{fun = @(P) <expression>}, where \texttt{P} is any $n\times 2$ array of $n\in\mathbb{N}$ points in $\mathbb{R}^2$;
@@ -162,27 +163,25 @@ In the above, the inputs and outputs are defined as follows:
 \item \texttt{Nx} $>= 2$ is the required amount of gridpoints along each dimension.  If $Q$ is not a square, then the shortest side of $Q$ is discretised with \texttt{Nx} gridpoints;
 \item \texttt{tol} $>0$ is the minimum distance between distinct nodes.  Any two nodes closer than \texttt{tol} will be merged into a unique node, in order to avoid excessively distorted and ill-conditioned elements;
 \item \texttt{P} is a $N\times 2$ array containing the $N\in\mathbb{N}$ nodes of the bulk mesh $\Omega_h$. We remark that the nodes of the surface mesh $\Gamma_h$ constitute a subset of \texttt{P};
-\item \texttt{h} $>0$ is the meshsize of the bulk mesh $\Omega_h$, and thanks to conformity, it is and also a sharp upper bound of the meshsize of the surface mesh $\Gamma_h$;
+\item \texttt{h} $>0$ is the meshsize of the bulk mesh $\Omega_h$, and thanks to conformity,  $h$ is also an upper bound of the meshsize of the surface mesh $\Gamma_h$;
 \item \texttt{BulkElements} is a list of the bulk elements in \texttt{element2d\_dummy} format;
 \item \texttt{SurfaceElements} is a $M\times 2$ array, where $M\in\mathbb{N}$ is the number of surface elements, that defines the surface elements in the following way, which is standard in finite element codes: for each $i=1,\dots,M$, the nodes of the $i$-th surface element (a segment) are $\texttt{P(SurfaceElements(i,:),:)}$.
-\end{itemize}}
-\red{
+\end{itemize}
 In a similar way, we address mesh generation in 3D. Let $Q \subset\mathbb{R}^2$ be a cuboid and let $f: Q \rightarrow\mathbb{R}$ be a Lipschitz function.  Let $\Omega \subset\mathbb{R}^3$ and $\Gamma = \partial \Omega$ be defined respectively as
 \begin{equation}
 \label{level_set_3d}
 \Omega = \{\boldx\in\mathbb{R}^3\ |\ f(\boldx) \le 0\}, \quad \text{and}\quad \Gamma = \{\boldx\in\mathbb{R}^3\ |\ f(\boldx) = 0\}.
 \end{equation}
-Similarly to the 2D case,  we generate the surface mesh $\Gamma_h$ with the well-known \emph{marching cube} algorithm \cite{lorensen1987marching}.  For the bulk mesh $\Omega_h$, we simply use the cubes and the cut cubes produced as a by-product of the marching cubes algorithm.  Once again, we have the conformity property that $\Gamma_h = \partial \Omega_h$.  This bulk-surface variant of the marching cube algorithm was proposed in our work \cite{frittelli2023elliptic} and is now implemented in VEMcomp in the function \texttt{generate\_mesh\_3d}, whose syntax is as follows}
+Similarly to the 2D case,  we generate the surface mesh $\Gamma_h$ with the well-known \emph{marching cube} algorithm \cite{lorensen1987marching}.  For the bulk mesh $\Omega_h$, we simply use the cubes and the cut cubes produced as a by-product of the marching cubes algorithm.  Once again, we have the conformity property that $\Gamma_h = \partial \Omega_h$.  This bulk-surface variant of the marching cube algorithm was proposed in our work \cite{frittelli2023elliptic} and is now implemented in VEMcomp in the function \texttt{generate\_mesh\_3d}, whose syntax is as follows
 \begin{lstlisting}
 [P, h, BulkElements, SurfaceElements]
      = generate_mesh_3d(fun, box, Nx, tol);
 \end{lstlisting}
-\red{
 In the above,  inputs and outputs are analogous to the 2D case: \texttt{fun} (this time as in \eqref{level_set_3d}),  \texttt{box} (this time $3\times 2$), \texttt{Nx}, \texttt{tol}, 
-\texttt{P} (this time $N\times 3$),  \texttt{h}, \texttt{BulkElements} (this time a list of \texttt{element3d\_dummy}), \texttt{SurfaceElements} (this time a list of \texttt{element2d\_dummy}).}
+\texttt{P} (this time $N\times 3$),  \texttt{h}, \texttt{BulkElements} (this time a list of \texttt{element3d\_dummy}), \texttt{SurfaceElements} (this time a list of \texttt{element2d\_dummy}).
 
 
-\section{Computation of local \red{and global} matrices}
+\section{Computation of local and global matrices}
 \label{sec:computation_local_matrices}
 VEMcomp has two classes specifically designed for the computation of the local VEM matrices of lowest polynomial order $k=1$ (stiffness, mass, and consistency matrices) in two and three space dimensions: \texttt{element2d} and \texttt{element3d}, respectively.  Moreover, VEMcomp provides two functions for the assembly of global matrices in 2D and 3D: \texttt{generate\_matrices\_2d} and \texttt{generate\_matrices\_3d}, respectively.  All these aspects will be covered in this Section.  Before starting, we remark that VEMcomp's matrix computation facilities rely on the following mesh regularity assumptions:
 \begin{itemize}
@@ -234,7 +233,7 @@ that can be queried from the object. In the above:
 \end{itemize}
 
 \noindent
-The usage of \texttt{element2d} will be demonstrated later on.
+The usage of \texttt{element2d} will be demonstrated in Section \ref{sec:unit_square}.
 
 \subsection{The class \texttt{element3d}}
 The class \texttt{element3d} represents a polygonal element in 3D with \texttt{NVert} vertexes that is star-shaped w.r.t. at least one point and whose faces fulfill the same property.  To create an instance of the class, use the following constructor
@@ -278,6 +277,7 @@ that can be queried from the object. In the above:
 The usage of \texttt{element3d} will be demonstrated later on.
 
 \subsection{A worked example in 2D: the unit square}
+\label{sec:unit_square}
 Here we will show the usage of \texttt{element2d} to compute the local matrices of the unit square, thereby presenting the closed-form counterpart. Consider the unit square contained in the $xy$-plane:
 \begin{equation}
 F = \{(x,y,z) \in \mathbb{R}^3 | (x,y) \in [0,1]^2, \ z = 0\},
@@ -468,7 +468,7 @@ Finally, the local stiffness and mass matrices are given by
 \end{align}
 
 \noindent
-For the unit cube $E$,  it is possible to show that
+For the unit cube $E$,  it is possible to show analytically that
 \begin{align}
 B = \frac{1}{8\sqrt{3}}&\left[\begin{array}{c c c c c c c c}
 \sqrt{3} & \sqrt{3} & \sqrt{3} & \sqrt{3} & \sqrt{3} & \sqrt{3} & \sqrt{3} & \sqrt{3}\\
@@ -533,7 +533,7 @@ G = \frac{1}{3}&\left[\begin{array}{c c c c}
 \end{align}
 
 \noindent
-We finally obtain the local stiffness and mass matrices:
+We finally obtain the analytical local stiffness and mass matrices:
 \begin{align}
 \label{stiffness_3d}
 \begin{split}
@@ -625,7 +625,7 @@ E =
 \end{lstlisting}
 
 \noindent
-By querying the stiffness and mass matrices of \texttt{E}, we can see the outputs
+By querying the numerically computed  stiffness and mass matrices of \texttt{E}, we can see the outputs
 
 \begin{lstlisting}
 >> E.K
@@ -658,63 +658,58 @@ ans =
 \noindent
 which agree with \eqref{stiffness_3d}-\eqref{mass_3d} up to machine precision.
 
-\subsection{\red{Global matrix assembly}}
-\red{
-Once a mesh has been generated in the format returned by the functions \texttt{generate\_mesh\_2d} or  \texttt{generate\_mesh\_3d} in Section \ref{sec:meshes},  VEMcomp provides two functions for global matrix assembly in 2D and 3D. The 2D case is covered by the \texttt{assemble\_matrices\_2d}, whose syntax is as follows:}
+\subsection{Global matrix assembly}
+Once a mesh has been generated in the format returned by the functions \texttt{generate\_mesh\_2d} or  \texttt{generate\_mesh\_3d} in Section \ref{sec:meshes},  VEMcomp provides two functions for global matrix assembly in 2D and 3D. The 2D case is covered by the \texttt{assemble\_matrices\_2d}, whose syntax is as follows:
 \begin{lstlisting}
 [K,M,KS,MS,R] = assemble_matrices_2d(P,ElementsBulk,ElementsSurface);
 \end{lstlisting}
-\red{
 In the above, the inputs are as returned by the function \texttt{generate\_mesh\_2d}, while the outputs are defined as follows
 \begin{itemize}
-\item \texttt{K}, \texttt{M} are the stiffness and mass matrices in the bulk, stored as a sparse matrices;
+\item \texttt{K}, \texttt{M} are the stiffness and mass matrices in the bulk, stored as sparse matrices;
 \item \texttt{KS}, \texttt{MS} are the stiffness and mass matrices on the surface, stored as sparse matrices;
 \item \texttt{R} is the reduction matrix.
 \end{itemize}
-For full definitions of the above matrices, see \cite{frittelli2021bulk}. Analogously,  for matrix assembly in 3D, VEMcomp provides the function \texttt{assemble\_matrices\_3d}, whose syntax is}
+For full definitions of the above matrices, see \cite{frittelli2021bulk}. Analogously,  for matrix assembly in 3D, VEMcomp provides the function \texttt{assemble\_matrices\_3d}, whose syntax is
 \begin{lstlisting}
 [K,M,KS,MS,R] = assemble_matrices_3d(P,ElementsBulk,ElementsSurface);
 \end{lstlisting}
-\red{
-In the above,  the inputs are as returned by the function \texttt{generate\_mesh\_3d} in Section \ref{sec:mesh_generation}, while the outputs are defined as in the 2D case.  For full definitions of these matrices in the 3D case, see \cite{frittelli2023elliptic}. The function \texttt{assemble\_matrices\_3d} can take an optional input \texttt{xcut} and an optional output \texttt{ElementsPlot} for plotting purposes, defined as follows.  The plot is obtained by cutting the bulk at a specified abscissa \texttt{xcut} (optional input). The function \texttt{assemble\_matrices\_3d} then returns the optional output \texttt{ElementsPlot}, a polyhedral surface of the cut bulk,  as a list of \texttt{element2d\_dummy}.}
+In the above,  the inputs are as returned by the function \texttt{generate\_mesh\_3d} in Section \ref{sec:mesh_generation}, while the outputs are defined as in the 2D case.  For full definitions of these matrices in the 3D case, see \cite{frittelli2023elliptic}. The function \texttt{assemble\_matrices\_3d} can take an optional input \texttt{xcut} and an optional output \texttt{ElementsPlot} for plotting purposes, defined as follows.  The plot is obtained by cutting the bulk at a specified abscissa \texttt{xcut} (optional input). The function \texttt{assemble\_matrices\_3d} then returns the optional output \texttt{ElementsPlot}, a polyhedral surface of the cut bulk,  as a list of \texttt{element2d\_dummy}.
 
 
-\section{\red{User-friendly solver and plotter}}
+\section{User-friendly solver and plotter}
 \label{sec:user_friendly_solver}
-\red{
 Given a bulk-surface mesh in 3D and the respective global matrices,  VEMcomp solves the elliptic BSPDE  \eqref{bulk_surface_problems} with the script \texttt{ELLIPTIC\_BS\_3D.m}.  For ease of presentation, the script is confined to the case $m=n=1$ of one bulk species and one surface species.  The user can easily modify the script to address the case of arbitrary $m$ and $n$.
-The user can set the input to the script using the first four lines, as in the following example:}
+The user can set the input to the script using the first four lines, as in the following example:
 \begin{lstlisting}
 load('mesh_and_matrices.mat');
 f1 = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2 - 6;
 g1 = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2 + 1;
 h1 = @(P) P(:,1).^2 + 8;
 \end{lstlisting}
-\red{
-In the above listing, the first line loads a \texttt{.mat} file that contains a 3D bulk-surface mesh and its respective matrices, previously constructed with the \texttt{generate\_mesh\_3d} and \texttt{assemble\_matrices\_3d} functions. The \texttt{f1}, \texttt{g1}, and \texttt{h1} functions are as in the right-hand sides in \eqref{bulk_surface_problems}. If the \texttt{.mat} file contains the optional output \texttt{ElementsPlot} produced by the \texttt{assemble\_matrices\_3d} function, then the \texttt{ELLIPTIC\_BS\_3D.m} script will produce a plot of the numerical solution.}
+In the above listing, the first line loads a \texttt{.mat} file that contains a 3D bulk-surface mesh and its respective matrices, previously constructed with the \texttt{generate\_mesh\_3d} and \texttt{assemble\_matrices\_3d} functions. The \texttt{f1}, \texttt{g1}, and \texttt{h1} functions are as in the right-hand sides in \eqref{bulk_surface_problems}. If the \texttt{.mat} file contains the optional output \texttt{ElementsPlot} produced by the \texttt{assemble\_matrices\_3d} function, then the \texttt{ELLIPTIC\_BS\_3D.m} script will produce a plot of the numerical solution.
 
 \section{Numerical examples}
 \label{sec:numerical_examples}
-\red{We now present an extensive list of numerical experiments carried out in VEMcomp. The experiments showcase at once the usage of VEMcomp and the optimal convergence of the Virtual Element Method in its various forms.}
+We now present an extensive list of numerical experiments carried out in VEMcomp. The experiments showcase the usage of VEMcomp and the optimal convergence of the Virtual Element Method in its various forms.
 
 
 \subsection{Bulk-only problems}
-\red{This first set of examples showcases the application of VEMcomp to bulk-only PDE problems of increasing complexity. In Example \ref{sec:laplace_twodim} we consider a Poisson problem in 2D on a circle with Dirichlet boundary conditions. In Example \ref{sec:laplace_sphere} we show the solution of a Poisson problem in 3D on the sphere .}
+This first set of examples showcases the application of VEMcomp to bulk-only PDE problems of increasing complexity. In Example \ref{sec:laplace_twodim} we consider a Poisson problem in 2D on a circle with Dirichlet boundary conditions. In Example \ref{sec:laplace_sphere} we show the solution of a Poisson problem in 3D on the sphere .
 
-\subsubsection{\red{Poisson problem on two-dimensional domain}}
+\subsubsection{Poisson problem on two-dimensional domain}
 \label{sec:laplace_twodim}
 We consider the following Poisson problem on the unit circle $\Omega = \{(x,y)\in\mathbb{R}^2 | x^2 + y^2 \leq 1\}$ with non-homogeneous Dirichlet boundary conditions:
 \begin{equation}
 \begin{cases}
 -\Delta u = 2\pi^2 \sin \pi x \sin \pi y, \qquad (x,y) \in \Omega;\\
-u(x,y) = \sin\pi x\sin\pi y, \qquad (x,y) \in  \partial \Omega.
+u(x,y) = \sin\pi x\sin\pi y, \qquad (x,y) \in  \partial \Omega,
 \end{cases}
 \end{equation}
 whose exact solution is given by
 \begin{equation}
 u(x,y) = \sin \pi x \sin \pi y, \qquad (x,y) \in \Omega.
 \end{equation}
-We consider a sequence of four meshes $i=1,\dots,4$. The $i$-th mesh is obtained with the marching squares algorithm as explained in Section \ref{sec:mesh_generation}. On each mesh we solve the discrete problem,  we compute the error in $L^2(\Omega)$ norm and the respective convergence rate. As shown in Table \ref{tab:laplace_2d_convergence_circle}, the convergence in $L^2(\Omega)$ norm is optimal, i.e. quadratic. The numerical solution obtained on the finest mesh is plotted in Fig.  \ref{fig:laplace_2d_numsol_circle}.
+We consider a sequence of four meshes $i=1,\dots,4$. The $i$-th mesh is obtained with the marching squares algorithm as explained in Section \ref{sec:mesh_generation}. On each mesh we solve the discrete problem,  we compute the error in $L^2(\Omega)$ norm and the respective convergence rate.  As shown in Table \red{[TODO]} the convergence in $L^2(\Omega)$ norm is optimal, i.e. quadratic. The numerical solution obtained on the finest mesh is plotted in Fig.  \red{[TODO]}.
 
  
 \subsubsection{Poisson equation on the sphere}
@@ -723,15 +718,15 @@ We now consider a 3D domain, the unit sphere $\Omega$ in 3D. The test problem, i
 \begin{equation}
 \label{experiment_laplace_equation_3d_sphere}
 \begin{cases}
--&\Delta u + u = 4(3-5r^2) + (1-r^2)^2 \qquad \text{in}\ \Omega\\
-&\nabla u \cdot \boldn = 0 \qquad \text{on}\ \partial \Omega
+-&\Delta u + u = 4(3-5(x^2 + y^2 + z^2)^2) + (1-(x^2 + y^2 + z^2)^2)^2 \qquad \text{in}\ \Omega;\\
+&\nabla u \cdot \boldn = 0 \qquad \text{on}\ \partial \Omega,
 \end{cases}
 \end{equation}
 whose exact solution in spherical coordinates is given by
 \begin{equation}
-u(x,y,z) = (1-r^2)^2
+u(x,y,z) = (1-(x^2 + y^2 + z^2))^2.
 \end{equation}
-We consider a sequence of four cubic meshes $i=1,\dots,4$. The $i$-th mesh is obtained by subdividing each dimension into $5i$ intervals, thereby producing a cubic bounding mesh.  The cubic elements that are not fully contained in the sphere are then discarded. Finally, the outer faces of the resulting cubic mesh are extruded to fill the outer part of the sphere with irregular $8$-vertex polyhedra.  Such a mesh is shown in Fig.  \ref{fig:extruded_mesh_sphere}. On each mesh we solve the discrete problem,  we compute the error in $L^2(\Omega)$ norm and the respective convergence rate. As shown in Table \ref{tab:laplace_3d_convergence_sphere}, the convergence in $L^2(\Omega)$ norm is optimal, i.e. quadratic. The numerical solution obtained on the finest mesh is plotted in Fig.  \ref{fig:laplace_3d_numsol_sphere}.
+We consider a sequence of four cubic meshes $i=1,\dots,4$. The $i$-th mesh is obtained by subdividing each dimension into $5i$ intervals, thereby producing a cubic bounding mesh.  The cubic elements that are not fully contained in the sphere are then cut.  This procedure is described in detail in \cite{frittelli2023elliptic}.  Such a mesh is shown in Fig.  \ref{fig:extruded_mesh_sphere}. On each mesh we solve the discrete problem,  we compute the error in $L^2(\Omega)$ norm and the respective convergence rate. As shown in Table \ref{tab:laplace_3d_convergence_sphere}, the convergence in $L^2(\Omega)$ norm is optimal, i.e. quadratic. The numerical solution obtained on the finest mesh is plotted in Fig.  \ref{fig:laplace_3d_numsol_sphere}.
 
 \begin{figure}[H]
 \begin{center}
@@ -765,7 +760,7 @@ $i$ & $N$ & $h$ & $L^2(\Omega)$ error & $L^2(\Omega)$ rate\\
 \end{figure} 
 
 \subsection{Numerical examples for bulk-surface problems}
-\red{We now apply VEMcomp to different types of BSPDEs.  In Example \ref{sec:example_elliptic_bs_sphere} we show a baseline problem given by a bulk-surface linear elliptic problem on the sphere. Example \ref{sec:example_parabolic_bs_sphere} introduces the time variable, by addressing the bulk-surface linear heat equation on the sphere.  In Example \ref{sec:example_bsrds_sphere}, we use VEMcomp to solve the top-end PDE problem considered in this work: a bulk-surface reaction-diffusion system (BSRDS) on the sphere.}
+We now apply VEMcomp to different types of BSPDEs.  In Example \ref{sec:example_elliptic_bs_sphere} we show a baseline problem given by a bulk-surface linear elliptic problem on the sphere. Example \ref{sec:example_parabolic_bs_sphere} introduces the time variable, by addressing the bulk-surface linear heat equation on the sphere.  In Example \ref{sec:example_bsrds_sphere}, we use VEMcomp to solve the top-end PDE problem considered in this work: a bulk-surface reaction-diffusion system (BSRDS) on the sphere.
 
 \subsubsection{Elliptic bulk-surface problem on the sphere}
 \label{sec:example_elliptic_bs_sphere}
@@ -855,14 +850,14 @@ $i$ & $N$ & $h$ & $\tau$ & $L^2(\Omega)\times L^2(\Gamma)$ error & $L^2(\Omega)\
 \label{fig:bs_3d_numsol_sphere_parabolic}
 \end{figure} 
 
-\subsubsection{\red{Bulk-surface reaction-diffusion system on the sphere}}
+\subsubsection{Bulk-surface reaction-diffusion system on the sphere}
 \label{sec:example_bsrds_sphere}
-\red{In this final example we solve the following BSRDS considered in \cite{frittelli2023bsrds}.}
+In this final example we solve the following BSRDS considered in \cite{frittelli2023bsrds}. \red{[TODO]}.
 
 
 \section{Conclusions}
 \label{sec:conclusions}
-\red{The present VEMcomp package is intended as a proof-of-concept,  with the main goal of being user-friendly and self-explicative. For this reason,  VEMcomp has room for improvement in terms of computational performances. }
+The present VEMcomp package is intended as a proof-of-concept,  with the main goal of being user-friendly and self-explicative. For this reason,  VEMcomp has room for improvement in terms of computational performances.  To this end,  two main challenges are (i) devising cheaper mesh generation strategies and (ii) devising cheaper quadrature formulas in 2D and 3D.
  
 \bibliographystyle{plainurl}
 \bibliography{bibliography}

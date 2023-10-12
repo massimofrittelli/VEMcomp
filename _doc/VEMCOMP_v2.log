@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.6.23)  27 APR 2023 17:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.6.23)  12 OCT 2023 12:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**VEMCOMP.tex
-(./VEMCOMP.tex
+**"VEMCOMP v2.tex"
+(./VEMCOMP v2.tex
 LaTeX2e <2020-10-01> patch level 4
 L3 programming layer <2021-02-18>
 (/usr/local/texlive/2021/texmf-dist/tex/latex/base/article.cls
@@ -328,8 +328,8 @@ File: l3backend-pdftex.def 2021-03-18 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count287
 \l__pdf_internal_box=\box53
 )
-(./VEMCOMP.aux)
-\openout1 = `VEMCOMP.aux'.
+(./VEMCOMP v2.aux)
+\openout1 = `"VEMCOMP v2.aux"'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
 LaTeX Font Info:    ... okay on input line 23.
@@ -424,9 +424,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 23.
 LaTeX Info: Redefining \pageref on input line 23.
 LaTeX Info: Redefining \nameref on input line 23.
- (./VEMCOMP.out) (./VEMCOMP.out)
+ (./VEMCOMP v2.out) (./VEMCOMP v2.out)
 \@outlinefile=\write3
-\openout3 = `VEMCOMP.out'.
+\openout3 = `"VEMCOMP v2.out"'.
 
 LaTeX Font Info:    Trying to load font information for U+msa on input line 29.
 
@@ -442,22 +442,22 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 5
-4.
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 4
+9.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 ) [2]
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 93.
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 94.
  [3]
-Overfull \hbox (18.32108pt too wide) in paragraph at lines 152--152
-[]\T1/cmr/m/n/10 We can now state that any polyg-o-nal mesh in 2D can be rep-re
--sented as a col-lec-tion of \T1/cmtt/m/n/10 element2d_dummy\T1/cmr/m/n/10 ,
+Overfull \hbox (18.32108pt too wide) in paragraph at lines 148--149
+\T1/cmr/m/n/10 We can now state that any polyg-o-nal mesh in 2D can be rep-re-s
+ented as a col-lec-tion of \T1/cmtt/m/n/10 element2d_dummy\T1/cmr/m/n/10 ,
  []
 
 [4] [5]
-Overfull \hbox (3.04703pt too wide) in paragraph at lines 207--209
+Overfull \hbox (3.04703pt too wide) in paragraph at lines 206--208
 \T1/cmr/m/n/10 Upon ini-tial-i-sa-tion, the ob-ject stores \T1/cmtt/m/n/10 P \T
 1/cmr/m/n/10 and \T1/cmtt/m/n/10 P0 \T1/cmr/m/n/10 and au-to-mat-i-cally com-pu
 tes sev-eral other \T1/cmtt/m/n/10 properties
@@ -504,24 +504,16 @@ Overfull \hbox (33.00082pt too wide) in paragraph at lines 642--644
  []
 
 
-Overfull \hbox (7.80673pt too wide) in paragraph at lines 665--666
+Overfull \hbox (7.80673pt too wide) in paragraph at lines 664--665
 [][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 [12]
-Overfull \hbox (7.80673pt too wide) in paragraph at lines 676--677
+Overfull \hbox (7.80673pt too wide) in paragraph at lines 674--675
 [][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 [13]
-
-LaTeX Warning: Reference `tab:laplace_2d_convergence_circle' on page 14 undefin
-ed on input line 717.
-
-
-LaTeX Warning: Reference `fig:laplace_2d_numsol_circle' on page 14 undefined on
- input line 717.
-
 Package epstopdf Info: Source file: <extruded_mesh_sphere.eps>
 (epstopdf)                    date: 2021-09-21 11:38:05
 (epstopdf)                    size: 75038 bytes
@@ -531,15 +523,15 @@ Package epstopdf Info: Source file: <extruded_mesh_sphere.eps>
 (epstopdf)                    size: 70383 bytes
 (epstopdf)             Command: <repstopdf --outfile=extruded_mesh_sphere-eps-c
 onverted-to.pdf extruded_mesh_sphere.eps>
-(epstopdf)             \includegraphics on input line 738.
+(epstopdf)             \includegraphics on input line 733.
 Package epstopdf Info: Output file is already uptodate.
-<extruded_mesh_sphere-eps-converted-to.pdf, id=524, 562.1pt x 421.575pt>
+<extruded_mesh_sphere-eps-converted-to.pdf, id=527, 562.1pt x 421.575pt>
 File: extruded_mesh_sphere-eps-converted-to.pdf Graphic file (type pdf)
 <use extruded_mesh_sphere-eps-converted-to.pdf>
 Package pdftex.def Info: extruded_mesh_sphere-eps-converted-to.pdf  used on inp
-ut line 738.
+ut line 733.
 (pdftex.def)             Requested size: 281.04932pt x 210.78697pt.
-[14 <./extruded_mesh_sphere-eps-converted-to.pdf>]
+ [14 <./extruded_mesh_sphere-eps-converted-to.pdf>]
 Package epstopdf Info: Source file: <laplace3dsphere_Nx41.eps>
 (epstopdf)                    date: 2021-09-24 20:05:14
 (epstopdf)                    size: 82955 bytes
@@ -549,13 +541,13 @@ Package epstopdf Info: Source file: <laplace3dsphere_Nx41.eps>
 (epstopdf)                    size: 108196 bytes
 (epstopdf)             Command: <repstopdf --outfile=laplace3dsphere_Nx41-eps-c
 onverted-to.pdf laplace3dsphere_Nx41.eps>
-(epstopdf)             \includegraphics on input line 761.
+(epstopdf)             \includegraphics on input line 756.
 Package epstopdf Info: Output file is already uptodate.
-<laplace3dsphere_Nx41-eps-converted-to.pdf, id=542, 562.1pt x 421.575pt>
+<laplace3dsphere_Nx41-eps-converted-to.pdf, id=545, 562.1pt x 421.575pt>
 File: laplace3dsphere_Nx41-eps-converted-to.pdf Graphic file (type pdf)
 <use laplace3dsphere_Nx41-eps-converted-to.pdf>
 Package pdftex.def Info: laplace3dsphere_Nx41-eps-converted-to.pdf  used on inp
-ut line 761.
+ut line 756.
 (pdftex.def)             Requested size: 281.04932pt x 210.78697pt.
  [15 <./laplace3dsphere_Nx41-eps-converted-to.pdf>]
 Package epstopdf Info: Source file: <bs_3d_sphere_nx41_u.eps>
@@ -566,13 +558,13 @@ Package epstopdf Info: Source file: <bs_3d_sphere_nx41_u.eps>
 (epstopdf)                    size: 112178 bytes
 (epstopdf)             Command: <repstopdf --outfile=bs_3d_sphere_nx41_u-eps-co
 nverted-to.pdf bs_3d_sphere_nx41_u.eps>
-(epstopdf)             \includegraphics on input line 806.
+(epstopdf)             \includegraphics on input line 801.
 Package epstopdf Info: Output file is already uptodate.
-<bs_3d_sphere_nx41_u-eps-converted-to.pdf, id=565, 562.1pt x 421.575pt>
+<bs_3d_sphere_nx41_u-eps-converted-to.pdf, id=568, 562.1pt x 421.575pt>
 File: bs_3d_sphere_nx41_u-eps-converted-to.pdf Graphic file (type pdf)
 <use bs_3d_sphere_nx41_u-eps-converted-to.pdf>
 Package pdftex.def Info: bs_3d_sphere_nx41_u-eps-converted-to.pdf  used on inpu
-t line 806.
+t line 801.
 (pdftex.def)             Requested size: 224.83601pt x 168.627pt.
 Package epstopdf Info: Source file: <bs_3d_sphere_nx41_v.eps>
 (epstopdf)                    date: 2021-09-24 19:47:30
@@ -582,13 +574,13 @@ Package epstopdf Info: Source file: <bs_3d_sphere_nx41_v.eps>
 (epstopdf)                    size: 122806 bytes
 (epstopdf)             Command: <repstopdf --outfile=bs_3d_sphere_nx41_v-eps-co
 nverted-to.pdf bs_3d_sphere_nx41_v.eps>
-(epstopdf)             \includegraphics on input line 808.
+(epstopdf)             \includegraphics on input line 803.
 Package epstopdf Info: Output file is already uptodate.
-<bs_3d_sphere_nx41_v-eps-converted-to.pdf, id=566, 562.1pt x 421.575pt>
+<bs_3d_sphere_nx41_v-eps-converted-to.pdf, id=569, 562.1pt x 421.575pt>
 File: bs_3d_sphere_nx41_v-eps-converted-to.pdf Graphic file (type pdf)
 <use bs_3d_sphere_nx41_v-eps-converted-to.pdf>
 Package pdftex.def Info: bs_3d_sphere_nx41_v-eps-converted-to.pdf  used on inpu
-t line 808.
+t line 803.
 (pdftex.def)             Requested size: 224.83601pt x 168.627pt.
  [16 <./bs_3d_sphere_nx41_u-eps-converted-to.pdf> <./bs_3d_sphere_nx41_v-eps-co
 nverted-to.pdf>]
@@ -601,15 +593,15 @@ d-to.pdf>
 (epstopdf)                    size: 113816 bytes
 (epstopdf)             Command: <repstopdf --outfile=bs_3d_sphere_nx41_paraboli
 c_u-eps-converted-to.pdf bs_3d_sphere_nx41_parabolic_u.eps>
-(epstopdf)             \includegraphics on input line 850.
+(epstopdf)             \includegraphics on input line 845.
 Package epstopdf Info: Output file is already uptodate.
-<bs_3d_sphere_nx41_parabolic_u-eps-converted-to.pdf, id=594, 562.1pt x 421.575p
+<bs_3d_sphere_nx41_parabolic_u-eps-converted-to.pdf, id=597, 562.1pt x 421.575p
 t>
 File: bs_3d_sphere_nx41_parabolic_u-eps-converted-to.pdf Graphic file (type pdf
 )
 <use bs_3d_sphere_nx41_parabolic_u-eps-converted-to.pdf>
 Package pdftex.def Info: bs_3d_sphere_nx41_parabolic_u-eps-converted-to.pdf  us
-ed on input line 850.
+ed on input line 845.
 (pdftex.def)             Requested size: 224.83601pt x 168.627pt.
 Package epstopdf Info: Source file: <bs_3d_sphere_nx41_parabolic_v.eps>
 (epstopdf)                    date: 2021-10-01 19:14:54
@@ -620,33 +612,30 @@ d-to.pdf>
 (epstopdf)                    size: 119640 bytes
 (epstopdf)             Command: <repstopdf --outfile=bs_3d_sphere_nx41_paraboli
 c_v-eps-converted-to.pdf bs_3d_sphere_nx41_parabolic_v.eps>
-(epstopdf)             \includegraphics on input line 852.
+(epstopdf)             \includegraphics on input line 847.
 Package epstopdf Info: Output file is already uptodate.
-<bs_3d_sphere_nx41_parabolic_v-eps-converted-to.pdf, id=595, 562.1pt x 421.575p
+<bs_3d_sphere_nx41_parabolic_v-eps-converted-to.pdf, id=598, 562.1pt x 421.575p
 t>
 File: bs_3d_sphere_nx41_parabolic_v-eps-converted-to.pdf Graphic file (type pdf
 )
 <use bs_3d_sphere_nx41_parabolic_v-eps-converted-to.pdf>
 Package pdftex.def Info: bs_3d_sphere_nx41_parabolic_v-eps-converted-to.pdf  us
-ed on input line 852.
+ed on input line 847.
 (pdftex.def)             Requested size: 224.83601pt x 168.627pt.
- (./VEMCOMP.bbl [17 <./bs_3d_sphere_nx41_parabolic_u-eps-converted-to.pdf> <./b
-s_3d_sphere_nx41_parabolic_v-eps-converted-to.pdf>] [18] [19]) [20] (./VEMCOMP.
-aux)
-
-LaTeX Warning: There were undefined references.
-
-Package rerunfilecheck Info: File `VEMCOMP.out' has not changed.
+ (./VEMCOMP v2.bbl [17 <./bs_3d_sphere_nx41_parabolic_u-eps-converted-to.pdf> <
+./bs_3d_sphere_nx41_parabolic_v-eps-converted-to.pdf>] [18] [19]) [20] (./VEMCO
+MP v2.aux)
+Package rerunfilecheck Info: File `"VEMCOMP v2".out' has not changed.
 (rerunfilecheck)             Checksum: 80F126EC2792FF2343DFBEAFB1954FA3;4694.
  ) 
 Here is how much of TeX's memory you used:
- 12126 strings out of 478994
- 172247 string characters out of 5858184
- 583482 words of memory out of 5000000
- 29130 multiletter control sequences out of 15000+600000
+ 12125 strings out of 478994
+ 172255 string characters out of 5858184
+ 583534 words of memory out of 5000000
+ 29129 multiletter control sequences out of 15000+600000
  424814 words of font info for 85 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 71i,20n,74p,1106b,1777s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 71i,20n,74p,1103b,1779s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}<
 /usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></
@@ -672,10 +661,10 @@ mf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/2021/texmf
 ist/fonts/type1/public/cm-super/sftt0800.pfb></usr/local/texlive/2021/texmf-dis
 t/fonts/type1/public/cm-super/sftt1000.pfb></usr/local/texlive/2021/texmf-dist/
 fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on VEMCOMP.pdf (20 pages, 1065260 bytes).
+Output written on "VEMCOMP v2.pdf" (20 pages, 1065991 bytes).
 PDF statistics:
- 830 PDF objects out of 1000 (max. 8388607)
- 741 compressed objects within 8 object streams
+ 834 PDF objects out of 1000 (max. 8388607)
+ 745 compressed objects within 8 object streams
  302 named destinations out of 1000 (max. 500000)
  207 words of extra memory for PDF output out of 10000 (max. 10000000)
 

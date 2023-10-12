@@ -202,8 +202,10 @@ M~Frittelli, A~Madzvamuse, and I~Sgura.
 M~Frittelli, A~Madzvamuse, and I~Sgura.
 \newblock Virtual element method for elliptic bulk-surface {PDEs} in three
   space dimensions.
-\newblock {\em Numerical Methods for Partial Differential Equations}, Accepted
-  for publication, 2023.
+\newblock {\em Numerical Methods for Partial Differential Equations},
+  39(6):4221--4247, 2023.
+\newblock \href {https://doi.org/10.1002/num.23040}
+  {\path{doi:10.1002/num.23040}}.
 
 \bibitem{Frittelli2017cross}
 M~Frittelli, A~Madzvamuse, I~Sgura, and C~Venkataraman.
