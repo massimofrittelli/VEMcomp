@@ -19,6 +19,7 @@ classdef element3d < element3dabstract
         Diameter
         K
         M
+        CM
     end
     
     properties (SetAccess = private, GetAccess = private)
@@ -123,6 +124,7 @@ classdef element3d < element3dabstract
             C = H*PInablastar;
             PI0 = PInabla; %solo per k=1,2.
             obj.M = C'*PInablastar + obj.Volume*(eye(obj.NVert)-PI0)'*(eye(obj.NVert)-PI0);
+            obj.CM = C'*PInablastar;
        end
        
        function [XYZ,W] = quadrature(obj)
@@ -137,14 +139,14 @@ classdef element3d < element3dabstract
        function [XYZ,W] = quadraturePyramid(obj, face)
            % COMPUTES QUADRATURE NODES AND WEIGHTS ON PYRAMID HAVING AN
            % element2d AS BASE
-           XYZ = zeros(8*face.NVert,3); W = zeros(8*face.NVert,1); 
+           XYZ = zeros(4*face.NVert,3); W = zeros(4*face.NVert,1); 
            for i=1:face.NVert-1
               PP = [face.P([i i+1],:); face.P0; obj.P0];
-              [XYZ(8*i-7:8*i,:), W(8*i-7:8*i,:)] = quadrature_tetrahedron_quadratic(PP);
+              [XYZ(4*i-3:4*i,:), W(4*i-3:4*i,:)] = quadrature_tetrahedron_quadratic(PP);
            end
            i=face.NVert;
            PP = [face.P([face.NVert 1],:); face.P0; obj.P0];
-           [XYZ(8*i-7:8*i,:), W(8*i-7:8*i,:)] = quadrature_tetrahedron_quadratic(PP);
+           [XYZ(4*i-3:4*i,:), W(4*i-3:4*i,:)] = quadrature_tetrahedron_quadratic(PP);
        end
        
        function I = boundaryIntegral(obj, normders, i)

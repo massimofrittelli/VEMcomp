@@ -162,15 +162,25 @@ classdef element2d < element2dabstract
         
         function [XY,W] = quadrature_quadratic(obj)
             % Determines quadrature weights and nodes on polygon
-            W = zeros(4*obj.NVert,1);
-            XY = zeros(4*obj.NVert,2);
+            % W = zeros(4*obj.NVert,1);
+            % XY = zeros(4*obj.NVert,2);
+            % for i = 1:obj.NVert-1
+            %     PP = [obj.TransformedP(i:i+1,:); obj.TransformedP0];
+            %     [XY(4*i-3:4*i,:), W(4*i-3:4*i,1)] = quadrature_triangle_quadratic(PP);
+            % end
+            % i = obj.NVert;
+            % PP = [obj.TransformedP([obj.NVert,1],:); obj.TransformedP0];
+            % [XY(4*i-3:4*i,:), W(4*i-3:4*i,1)] = quadrature_triangle_quadratic(PP);
+            
+            W = zeros(3*obj.NVert,1);
+            XY = zeros(3*obj.NVert,2);
             for i = 1:obj.NVert-1
                 PP = [obj.TransformedP(i:i+1,:); obj.TransformedP0];
-                [XY(4*i-3:4*i,:), W(4*i-3:4*i,1)] = quadrature_triangle_quadratic(PP);
+                [XY(3*i-2:3*i,:), W(3*i-2:3*i,1)] = quadrature_triangle_quadratic(PP);
             end
             i = obj.NVert;
             PP = [obj.TransformedP([obj.NVert,1],:); obj.TransformedP0];
-            [XY(4*i-3:4*i,:), W(4*i-3:4*i,1)] = quadrature_triangle_quadratic(PP);
+            [XY(3*i-2:3*i,:), W(3*i-2:3*i,1)] = quadrature_triangle_quadratic(PP);
         end
         
     end
