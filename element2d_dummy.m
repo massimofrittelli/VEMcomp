@@ -95,15 +95,14 @@ classdef element2d_dummy
             end
         end
         
-        function plot(obj, col)
-            if nargin == 1
-                fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), obj.P(:,1)*0 + 1 - obj.is_square);
-            else
-                if obj.is_boundary
-                    fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), col,'EdgeColor','none');
-                else
-                    fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), col);
-                end
+        function plot(obj, faceColor, edgeColor)
+            switch nargin
+                case 1
+                    fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), obj.P(:,1)*0 + 1 - obj.is_square);
+                case 2
+                    fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), faceColor);
+                case 3
+                    fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), faceColor, 'EdgeColor', edgeColor);
             end
         end
         

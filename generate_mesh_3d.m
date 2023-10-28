@@ -1,8 +1,6 @@
-function [P, h, BulkElements, SurfaceElements, SurfaceElementsToPlot] = generate_mesh_3D_domain(fun, range, Nx, tol, xcut)
+function [P, h, BulkElements, SurfaceElements, ElementsPlot] = generate_mesh_3d(fun, range, Nx, tol, xcut)
 %GENERATE_MESH_3D_DOMAIN Summary of this function goes here
 %   Detailed explanation goes here
-
-i_cut = 3;
 
 hx_requested = (range(1,2)-range(1,1))/(Nx-1); % Requested discretisation step along x
 hy_requested = (range(2,2)-range(2,1))/(Nx-1); % Requested discretisation step along y
@@ -19,6 +17,8 @@ N = Nx*Ny*Nz; % Number of nodes of bounding box
 range(1,:) = range(1,:) + (h_mono*(Nx-1) - (range(1,2)-range(1,1)))/2*[-1,1]; % Corrected range of bounding box along x
 range(2,:) = range(2,:) + (h_mono*(Ny-1) - (range(2,2)-range(2,1)))/2*[-1,1]; % Corrected range of bounding box along y
 range(3,:) = range(3,:) + (h_mono*(Nz-1) - (range(3,2)-range(3,1)))/2*[-1,1]; % Corrected range of bounding box along z
+
+i_cut = min(max(round((xcut-range(1,1))/h_mono),0),Nx);
 
 % GENERATE ONE CUBIC ELEMENT
 P1S = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*h_mono; % bottom face
@@ -128,7 +128,7 @@ end
 % DETERMINE SET OF NON-REPEATED NODES UP TO SMALL TOLERANCE
 P = uniquetol([P(accepted_node,:); newP],tol,'ByRows',true);
 
-SurfaceElementsToPlot = [];
+ElementsPlot = [];
 % FIX ELEMENTS BY ASSIGNING NODE INDEXES AND ELIMINATING DUPLICATE NODES UP
 % TO SMALL TOLERANCE
 SurfaceElements = [];
@@ -144,7 +144,7 @@ for i=1:length(BulkElements)
            SurfaceElements = [SurfaceElements; ind']; %#ok
        end
        if BulkElements(i).Faces(j).to_plot
-           SurfaceElementsToPlot = [SurfaceElementsToPlot; BulkElements(i).Faces(j)]; %#ok
+           ElementsPlot = [ElementsPlot; BulkElements(i).Faces(j)]; %#ok
        end
    end
 end

@@ -1,7 +1,7 @@
 close all
 
-Nx = 21;
-tol = 1e-10;
+Nx = 5;
+tol = 1e-3;
 
 % BATTERY-SHAPED DOMAIN
 % R = 1;
@@ -14,16 +14,16 @@ tol = 1e-10;
 % fun = @(P) ff(P(:,3)) + P(:,1).^2 + P(:,2).^2;
 
 % UNIT BALL
-xmin = -1.04;
-xmax = 1.04;
-ymin = -1.04;
-ymax = 1.04;
-zmin = -1.04;
-zmax = 1.04;
-fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2  -1;
+% xmin = -1.04;
+% xmax = 1.04;
+% ymin = -1.04;
+% ymax = 1.04;
+% zmin = -1.04;
+% zmax = 1.04;
+% fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2  -1;
 
 % HOLLOW BALL
-%fun = @(P) (P(:,1).^2 + P(:,2).^2 + P(:,3).^2).^2 - (P(:,1).^2 + P(:,2).^2 + P(:,3).^2)+0.2;
+% fun = @(P) (P(:,1).^2 + P(:,2).^2 + P(:,3).^2).^2 - (P(:,1).^2 + P(:,2).^2 + P(:,3).^2)+0.2;
 
 % ALIEN SHAPED DOMAIN
 % xmin = -1.6;
@@ -35,13 +35,13 @@ fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2  -1;
 % fun = @(P) P(:,1).^2 + .4*cos(2*pi*P(:,1)) + P(:,2).^2 + .4*sin(pi*P(:,2)) + P(:,3).^2 + .6*cos(3*pi*P(:,3)) - 1;
 
 % DUMBBELL SHAPED DOMAIN
-% xmin = -1.1;
-% xmax = 1.1;
-% ymin = -0.7;
-% ymax = 0.7;
-% zmin = -0.7;
-% zmax = 0.7;
-% fun = @(P) P(:,1).^4 - P(:,1).^2 + P(:,2).^2 + P(:,3).^2 - 0.1;
+xmin = -1.1;
+xmax = 1.1;
+ymin = -0.7;
+ymax = 0.7;
+zmin = -0.7;
+zmax = 0.7;
+fun = @(P) P(:,1).^4 - P(:,1).^2 + P(:,2).^2 + P(:,3).^2 - 0.1;
 
 % DUPIN RING CYCLIDE
 % xmin = -1.25;
@@ -53,13 +53,18 @@ fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2  -1;
 % fun = @(P) (9*(P(:,1).^2 + P(:,2).^2 + P(:,3).^2) + 261/100).^2 -4*(6*P(:,1)-sqrt(39)/10).^2 -3249/25*P(:,2).^2;
 
 range = [xmin, xmax; ymin, ymax; zmin, zmax];
-[P, h, CubicElements, NonCubicElements, EGamma, FacesToPlot] = generate_mesh_3D_domain(fun, range, Nx,tol);
+xcut = -.5;
+[P, h, BulkElements, SurfaceElements, ElementsPlot] = generate_mesh_3d(fun, range, Nx, tol, xcut);
 
 figure
 set(gcf,'color','white')
 hold on
-for i=1:length(FacesToPlot)
-   plot(FacesToPlot(i)); 
+for i=1:length(ElementsPlot)
+    if ElementsPlot(i).is_boundary
+        plot(ElementsPlot(i), -0.5); 
+    else
+        plot(ElementsPlot(i));
+    end
 end
 view(3)
 axis equal tight
@@ -69,7 +74,7 @@ zlabel('z','rot',0)
 set(gca,'FontSize',18)
 colormap jet
 % colormap spring %(parabolic paper)
-caxis([-1.5,2]);
+clim([-1.5,2]);
 
 % x = linspace(xmin, xmax, Nx);
 % y = linspace(ymin, ymax, Nx);

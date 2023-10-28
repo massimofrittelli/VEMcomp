@@ -1,34 +1,45 @@
-function [P, h, SquareElements, NonSquareElements] = generate_mesh_flat_domain(fun, xmax, Nx, tol)
+function [P, h, BulkElements, SurfaceElements] = generate_mesh_2d(fun, range, Nx, tol)
 %GENERATE_MESH_FLAT_DOMAIN Summary of this function goes here
 %   Detailed explanation goes here
 
-Nsquare = Nx^2;
-hx = 2*xmax/(Nx-1); % Discretisation step along each dimension
-h = hx*sqrt(2); % Meshsize
+hx_requested = (range(1,2)-range(1,1))/(Nx-1); % Requested discretisation step along x
+hy_requested = (range(2,2)-range(2,1))/(Nx-1); % Requested discretisation step along y
+
+h_mono = min([hx_requested,hy_requested]); % Actual discretization step along each dimension
+h = h_mono*sqrt(2); % Meshsize
+
+Nx = ceil((range(1,2)-range(1,1))/h_mono)+1; % Corrected number of discretization nodes along x
+Ny = ceil((range(2,2)-range(2,1))/h_mono)+1; % Corrected number of discretization nodes along y
+Nrect = Nx*Ny; % Number of nodes of bounding box
+
+range(1,:) = range(1,:) + (h_mono*(Nx-1) - (range(1,2)-range(1,1)))/2*[-1,1]; % Corrected range of bounding box along x
+range(2,:) = range(2,:) + (h_mono*(Ny-1) - (range(2,2)-range(2,1)))/2*[-1,1]; % Corrected range of bounding box along y
 
 % GENERATE ONE SQUARE ELEMENT
-PS = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*hx;
+PS = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*h_mono;
 ES = element2d_dummy(PS, true);
 
 % CREATING GRIDPOINTS OF BOUNDING BOX
-x = linspace(-xmax,xmax,Nx); % Gridpoints in [-1,1]
-P = zeros(Nsquare,3); % Gridpoints of bounding box
+x = linspace(range(1,1),range(1,2),Nx); % Gridpoints along x
+y = linspace(range(2,1),range(2,2),Ny); % Gridpoints along y
+P = zeros(Nrect,3); % Gridpoints of bounding box
 for i=0:Nx-1
     for j=0:Nx-1  
-    	P(Nx*i+j+1,:) = [x(i+1) x(j+1) 0];
+    	P(Nx*i+j+1,:) = [x(i+1) y(j+1) 0];
     end
 end
 
 % GENERATE ELEMENTS
 SquareElements = [];
 NonSquareElements = [];
-accepted_node = false(Nsquare,1);
+SE = cell(0,1);
+accepted_node = false(Nrect,1);
 for i=0:Nx-2 % For each element of the bounding box
-    for j=0:Nx-2
-        indexes = [Nx*i+j+1
-                   Nx*i+j+2
-                   Nx*(i+1)+j+2
-                   Nx*(i+1)+j+1];                  
+    for j=0:Ny-2
+        indexes = [Ny*i+j+1
+                   Ny*i+j+2
+                   Ny*(i+1)+j+2
+                   Ny*(i+1)+j+1];                  
         NewSquareElement = shiftElement(ES, P(indexes(1),:));
         if is_outside(NewSquareElement, fun)
             continue
@@ -43,15 +54,16 @@ for i=0:Nx-2 % For each element of the bounding box
         % Store non-square elements obtained by cutting square elements
         % with boundary. Such non-square elements are not endowed with node
         % indexes yet.
-        NewElement = cut(NewSquareElement, fun, tol);
+        [NewElement, LocalSurfaceElements] = cut(NewSquareElement, fun, tol);
         NonSquareElements = [NonSquareElements; NewElement]; %#ok 
+        SE = [SE; LocalSurfaceElements]; %#ok
     end
 end
 
 % AFTER ELIMINATING SQUARE ELEMENTS THAT ARE OUTSIDE DOMAIN, RE-DETERMINE
 % INDEXES OF NODES USED BY SQUARE ELEMENTS
 P = P(accepted_node,:);
-acceptedindexes = zeros(Nsquare,1);
+acceptedindexes = zeros(Nrect,1);
 acceptedindexes(accepted_node,1) = linspace(1,length(P),length(P))';
 for i=1:length(SquareElements)
    SquareElements(i).Pind = acceptedindexes(SquareElements(i).Pind); %#ok
@@ -77,6 +89,13 @@ for i=1:length(NonSquareElements)
    NonSquareElements(i).P = P(ind,:); %#ok
 end
 
+BulkElements = [SquareElements; NonSquareElements];
+
+SurfaceElements = zeros(length(SE),2);
+for i=1:length(SE)
+    [~, ind] = ismembertol(SE{i},P,tol,'ByRows',true);
+    SurfaceElements(i,:) = ind';
+end
 
 end
 
@@ -103,7 +122,7 @@ function inside = is_inside(Element, fun)
 end
 
 % CUTS GIVEN ELEMENT BY BOUNDARY OF DOMAIN
-function CutElement = cut(Element, fun, tol)
+function [CutElement, LocalSurfaceElements] = cut(Element, fun, tol)
     P = Element.P;
     inside_or_boundary = fun(P) <= 0;
     Pnew = [];
@@ -121,7 +140,19 @@ function CutElement = cut(Element, fun, tol)
         CutElement = [];
         return
     end
-    CutElement = element2d_dummy(Pnew(sort(ind),:), false);
+    indnewsort = sort(ind);
+    Pnewsort = Pnew(indnewsort,:);
+    CutElement = element2d_dummy(Pnewsort, false);
+    indboundary = find(abs(fun(Pnewsort)) < tol);
+    LocalSurfaceElements = cell(0,1);
+    for i=1:length(indnewsort)-1
+        if all(ismember(indnewsort([i i+1]), indboundary))
+            LocalSurfaceElements = [LocalSurfaceElements; {Pnew(indnewsort([i i+1]),:)}]; %#ok
+        end
+    end
+    if all(ismember(indnewsort([end 1]), indboundary))
+            LocalSurfaceElements = [LocalSurfaceElements; {Pnew(indnewsort([end 1]),:)}];
+    end
 end
 
 % COMPUTES INTERSECTION POINT BETWEEN AN EDGE AND THE BOUNDARY OF THE
