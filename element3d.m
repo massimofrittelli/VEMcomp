@@ -19,7 +19,7 @@ classdef element3d < element3dabstract
         Diameter
         K
         M
-        CM
+        C
     end
     
     properties (SetAccess = private, GetAccess = private)
@@ -35,14 +35,14 @@ classdef element3d < element3dabstract
            
            % Compute volume and centroid
            volumes = zeros(obj.NFaces, 1);
-           C = [0 0 0];
+           CV = [0 0 0];
            for i=1:length(obj.Faces)
                volumes(i) = abs(obj.Faces(i).OrientedArea * (obj.P0 - obj.Faces(i).P0)')/3;
-               C = C + volumes(i)*(obj.P0 + 3*obj.Faces(i).Centroid)/4;
+               CV = CV + volumes(i)*(obj.P0 + 3*obj.Faces(i).Centroid)/4;
            end
            
            obj.Volume = sum(volumes);
-           obj.Centroid = C/obj.Volume;
+           obj.Centroid = CV/obj.Volume;
            
            % Compute diameter
            distances = zeros(obj.NVert);
@@ -121,10 +121,10 @@ classdef element3d < element3dabstract
             end
 
             %COMPUTING LOCAL MASS MATRIX FROM H,B AND D (See Hitchhiker's)
-            C = H*PInablastar;
+            HP = H*PInablastar;
             PI0 = PInabla; %solo per k=1,2.
-            obj.M = C'*PInablastar + obj.Volume*(eye(obj.NVert)-PI0)'*(eye(obj.NVert)-PI0);
-            obj.CM = C'*PInablastar;
+            obj.M = HP'*PInablastar + obj.Volume*(eye(obj.NVert)-PI0)'*(eye(obj.NVert)-PI0);
+            obj.C = HP'*PInablastar;
        end
        
        function [XYZ,W] = quadrature(obj)

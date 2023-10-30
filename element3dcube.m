@@ -16,6 +16,7 @@ classdef element3dcube < element3dabstract
         Diameter
         K
         M
+        C
     end
     
     methods (Access = private)
@@ -68,6 +69,9 @@ classdef element3dcube < element3dabstract
 
             %COMPUTING LOCAL MASS MATRIX FROM H,B AND D (See Hitchhiker's)
             obj.M = obj.Volume*(51*eye(8) - 22*adj_pairs + opp_face_pairs + 24*opp_pairs)/96;
+
+            %COMPUTING LOCAL CONSISTENCY MATRIX FROM H,B AND D (See Hitchhiker's)
+            obj.C = obj.Volume*(3*eye(8) + 2*adj_pairs + opp_face_pairs + 0*opp_pairs)/96;
             
        end
        

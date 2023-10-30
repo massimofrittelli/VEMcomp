@@ -17,7 +17,7 @@ classdef element2d < element2dabstract
         Diameter
         K
         M
-        CM % Consistency matrix
+        C % Consistency matrix
     end
     
     properties(SetAccess = private, GetAccess = private)
@@ -153,10 +153,10 @@ classdef element2d < element2dabstract
             end
 
             %COMPUTING LOCAL MASS MATRIX FROM H,B AND D (See Hitchhiker's)
-            C = H*PInablastar;
+            HP = H*PInablastar;
             PI0 = PInabla; %solo per k=1,2.
-            obj.CM = C'*PInablastar;
-            obj.M = C'*PInablastar + obj.Area*(eye(obj.NVert)-PI0)'*(eye(obj.NVert)-PI0);
+            obj.C = HP'*PInablastar;
+            obj.M = HP'*PInablastar + obj.Area*(eye(obj.NVert)-PI0)'*(eye(obj.NVert)-PI0);
         end
         
         

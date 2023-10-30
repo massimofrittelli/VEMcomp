@@ -17,7 +17,7 @@ classdef element2dsquare < element2dabstract
         Diameter
         K
         M
-        CM
+        C
         
         % COMPUTED BY CONSTRUCTOR AND NOT PRESENT IN ABSTRACT CLASS
         EdgeLength(1,1) double
@@ -59,7 +59,7 @@ classdef element2dsquare < element2dabstract
             obj.M = obj.Area*(17*eye(4) -9*(diag(v3,1) + diag(v3,-1)) + 13*(diag(v2,2) + diag(v2,-2)) -9*(diag(1,3) + diag(1,-3)))/48;
         
             % Compute consistency matrix CM
-            obj.CM = obj.Area*(5*eye(4) +3*(diag(v3,1) + diag(v3,-1)) + 1*(diag(v2,2) + diag(v2,-2)) -3*(diag(1,3) + diag(1,-3)))/3;
+            obj.C = obj.Area*(5*eye(4) +3*(diag(v3,1) + diag(v3,-1)) + 1*(diag(v2,2) + diag(v2,-2)) +3*(diag(1,3) + diag(1,-3)))/48;
         end
         
     end
