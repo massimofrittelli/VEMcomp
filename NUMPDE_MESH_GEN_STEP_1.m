@@ -18,7 +18,7 @@ zlabel('z','rot',0)
 set(gca,'FontSize',18, 'Position', [0 0 1 1])
 
 colormap jet
-caxis([-1.5,2]);
+clim([-1.5,2]);
 
 [x,y,z] = sphere(40);      %# Makes a 21-by-21 point sphere
 r = 1;                 %# A radius value

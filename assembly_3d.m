@@ -63,7 +63,7 @@ for i=1:length(BulkElements) % For each bulk element
                 eind_boundary = Face.Pind;
                 MS(eind_boundary, eind_boundary) = MS(eind_boundary, eind_boundary) + Face.M; %#ok
                 KS(eind_boundary, eind_boundary) = KS(eind_boundary, eind_boundary) + Face.K; %#ok
-                CS(eind_boundary, eind_boundary) = CS(eind_boundary, eind_boundary) + Face.CM; %#ok
+                CS(eind_boundary, eind_boundary) = CS(eind_boundary, eind_boundary) + Face.C; %#ok
             end
         end
     end

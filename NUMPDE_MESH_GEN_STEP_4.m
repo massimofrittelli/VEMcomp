@@ -1,4 +1,4 @@
-% DESCRIPTION - GENERATES ILLUSTRATION OF STEP 3 OF MESH EXTRUSION ALGORITHM
+% DESCRIPTION - GENERATES ILLUSTRATION OF STEP 4 OF MESH EXTRUSION ALGORITHM
 % FOR THE BSVEM 3D ELLIPTIC PAPER
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -18,18 +18,13 @@ zmax = 1;
 range = [xmin, xmax; ymin, ymax; zmin, zmax];
 tol = 1e-10;
 fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2  -1;
-[P, h, CubicElements, NonCubicElements, EGamma, EGammaPlot, ElementsToPlot] = generate_mesh_3D_domain(fun, range, Nx, tol);
+[P, h, BulkElements, SurfaceElements, ElementsPlot] = generate_mesh_3d(fun, range, Nx, tol, -0.2);
 
 figure
 set(gcf,'color','white')
 hold on
-for i=1:length(ElementsToPlot)
-    if i==13
-        plot(ElementsToPlot(i), 1.5); 
-       continue 
-    end
-   plot(ElementsToPlot(i)); 
-end
+i = 13;
+plot(ElementsPlot(i), 1.5); 
 view(3)
 axis equal tight
 xlabel('x')
@@ -38,8 +33,8 @@ zlabel('z','rot',0)
 set(gca,'FontSize',18, 'Position', [0 0 1 1])
 
 colormap jet
-% colormap spring %(parabolic paper)
-caxis([-1.5,2]);
+clim([-1.5,2]);
 lightangle(-40,20)
 lighting gouraud
+
 axis off

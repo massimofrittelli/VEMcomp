@@ -19,7 +19,7 @@ set(gca,'FontSize',18, 'Position', [0 0 1 1])
 
 
 colormap jet
-caxis([-1.5,2]);
+clim([-1.5,2]);
 
 [x,y,z] = sphere(40);      %# Makes a 21-by-21 point sphere
 %x = x(21:end,:);       %# Keep top 11 x points
