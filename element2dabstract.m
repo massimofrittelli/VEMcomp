@@ -12,6 +12,7 @@ classdef (Abstract) element2dabstract < matlab.mixin.Heterogeneous
         Diameter(1,1) double
         K(:,:) double % Stiffness matrix
         M(:,:) double % Mass matrix
+        C(:,:) double % Consistency matrix
     end
     
             

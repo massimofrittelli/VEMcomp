@@ -17,7 +17,7 @@ classdef element2d < element2dabstract
         Diameter
         K
         M
-        C % Consistency matrix
+        C
     end
     
     properties(SetAccess = private, GetAccess = private)
@@ -88,6 +88,26 @@ classdef element2d < element2dabstract
         end
         
         function obj = setLocalMatrices(obj)
+
+            % if obj.NVert == 3
+            %     obj.M = (ones(3)+eye(3))*obj.Area/12;
+            %     obj.C = obj.M;
+            %     % edges of the considered triangle
+            %     v1 = obj.P(3,:)-obj.P(2,:);
+            %     v2 = obj.P(1,:)-obj.P(3,:);
+            %     v3 = obj.P(2,:)-obj.P(1,:);
+            %     % heights of the considered triangle
+            %     h = [v2-(v1*v2')*v1/norm(v1)^2;
+            %          v3-(v2*v3')*v2/norm(v2)^2;
+            %          v1-(v3*v1')*v3/norm(v3)^2];
+            %     % gradients of the local basis functions
+            %     nabla = [h(1,:)/norm(h(1,:))^2;
+            %              h(2,:)/norm(h(2,:))^2;
+            %              h(3,:)/norm(h(3,:))^2];
+            %     obj.K = nabla*nabla'*obj.Area*2;
+            %     return
+            % end
+
             %computing edges of the element
             edges = zeros(obj.NVert,2);
             for i=1:obj.NVert-1

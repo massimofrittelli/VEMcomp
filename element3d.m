@@ -66,6 +66,16 @@ classdef element3d < element3dabstract
        end
        
        function obj = setLocalMatrices(obj)
+            % if obj.NVert == 4
+            %     obj.M = (ones(4)+eye(4))*obj.Volume/20;
+            %     obj.C = obj.M;
+            %     B = [obj.P'; [1, 1, 1, 1]];
+            %     Binv = inv(B);
+            %     obj.K = Binv(:,1:3)*Binv(:,1:3)'*obj.Volume;
+            %     return
+            % end
+
+
            % computing gradient of the non-constant barycentric monomials 
             nabla2 = [1,0,0]/obj.Diameter;
             nabla3 = [0,1,0]/obj.Diameter;

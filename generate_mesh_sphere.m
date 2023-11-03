@@ -1,7 +1,6 @@
 %
-% DESCRIPTION - Generates polyhedral mesh on the unit sphere
-% Notice: this function serves only as an auxiliary function for the
-% scripts MESH_PLOTTER_STEP_3 and MESH_PLOTTER_STEP_4
+% DESCRIPTION - Generates polyhedral mesh on the unit sphere throuhh the
+% extrusion technique - needs fixing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % INPUTS:
@@ -20,7 +19,7 @@
 %   survive after the sphere is cut.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [P, h, boundarynode, EGamma, Elements, EGammaCut, ElementsCut] = generate_mesh_sphere(Nx)
+function [P, h, boundarynode, SurfaceElements, BulkElements, EGammaCut, ElementsPlot] = generate_mesh_sphere(Nx)
 
 hx = 2/(Nx-1); % Discretisation step along each dimension
 h = hx*sqrt(3); % Meshsize
@@ -77,12 +76,12 @@ end
 acceptednode = false(2*size(P,1),1);
 boundarynode = false(2*size(P,1),1);
 newP = [P; zeros(size(P))];
-EGamma = [];
+SurfaceElements = [];
 % Twice the amount of nodes of the bounding box to allow for extrusion
-Elements = [];
+BulkElements = [];
 EGammaCut = [];
 % Twice the amount of nodes of the bounding box to allow for extrusion
-ElementsCut = [];
+ElementsPlot = [];
 for i=0:Nx-2 % For each element of the bounding box
     for j=0:Nx-2
         for k=0:Nx-2
@@ -104,9 +103,9 @@ for i=0:Nx-2 % For each element of the bounding box
                     
                 NewCubicElement = shiftElement(ESD, P(indexes(1),:));
                 NewCubicElement.Pind = indexes;
-                Elements = [Elements; NewCubicElement]; %#ok
+                BulkElements = [BulkElements; NewCubicElement]; %#ok
                 if i == ceil((Nx-2)/2) || j == ceil((Nx-2)/2)
-                    ElementsCut = [ElementsCut; NewCubicElement]; %#ok
+                    ElementsPlot = [ElementsPlot; NewCubicElement]; %#ok
                 end
                 
                 % Extrude element, if it has an external face
@@ -114,9 +113,9 @@ for i=0:Nx-2 % For each element of the bounding box
                     continue
                 end
                 NewElements = extrude(NewCubicElement,Ncube);
-                Elements = [Elements; NewElements]; %#ok
+                BulkElements = [BulkElements; NewElements]; %#ok
                 if i == ceil((Nx-2)/2) || j == ceil((Nx-2)/2)
-                    ElementsCut = [ElementsCut; NewElements]; %#ok
+                    ElementsPlot = [ElementsPlot; NewElements]; %#ok
                 end
                 for l=1:length(NewElements)
                     Element = NewElements(l);
@@ -126,7 +125,7 @@ for i=0:Nx-2 % For each element of the bounding box
                     eind_boundary_2 = Element.Faces(3).Pind;
                     acceptednode(eind, 1) = true(length(eind),1);
                     boundarynode(eind_boundary,1) = true(4,1);
-                    EGamma = [EGamma; eind_boundary_1'; eind_boundary_2']; %#ok
+                    SurfaceElements = [SurfaceElements; eind_boundary_1'; eind_boundary_2']; %#ok
                     if i >= ceil((Nx-2)/2) || j >= ceil((Nx-2)/2)
                         EGammaCut = [EGammaCut; eind_boundary_1'; eind_boundary_2']; %#ok
                     end
@@ -143,20 +142,20 @@ P = newP(acceptednode,:);
 boundarynode = find(boundarynode(acceptednode));
 acceptedindexes = zeros(2*Ncube,1);
 acceptedindexes(acceptednode,1) = linspace(1,length(P),length(P))';
-EGamma = acceptedindexes(EGamma);
+SurfaceElements = acceptedindexes(SurfaceElements);
 EGammaCut = acceptedindexes(EGammaCut);
 
-for i=1:length(Elements)
-   Elements(i).Pind = acceptedindexes(Elements(i).Pind); %#ok
-   for j=1:length(Elements(i).Faces)
-       Elements(i).Faces(j).Pind = acceptedindexes(Elements(i).Faces(j).Pind);
+for i=1:length(BulkElements)
+   BulkElements(i).Pind = acceptedindexes(BulkElements(i).Pind); %#ok
+   for j=1:length(BulkElements(i).Faces)
+       BulkElements(i).Faces(j).Pind = acceptedindexes(BulkElements(i).Faces(j).Pind);
    end
 end
 
-for i=1:length(ElementsCut)
-   ElementsCut(i).Pind = acceptedindexes(ElementsCut(i).Pind); %#ok
-   for j=1:length(ElementsCut(i).Faces)
-       ElementsCut(i).Faces(j).Pind = acceptedindexes(ElementsCut(i).Faces(j).Pind);
+for i=1:length(ElementsPlot)
+   ElementsPlot(i).Pind = acceptedindexes(ElementsPlot(i).Pind); %#ok
+   for j=1:length(ElementsPlot(i).Faces)
+       ElementsPlot(i).Faces(j).Pind = acceptedindexes(ElementsPlot(i).Faces(j).Pind);
    end
 end
 

@@ -194,13 +194,14 @@ function [CutElement] = cutElement(CubicElement, fun, tol)
         end
     end
     CutFacesP = uniquetol(CutFacesP,tol,'ByRows',true);
-    if length(CutFacesP) < 4 % Element has zero volume -> discard
+    if length(CutFacesP) < 4 % Element is flat -> discard
         CutElement = [];
         return
     end
     try
         chull = convhull(CutFacesP,'simplify',true); 
     catch % Element has zero volume -> discard
+        warning('Almost-zero volume element discarded -> tiny dent in the mesh')
         CutElement = [];
         return
     end

@@ -95,7 +95,7 @@ classdef element2d_dummy
             end
         end
         
-        function plot(obj, faceColor, edgeColor)
+        function plot(obj, faceColor, edgeColor, edgeAlpha)
             switch nargin
                 case 1
                     fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), obj.P(:,1)*0 + 1 - obj.is_square);
@@ -103,6 +103,8 @@ classdef element2d_dummy
                     fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), faceColor);
                 case 3
                     fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), faceColor, 'EdgeColor', edgeColor);
+                case 4
+                    fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), faceColor, 'EdgeColor', edgeColor, 'EdgeAlpha', edgeAlpha);
             end
         end
         

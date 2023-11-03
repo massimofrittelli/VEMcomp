@@ -1,7 +1,7 @@
 % Generating mesh
 fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2 -1;
-range = [-1,1; -1,1; -1,1];
-tol = 1e-3;
+range = [-1,1; -1,1; -1,1]*1.04;
+tol = 1e-10;
 Nx = 30;
 [P, h, BulkElements, SurfaceElements, ElementsPlot] = ...
     generate_mesh_3d(fun, range, Nx, tol, -0.3);
@@ -46,6 +46,7 @@ title('u')
 set(gca,'FontSize',18)
 colorbar
 
+% Plotting exact solution
 figure
 set(gcf,'color','white')
 for i=1:length(ElementsPlot)
