@@ -1,7 +1,10 @@
+close all
+clearvars
+
 % Generating mesh
 fun = @(P) P(:,1).^2 + P(:,2).^2 -1;
 range = [-1,1; -1,1];
-tol = 1e-3;
+tol = 1e-6;
 Nx = 40;
 [P, h, BulkElements, SurfaceElements] = generate_mesh_2d(fun, range, Nx, tol);
 
@@ -23,38 +26,14 @@ esol = @(P) (1- (P(:,1).^2 + P(:,2).^2)).^2;
 % Dirichlet
 % esol = @(P) 1- (P(:,1).^2 + P(:,2).^2);
 u_exact = esol(P);
-pointwise_error = u_exact - u;
-normsol = sqrt(u_exact'*M*u_exact);
-normerror = sqrt(pointwise_error'*M*pointwise_error);
-relative_err = normerror/normsol;
+L2_relative_err = compute_error(C,MS,u,u_exact,[],[]);
 
 % Plotting numerical solution
 figure
 set(gcf,'color','white')
-for i=1:length(BulkElements)
-   plot(BulkElements(i), u(BulkElements(i).Pind)); 
-   hold on
-end
-colormap jet
-view(2)
-axis equal tight
-xlabel('x')
-ylabel('y','rot',0)
-title('u_h')
-set(gca,'FontSize',18)
-colorbar
+plot_bulk_2d(BulkElements, u, '$u$')
 
+% PLOTTING EXACT SOLUTION
 figure
 set(gcf,'color','white')
-for i=1:length(BulkElements)
-   plot(BulkElements(i), esol(P(BulkElements(i).Pind, :))); 
-   hold on
-end
-colormap jet
-view(2)
-axis equal tight
-xlabel('x')
-ylabel('y','rot',0)
-set(gca,'FontSize',18)
-title('u_{exact}')
-colorbar
+plot_bulk_2d(BulkElements, esol(P), '$u_{exact}$')

@@ -2,12 +2,15 @@
 % computes errors.
 
 close all
+clearvars
 
 % Script to solve an elliptic B-S problem on the sphere
 alpha = 1;
 beta = 2;
 
-load('mesh_sphere_marchcub_Nx30.mat')
+%load('mesh_sphere_marchcub_Nx30.mat')
+%load('mesh_sphere31.mat')
+load('mesh_sphere30_tol1e-6.mat')
 N = length(P); % Overall amount of nodes
 NGamma = length(MS); % Amount of boundary nodes
 
@@ -28,58 +31,33 @@ numsol = [K+M+alpha*R*MS*R', -beta*R*MS; -alpha*MS*R', KS+(beta+1)*MS]\[M*f_u(P)
 u = numsol(1:N,1);
 v = numsol(N+1:end,1);
 toc
-es_u = esol_u(P);
-es_v = esol_v(R'*P);
-err_u = u - es_u;
-err_v = v - es_v;
-% L2err_u = sqrt(err_u'*M*err_u);
-% L2err_v = sqrt(err_v'*MS*err_v);
-% H1err_u = sqrt(err_u'*K*err_u);
-% H1err_v = sqrt(err_v'*KS*err_v);
+u_exact = esol_u(P);
+v_exact = esol_v(R'*P);
+err_u = u - u_exact;
+err_v = v - v_exact;
 
-L2err_product_abs = sqrt(err_u'*M*err_u + err_v'*MS*err_v);
-H1err_product_abs = sqrt(err_u'*(K+M)*err_u + err_v'*(KS+MS)*err_v);
-L2norm_product = sqrt(es_u'*M*es_u + es_v'*MS*es_v);
-H1norm_product = sqrt(es_u'*(K+M)*es_u + es_v'*(KS+MS)*es_v);
-L2err_product_rel = L2err_product_abs/L2norm_product;
-H1err_product_rel = H1err_product_abs/H1norm_product;
+% L2err_product_abs = sqrt(err_u'*M*err_u + err_v'*MS*err_v);
+% H1err_product_abs = sqrt(err_u'*(K+M)*err_u + err_v'*(KS+MS)*err_v);
+% L2norm_product = sqrt(u_exact'*M*u_exact + v_exact'*MS*v_exact);
+% H1norm_product = sqrt(u_exact'*(K+M)*u_exact + v_exact'*(KS+MS)*v_exact);
+% L2err_product_rel = L2err_product_abs/L2norm_product;
+% H1err_product_rel = H1err_product_abs/H1norm_product;
+
+L2_err_rel = compute_error(C,MS,u,u_exact,v,v_exact);
 
 
-xcut = range(1,1) + h/sqrt(3)*2;
+%xcut = range(1,1) + h/sqrt(3)*2;
 
-
-% Plotting Numerical Solution - Bulk Component u
+% Plotting Numerical Solution
 figure
 set(gcf, 'Color','white')
-
+% Bulk Component u
 subplot(121)
-hold on
-for i=1:length(ElementsPlot)
-       plot(ElementsPlot(i), u(ElementsPlot(i).Pind)); 
-end
-view(3)
-set(gca,'FontSize',18)
-xlabel('x')
-ylabel('y')
-zlabel('z','rot',0)
-axis equal
-title('u')
-colorbar
-colormap parula
-
-% Plotting Numerical Solution - Surface Component v
+plot_bulk_3d(ElementsPlot, u, '$u$')
+% Surface Component v
 subplot(122)
-trisurf(SurfaceElements, P(:,1), P(:,2), P(:,3), R*v, 'FaceColor', 'interp')
-view(3)
-set(gca,'FontSize',18)
-xlabel('x')
-ylabel('y')
-zlabel('z','rot',0)
-axis equal
-xlim([-0.5,1])
-title('v')
-colorbar
-colormap parula
+plot_surf_3d(P,R,SurfaceElements,v,'$v$')
+xlim([xcut,1])
 hold on
 Ccirc = [-0.5, 0, 0];   % Center of circle 
 Rcirc = sqrt(3)/2;      % Radius of circle 

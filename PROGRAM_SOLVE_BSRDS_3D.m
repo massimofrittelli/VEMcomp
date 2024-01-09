@@ -17,7 +17,6 @@
 
 
 close all
-%clearvars
 
 % Set model parameters
 a = 0.1;
@@ -35,15 +34,11 @@ gamma_Omega = 300;
 gamma_Gamma = 300;
 
 % Set time discretisation
-T = 5;
+T = 1e-5;
 tau = 1e-5;
 
 % Set space discretisation
-load('mesh_torus_marchcub_Nx11.mat')
-
-% Lumping!
-% M = diag(sum(M));
-% MS = diag(sum(MS));
+%load('mesh_torus_marchcub_Nx11.mat')
 
 N = length(P);
 NGamma = length(MS); % Amount of boundary nodes
@@ -108,44 +103,31 @@ set(gcf, 'color', 'white')
 
 % % Plotting Numerical Solution - Bulk Component u
 subplot(2,2,1)
-for i=1:size(ElementsPlot)
-    hold on
-    if not(ElementsPlot(i).is_boundary)
-        plot(ElementsPlot(i), u(ElementsPlot(i).Pind));
-    else
-        plot(ElementsPlot(i), u(ElementsPlot(i).Pind),'k',0.3);
-    end
-end
-view(3)
-set(gca,'FontSize',18)
-xlabel('x')
-ylabel('y')
-zlabel('z','rot',0)
-title('u', 'interpreter', 'latex')
-colorbar
-colormap parula
-axis equal tight
+plot_bulk_3d(ElementsPlot, u, '$u$')
+% Below code makes thicker lines on the cut
+% for i=1:size(ElementsPlot)
+%     hold on
+%     if not(ElementsPlot(i).is_boundary)
+%         plot(ElementsPlot(i), u(ElementsPlot(i).Pind));
+%     else
+%         plot(ElementsPlot(i), u(ElementsPlot(i).Pind),'k', 0.3);
+%     end
+% end
 
 
 % % Plotting Numerical Solution - Bulk Component v
 subplot(2,2,2)
-for i=1:size(ElementsPlot)
-    hold on
-    if not(ElementsPlot(i).is_boundary)
-        plot(ElementsPlot(i), v(ElementsPlot(i).Pind));
-    else
-        plot(ElementsPlot(i), v(ElementsPlot(i).Pind),'k', 0.3);
-    end
-end
-view(3)
-set(gca,'FontSize',18)
-xlabel('x')
-ylabel('y')
-zlabel('z','rot',0)
-title('v', 'interpreter', 'latex')
-colorbar
-colormap parula
-axis equal tight
+plot_bulk_3d(ElementsPlot, v, '$v$')
+% Below code makes thicker lines on the cut
+% for i=1:size(ElementsPlot)
+%     hold on
+%     if not(ElementsPlot(i).is_boundary)
+%         plot(ElementsPlot(i), v(ElementsPlot(i).Pind));
+%     else
+%         plot(ElementsPlot(i), v(ElementsPlot(i).Pind),'k', 0.3);
+%     end
+% end
+
 
 xline = ones(200,1)*xcut;
 yline = linspace(-sqrt(3)/2, sqrt(3)/2, 200);
@@ -154,38 +136,27 @@ zline = sqrt(9/100-(sqrt(xcut^2+yline.^2)-7/10).^2);
 
 % % Plotting Numerical Solution - Surface Component r
 subplot(2,2,3)
-trisurf(SurfaceElements, P(:,1), P(:,2), P(:,3), R*r, 'FaceColor', 'interp', 'EdgeAlpha',.3)
+plot_surf_3d(P,R,SurfaceElements,r,'$r$')
 hold on
 plot3(xline,yline,zline,'k','LineWidth',1)
 plot3(xline,yline,-zline,'k','LineWidth',1)
-set(gca,'FontSize',18)
-xlabel('x')
-ylabel('y')
-zlabel('z','rot',0)
-axis equal
-clim([min(r), max(r)])
-title('r', 'interpreter', 'latex')
-colorbar
-colormap parula
 xlim([xcut, max(P(:,1))])
+% Below code makes more transparent esdes on the surf
+% trisurf(SurfaceElements, P(:,1), P(:,2), P(:,3), R*r, 'FaceColor', 'interp', 'EdgeAlpha',.3)
 
 
 % % Plotting Numerical Solution - Surface Component s
 subplot(2,2,4)
-trisurf(SurfaceElements, P(:,1), P(:,2), P(:,3), R*s, 'FaceColor', 'interp', 'EdgeAlpha',.3)
+plot_surf_3d(P,R,SurfaceElements,s,'$s$')
 hold on
 plot3(xline,yline,zline,'k','LineWidth',1)
 plot3(xline,yline,-zline,'k','LineWidth',1)
-set(gca,'FontSize',18)
-xlabel('x')
-ylabel('y')
-zlabel('z','rot',0)
-axis equal tight
-clim([min(s), max(s)])
-title('s', 'interpreter', 'latex')
-colorbar
-colormap parula
 xlim([xcut, max(P(:,1))])
+% Below code makes more transparent esdes on the surf
+% trisurf(SurfaceElements, P(:,1), P(:,2), P(:,3), R*s, 'FaceColor', 'interp', 'EdgeAlpha',.3)
+
+
+
 
 
 % PLOT FOR TETRAHEDRAL MESHES

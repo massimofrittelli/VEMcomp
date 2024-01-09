@@ -24,6 +24,13 @@ Nbulk = length(P);
 boundarynodes = unique(SurfaceElements(:));
 Nsurf = length(boundarynodes);
 
+if isempty(BulkElements) % Triangulated surface mesh
+    K = []; M = []; C = []; R = speye(Nsurf);
+    [KS,MS] = matrices(P,SurfaceElements);
+    CS = MS;
+    return
+end
+
 K = spalloc(Nbulk,Nbulk,27*Nbulk); % Stiffness matrix in the bulk
 M = spalloc(Nbulk,Nbulk,27*Nbulk); % Mass matrix in the bulk
 C = spalloc(Nbulk,Nbulk,27*Nbulk); % Mass matrix in the bulk

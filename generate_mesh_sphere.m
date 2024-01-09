@@ -19,7 +19,7 @@
 %   survive after the sphere is cut.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [P, h, boundarynode, SurfaceElements, BulkElements, EGammaCut, ElementsPlot] = generate_mesh_sphere(Nx)
+function [P, h, SurfaceElements, BulkElements] = generate_mesh_sphere(Nx, tol)
 
 hx = 2/(Nx-1); % Discretisation step along each dimension
 h = hx*sqrt(3); % Meshsize
@@ -62,26 +62,19 @@ ESD.Pind = (1:8)';
 
 x = linspace(-1,1,Nx); % Gridpoints in [-1,1]
 P = zeros(Ncube,3); % Gridpoints of bounding box
-radii = zeros(Ncube,1); % Distances of nodes from origin (sphere centre)
 for i=0:Nx-1
     for j=0:Nx-1
         for k=0:Nx-1
             P(Nx^2*i+Nx*j+k+1,:) = [x(i+1) x(j+1) x(k+1)];
-            radii(Nx^2*i+Nx*j+k+1) = norm([x(i+1) x(j+1) x(k+1)]);
         end
     end
 end
 
 % MATRIX ASSEMBLY
 acceptednode = false(2*size(P,1),1);
-boundarynode = false(2*size(P,1),1);
-newP = [P; zeros(size(P))];
-SurfaceElements = [];
+Pnew = [];
 % Twice the amount of nodes of the bounding box to allow for extrusion
 BulkElements = [];
-EGammaCut = [];
-% Twice the amount of nodes of the bounding box to allow for extrusion
-ElementsPlot = [];
 for i=0:Nx-2 % For each element of the bounding box
     for j=0:Nx-2
         for k=0:Nx-2
@@ -102,11 +95,7 @@ for i=0:Nx-2 % For each element of the bounding box
                 acceptednode(indexes,1) = true(8,1);
                     
                 NewCubicElement = shiftElement(ESD, P(indexes(1),:));
-                NewCubicElement.Pind = indexes;
                 BulkElements = [BulkElements; NewCubicElement]; %#ok
-                if i == ceil((Nx-2)/2) || j == ceil((Nx-2)/2)
-                    ElementsPlot = [ElementsPlot; NewCubicElement]; %#ok
-                end
                 
                 % Extrude element, if it has an external face
                 if norm(TPO) < 1 - h
@@ -114,48 +103,34 @@ for i=0:Nx-2 % For each element of the bounding box
                 end
                 NewElements = extrude(NewCubicElement,Ncube);
                 BulkElements = [BulkElements; NewElements]; %#ok
-                if i == ceil((Nx-2)/2) || j == ceil((Nx-2)/2)
-                    ElementsPlot = [ElementsPlot; NewElements]; %#ok
-                end
                 for l=1:length(NewElements)
-                    Element = NewElements(l);
-                    eind = Element.Pind;
-                    eind_boundary = get_P_indexes_boundary(Element);
-                    eind_boundary_1 = Element.Faces(2).Pind;
-                    eind_boundary_2 = Element.Faces(3).Pind;
-                    acceptednode(eind, 1) = true(length(eind),1);
-                    boundarynode(eind_boundary,1) = true(4,1);
-                    SurfaceElements = [SurfaceElements; eind_boundary_1'; eind_boundary_2']; %#ok
-                    if i >= ceil((Nx-2)/2) || j >= ceil((Nx-2)/2)
-                        EGammaCut = [EGammaCut; eind_boundary_1'; eind_boundary_2']; %#ok
-                    end
-                    [~,id1, id2] = intersect(eind,eind_boundary,'stable');
-                    newP(eind_boundary,:) = Element.P(id1(id2),:);
+                    Pnew = [Pnew; NewElements(l).P]; %#ok
                 end
             end
         end
     end
 end
 
+% DISCARD UNUSED NODES OF THE BOUNDING BOX
+P = P(acceptednode,:);
 
-P = newP(acceptednode,:);
-boundarynode = find(boundarynode(acceptednode));
-acceptedindexes = zeros(2*Ncube,1);
-acceptedindexes(acceptednode,1) = linspace(1,length(P),length(P))';
-SurfaceElements = acceptedindexes(SurfaceElements);
-EGammaCut = acceptedindexes(EGammaCut);
+% DETERMINE SET OF NON-REPEATED NODES UP TO SMALL TOLERANCE
+P = uniquetol([P; Pnew],tol,'ByRows',true);
 
+% FIX ELEMENTS BY ASSIGNING NODE INDEXES AND ELIMINATING DUPLICATE NODES UP
+% TO SMALL TOLERANCE
+SurfaceElements = [];
 for i=1:length(BulkElements)
-   BulkElements(i).Pind = acceptedindexes(BulkElements(i).Pind); %#ok
+   [~, ind] = ismembertol(BulkElements(i).P,P,tol,'ByRows',true);
+   BulkElements(i).Pind = ind; %#ok 
+   BulkElements(i).P = P(ind,:); %#ok
    for j=1:length(BulkElements(i).Faces)
-       BulkElements(i).Faces(j).Pind = acceptedindexes(BulkElements(i).Faces(j).Pind);
-   end
-end
-
-for i=1:length(ElementsPlot)
-   ElementsPlot(i).Pind = acceptedindexes(ElementsPlot(i).Pind); %#ok
-   for j=1:length(ElementsPlot(i).Faces)
-       ElementsPlot(i).Faces(j).Pind = acceptedindexes(ElementsPlot(i).Faces(j).Pind);
+       [~, ind] = ismembertol(BulkElements(i).Faces(j).P,P,tol,'ByRows',true);
+       BulkElements(i).Faces(j).Pind = ind;
+       BulkElements(i).Faces(j).P = P(ind,:);
+       if BulkElements(i).Faces(j).is_boundary && length(BulkElements(i).Faces(j).Pind) == 3
+           SurfaceElements = [SurfaceElements; BulkElements(i).Faces(j).Pind']; %#ok
+       end
    end
 end
 

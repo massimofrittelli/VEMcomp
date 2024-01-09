@@ -1,7 +1,7 @@
 close all
 
-Nx = 11;
-tol = 1e-10;
+Nx = 4;
+tol = 1e-6;
 
 % BATTERY-SHAPED DOMAIN
 % R = 1;
@@ -14,12 +14,12 @@ tol = 1e-10;
 % fun = @(P) ff(P(:,3)) + P(:,1).^2 + P(:,2).^2;
 
 % UNIT BALL
-% xmin = -1.04;
-% xmax = 1.04;
-% ymin = -1.04;
-% ymax = 1.04;
-% zmin = -1.04;
-% zmax = 1.04;
+% xmin = -1;
+% xmax = 1;
+% ymin = -1;
+% ymax = 1;
+% zmin = -1;
+% zmax = 1;
 % fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2  -1;
 
 % HOLLOW BALL
