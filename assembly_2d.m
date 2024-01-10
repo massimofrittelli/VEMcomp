@@ -18,10 +18,10 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [K,C,M, KS, MS, R] = assembly_2d(P, BulkElements, SurfaceElements)
+function [K,C,M, KS, MS, R] = assembly_2d(P, BulkElements, SurfElements)
 
 Nbulk = length(P);
-boundarynodes = unique(SurfaceElements(:));
+boundarynodes = unique(SurfElements(:));
 Nsurf = length(boundarynodes);
 
 K = spalloc(Nbulk,Nbulk,9*Nbulk); % Stiffness matrix in the 2D bulk
@@ -34,33 +34,32 @@ MS = spalloc(Nbulk, Nbulk, 3*Nsurf); % Mass matrix on the 1D surface
 % find first square element in mesh (they are all equal)
 for i=1:length(BulkElements)
     if BulkElements(i).is_square
-        Square = dummy2element(BulkElements(i));
-        MSq = Square.M;
-        CSq = Square.C;
-        KSq = Square.K;
+        Square = copyElement2d(BulkElements(i));
+        MSq = getLocalMatrices(Square).M;
+        CSq = getLocalMatrices(Square).C;
+        KSq = getLocalMatrices(Square).K;
         break
     end
 end
 
 % MATRIX ASSEMBLY IN THE BULK
 for i=1:length(BulkElements) % For each bulk element
-    ElementDummy = BulkElements(i);
-    eind = ElementDummy.Pind;
-    if ElementDummy.is_square
+    Element = copyElement2d(BulkElements(i));
+    eind = Element.Pind;
+    if Element.is_square
         M(eind, eind) = M(eind, eind) + MSq; %#ok
         C(eind, eind) = C(eind, eind) + CSq; %#ok
         K(eind, eind) = K(eind, eind) + KSq; %#ok
     else
-        Element = dummy2element(ElementDummy);
-        M(eind, eind) = M(eind, eind) + Element.M; %#ok
-        C(eind, eind) = C(eind, eind) + Element.C; %#ok
-        K(eind, eind) = K(eind, eind) + Element.K; %#ok
+        M(eind, eind) = M(eind, eind) + getLocalMatrices(Element).M; %#ok
+        C(eind, eind) = C(eind, eind) + getLocalMatrices(Element).C; %#ok
+        K(eind, eind) = K(eind, eind) + getLocalMatrices(Element).K; %#ok
     end
 end
 
 % MATRIX ASSEMBLY ON THE SURFACE
-for i=1:length(SurfaceElements)
-    eind = SurfaceElements(i,:);
+for i=1:length(SurfElements)
+    eind = SurfElements(i,:);
     element_length = norm(P(eind(1),:) - P(eind(2),:));
     MS(eind, eind) = MS(eind, eind) + [2 1; 1 2]/6*element_length; %#ok
     MS(eind, eind) = MS(eind, eind) + [1 -1; -1 1]/element_length; %#ok

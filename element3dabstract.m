@@ -1,10 +1,10 @@
-classdef (Abstract) element3dabstract < matlab.mixin.Heterogeneous
+classdef (Abstract) element3dabstract < handle
     %element3dabstract is an abstract class that defines the functionality of
     %any 3D VEM element
     
     properties (Abstract, SetAccess = private)
         
-        Faces(:,1) element2dabstract
+        Faces(:,1) element2d
         P(:,3) double % Vertices
         NVert(1,1) double % Number of vertices
         NFaces(1,1) double % Number of faces

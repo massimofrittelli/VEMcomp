@@ -1,36 +1,67 @@
 classdef element2d < element2dabstract
     % ELEMENT2D represents a VEM polygonal element with k=1
+
+    properties
+        to_plot logical
+    end
     
     properties(SetAccess = private)
         
-        % CONSTRUCTOR INPUTS
+        %Initialized by constructor
         P % Vertexes
         P0 % Element is star-shaped wrt P0
         Pind % Indexes of vertexes
+        is_square
         is_boundary
-        
-        % COMPUTED BY CONSTRUCTOR
         NVert
+        EdgeLength(1,1) double
+        
+        %Computed by initElement
         Area
         OrientedArea
         Centroid
         Diameter
+
+        %Computed by getLocalMatrices
         K
         M
-        C
+        C        
     end
     
     properties(SetAccess = private, GetAccess = private)
         TransformedP(:,2) double
         TransformedP0(1,2) double
         TransformedCentroid(1,2) double
+        hasMatrices = false;
+    end
+
+    properties (Dependent)
+       NormalDirection(3,1) double 
     end
     
     methods(Access = private)
         function obj = initElement(obj)
-            
-             % Compute number of vertices
-             obj.NVert = length(obj.P);
+
+             if obj.is_square
+             
+                  % Compute edge length
+                  obj.EdgeLength = norm(obj.P(1,:) - obj.P(2,:));
+             
+                  % Compute Area
+                  obj.Area = obj.EdgeLength^2;
+             
+                  % Compute Oriented Area
+                  obj.OrientedArea = cross(obj.P(3,:) - obj.P(2,:), obj.P(2,:) - obj.P(1,:));
+             
+                  % Compute Centroid and P0
+                  obj.Centroid = (obj.P(1,:) + obj.P(3,:))/2;
+                  obj.P0 = obj.Centroid;
+             
+                  % Compute Diameter
+                  obj.Diameter = norm(obj.P(1,:) - obj.P(3,:));
+
+                  return;
+             end
              
              % Compute area, oriented area and centroid
              orientedAreas = zeros(obj.NVert, 3);
@@ -87,7 +118,7 @@ classdef element2d < element2dabstract
              obj.TransformedCentroid = GR;
         end
         
-        function obj = setLocalMatrices(obj)
+        function obj = computeLocalMatrices(obj)
 
             % if obj.NVert == 3
             %     obj.M = (ones(3)+eye(3))*obj.Area/12;
@@ -107,6 +138,21 @@ classdef element2d < element2dabstract
             %     obj.K = nabla*nabla'*obj.Area*2;
             %     return
             % end
+
+            if obj.is_square
+                % Compute local stiffness matrix K
+                obj.K = (4*eye(4) - ones(4,4))/4;
+            
+                % Compute local mass matrix M
+                v2 = ones(2,1);
+                v3 = ones(3,1);
+                obj.M = obj.Area*(17*eye(4) -9*(diag(v3,1) + diag(v3,-1)) + 13*(diag(v2,2) + diag(v2,-2)) -9*(diag(1,3) + diag(1,-3)))/48;
+        
+                % Compute consistency matrix CM
+                obj.C = obj.Area*(5*eye(4) +3*(diag(v3,1) + diag(v3,-1)) + 1*(diag(v2,2) + diag(v2,-2)) +3*(diag(1,3) + diag(1,-3)))/48;
+            
+                return
+            end
 
             %computing edges of the element
             edges = zeros(obj.NVert,2);
@@ -206,19 +252,129 @@ classdef element2d < element2dabstract
     end
     
     methods
-        function obj = element2d(P, P0, Pind, is_boundary)
+        function obj = element2d(P, is_square, is_boundary, Pind, P0)
             % ELEMENT Construct an instance of this class
             obj.P = P;
-            obj.P0 = P0;
-            if nargin >= 3
-               obj.Pind = Pind;
+            obj.NVert = length(obj.P);
+            if nargin >= 2
+                obj.is_square = is_square;
             end
-            if nargin >= 4
+            if nargin >= 3
                obj.is_boundary = is_boundary;
             end
-            obj = initElement(obj);
-            obj = setLocalMatrices(obj);
+            if nargin >= 4
+               obj.Pind = Pind;
+            end
+            if nargin >= 5
+                obj.P0 = P0;
+            end
+        end
+
+        function newobj = copyElement2d(obj)
+            if not(isequal(class(obj), 'element2d'))
+                error('Wrong input class')
+            end
+            newobj = element2d(obj.P, obj.is_square, obj.is_boundary, obj.Pind, obj.P0);
+        end
+
+
+        function ND = get.NormalDirection(obj)
+           if not(obj.is_square)
+              error('Normal direction is supported square elements only') 
+           end
+           direction = cross(obj.P(3,:)-obj.P(2,:) , obj.P(2,:)-obj.P(1,:));
+           [~, ND] = max(abs(direction));
+        end
+
+        function E = shiftElement(obj, v)
+           E =  element2d(obj.P+repmat(v,length(obj.P),1),obj.is_square,false,obj.Pind);
+        end
+
+        function EE = extrude(obj, Ncube)
+           EP = zeros(size(obj.P));
+           actuallyExtruded = logical(size(obj.P,1));
+           for i=1:obj.NVert
+               [EP(i,:), actuallyExtruded(i)] = extrude_node(obj.P(i,:));
+           end
+           extruded_ind = obj.Pind + Ncube;
+           extruded_ind(not(actuallyExtruded)) = obj.Pind(not(actuallyExtruded));
+           ExtrudedFaces = obj;
+           
+           % Re-ordering vertexes of square face of extruded element, in
+           % such a wat that the normal is outward
+           ExtrudedFaces.P = flipud(ExtrudedFaces.P);
+           ExtrudedFaces.Pind = flipud(ExtrudedFaces.Pind);
+           
+           % CREATE TRIANGULAR FACES LYING ON THE SURFACE
+           if norm(EP(1,:) + EP(3,:)) >= norm(EP(2,:) + EP(4,:))
+               NewExtrudedFace1 = element2d(EP([1 2 3],:), false, true);
+               NewExtrudedFace1.Pind = extruded_ind([1 2 3],1);
+               NewExtrudedFace2 = element2d(EP([1 3 4],:), false, true);
+               NewExtrudedFace2.Pind = extruded_ind([1 3 4],1);
+           else
+               NewExtrudedFace1 = element2d(EP([1 2 4],:), false, true);
+               NewExtrudedFace1.Pind = extruded_ind([1 2 4],1);
+               NewExtrudedFace2 = element2d(EP([2 3 4],:), false, true);
+               NewExtrudedFace2.Pind = extruded_ind([2 3 4],1);
+           end
+               ExtrudedFaces = [ExtrudedFaces; NewExtrudedFace1; NewExtrudedFace2];
+           % CREATE LATERAL SQUARE FACES
+           for i=1:obj.NVert
+              LP = unique([obj.P([i 1+rem(i,obj.NVert)],:); EP([1+rem(i,obj.NVert) i],:)],'rows','stable');
+              NewExtrudedFace = element2d(LP, false, false);
+              EPind = unique([obj.Pind([i 1+rem(i,obj.NVert)],1); extruded_ind([1+rem(i,obj.NVert) i],1)],'stable');
+              NewExtrudedFace.Pind = EPind;
+              ExtrudedFaces = [ExtrudedFaces; NewExtrudedFace]; %#ok 
+           end
+           EE = element3d([obj.P; EP(actuallyExtruded,:)], ExtrudedFaces, false, [obj.Pind; extruded_ind(actuallyExtruded)]);
+        end
+
+        function plot(obj, faceColor, edgeColor, edgeAlpha)
+            switch nargin
+                case 1
+                    fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), obj.P(:,1)*0 + 1 - obj.is_square);
+                case 2
+                    fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), faceColor);
+                case 3
+                    fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), faceColor, 'EdgeColor', edgeColor);
+                case 4
+                    fill3(obj.P(:,1), obj.P(:,2), obj.P(:,3), faceColor, 'EdgeColor', edgeColor, 'EdgeAlpha', edgeAlpha);
+            end
+        end
+
+        function obj = getLocalMatrices(obj)
+            if not(obj.hasMatrices)
+                obj = initElement(obj);
+                obj = computeLocalMatrices(obj);
+                obj.hasMatrices = true;
+            end
+        end
+
+        function setP(obj, P)
+            obj.P = P;
+        end
+
+        function setPind(obj, Pind)
+            obj.Pind = Pind;
         end
     end
+end
+
+function [P, wasActuallyExtruded] = extrude_node(P)
+    tol = 1e-8;
+    % TYPE 1: LESS UNIFORM, BUT INTERNAL FACES ARE GUARANTEED TO BE FLAT
+    n = signtol(P);
+    alpha = (- P*n' + sqrt((P*n')^2 -norm(n)^2*(norm(P)^2-1)))/norm(n)^2;
+    wasActuallyExtruded = (abs(alpha) > tol);
+    P = P + wasActuallyExtruded*alpha*n;
+    % TYPE 2: MORE UNIFORM, BUT INTERNAL FACES ARE NOT GUARANTEED TO BE
+    % FLAT
+%     wasActuallyExtruded = (1 - norm(P) > tol);
+%     P = P/norm(P);
+end
+
+function x = signtol(x)
+    tol = 1e-10;
+    x = sign(x).*(abs(x) > tol);
 end
 

@@ -1,4 +1,4 @@
-classdef (Abstract) element2dabstract < matlab.mixin.Heterogeneous
+classdef (Abstract) element2dabstract < handle
     %element2dabstract is an abstract class that defines the functionality of
     %any 2D VEM element
     

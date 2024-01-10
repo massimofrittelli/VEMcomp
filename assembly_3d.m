@@ -18,15 +18,15 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [K, M, C, KS, MS, CS, R] = assembly_3d(P, BulkElements, SurfaceElements)
+function [K, C, M, KS, CS, MS, R] = assembly_3d(P, BulkElements, SurfElements)
 
 Nbulk = length(P);
-boundarynodes = unique(SurfaceElements(:));
+boundarynodes = unique(SurfElements(:));
 Nsurf = length(boundarynodes);
 
 if isempty(BulkElements) % Triangulated surface mesh
     K = []; M = []; C = []; R = speye(Nsurf);
-    [KS,MS] = matrices(P,SurfaceElements);
+    [KS,MS] = matrices(P,SurfElements);
     CS = MS;
     return
 end
@@ -41,11 +41,11 @@ CS = spalloc(Nbulk,Nbulk,9*Nsurf); % Consistency matrix on the surf
 
 % find first cubic element in mesh (they are all equal)
 for i=1:length(BulkElements)
-    if BulkElements(i).iscube
-        Cube = dummy2element(BulkElements(i));
-        MC = Cube.M;
-        KC = Cube.K;
-        CC = Cube.C;
+    if BulkElements(i).is_cube
+        Cube = copyElement3d(BulkElements(i));
+        MC = getLocalMatrices(Cube).M;
+        KC = getLocalMatrices(Cube).K;
+        CC = getLocalMatrices(Cube).C;
         % An element3dcube is not supposed to have boundary faces
         break
     end
@@ -55,22 +55,26 @@ end
 for i=1:length(BulkElements) % For each bulk element
     ElementDummy = BulkElements(i);
     eind = ElementDummy.Pind;
-    if ElementDummy.iscube
+    if ElementDummy.is_cube
         M(eind, eind) = M(eind, eind) + MC; %#ok
         C(eind, eind) = C(eind, eind) + CC; %#ok
         K(eind, eind) = K(eind, eind) + KC; %#ok
     else
-        Element = dummy2element(ElementDummy);
-        M(eind, eind) = M(eind, eind) + Element.M; %#ok
-        C(eind, eind) = C(eind, eind) + Element.C; %#ok
-        K(eind, eind) = K(eind, eind) + Element.K; %#ok
+        Element = copyElement3d(ElementDummy);
+        try
+        M(eind, eind) = M(eind, eind) + getLocalMatrices(Element).M; %#ok
+        catch
+        print('ops');
+        end
+        C(eind, eind) = C(eind, eind) + getLocalMatrices(Element).C; %#ok
+        K(eind, eind) = K(eind, eind) + getLocalMatrices(Element).K; %#ok
         for j=1:Element.NFaces
-            Face = Element.Faces(j);
+            Face = copyElement2d(Element.Faces(j));
             if Face.is_boundary
                 eind_boundary = Face.Pind;
-                MS(eind_boundary, eind_boundary) = MS(eind_boundary, eind_boundary) + Face.M; %#ok
-                KS(eind_boundary, eind_boundary) = KS(eind_boundary, eind_boundary) + Face.K; %#ok
-                CS(eind_boundary, eind_boundary) = CS(eind_boundary, eind_boundary) + Face.C; %#ok
+                MS(eind_boundary, eind_boundary) = MS(eind_boundary, eind_boundary) + getLocalMatrices(Face).M; %#ok
+                KS(eind_boundary, eind_boundary) = KS(eind_boundary, eind_boundary) + getLocalMatrices(Face).K; %#ok
+                CS(eind_boundary, eind_boundary) = CS(eind_boundary, eind_boundary) + getLocalMatrices(Face).C; %#ok
             end
         end
     end

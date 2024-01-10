@@ -1,13 +1,13 @@
 % % Generating mesh
-% fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2 -1;
-% range = [-1,1; -1,1; -1,1]*1.04;
-% tol = 1e-10;
-% Nx = 30;
-% [P, h, BulkElements, SurfaceElements, ElementsPlot] = ...
-%     generate_mesh_3d(fun, range, Nx, tol, -0.3);
+fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2 -1;
+range = [-1,1; -1,1; -1,1]*1.04;
+tol = 1e-10;
+Nx = 10;
+[P, h, BulkElements, SurfElements, ElementsPlot] = ...
+     generate_mesh_3d(fun, range, Nx, tol, -0.3);
 % 
 % % Assembling matrices
-% [K, M, C, KS, MS, CS, R] = assembly_3d(P, BulkElements, SurfaceElements);
+[K, M, C, KS, MS, CS, R] = assembly_3d(P, BulkElements, SurfElements);
 
 % Solving PDE
 % Neumann

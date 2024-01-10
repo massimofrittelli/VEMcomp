@@ -1,27 +1,27 @@
-function [P, h, BulkElements, SurfaceElements] = generate_mesh_2d(fun, range, Nx, tol)
+function [P, h, BulkElements, SurfElements] = generate_mesh_2d(fun, Q, Nx, tol)
 %GENERATE_MESH_FLAT_DOMAIN Summary of this function goes here
 %   Detailed explanation goes here
 
-hx_requested = (range(1,2)-range(1,1))/(Nx-1); % Requested discretisation step along x
-hy_requested = (range(2,2)-range(2,1))/(Nx-1); % Requested discretisation step along y
+hx_requested = (Q(1,2)-Q(1,1))/(Nx-1); % Requested discretisation step along x
+hy_requested = (Q(2,2)-Q(2,1))/(Nx-1); % Requested discretisation step along y
 
 h_mono = min([hx_requested,hy_requested]); % Actual discretization step along each dimension
 h = h_mono*sqrt(2); % Meshsize
 
-Nx = ceil((range(1,2)-range(1,1))/h_mono)+1; % Corrected number of discretization nodes along x
-Ny = ceil((range(2,2)-range(2,1))/h_mono)+1; % Corrected number of discretization nodes along y
+Nx = ceil((Q(1,2)-Q(1,1))/h_mono)+1; % Corrected number of discretization nodes along x
+Ny = ceil((Q(2,2)-Q(2,1))/h_mono)+1; % Corrected number of discretization nodes along y
 Nrect = Nx*Ny; % Number of nodes of bounding box
 
-range(1,:) = range(1,:) + (h_mono*(Nx-1) - (range(1,2)-range(1,1)))/2*[-1,1]; % Corrected range of bounding box along x
-range(2,:) = range(2,:) + (h_mono*(Ny-1) - (range(2,2)-range(2,1)))/2*[-1,1]; % Corrected range of bounding box along y
+Q(1,:) = Q(1,:) + (h_mono*(Nx-1) - (Q(1,2)-Q(1,1)))/2*[-1,1]; % Corrected range of bounding box along x
+Q(2,:) = Q(2,:) + (h_mono*(Ny-1) - (Q(2,2)-Q(2,1)))/2*[-1,1]; % Corrected range of bounding box along y
 
 % GENERATE ONE SQUARE ELEMENT
 PS = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*h_mono;
-ES = element2d_dummy(PS, true);
+ES = element2d(PS, true);
 
 % CREATING GRIDPOINTS OF BOUNDING BOX
-x = linspace(range(1,1),range(1,2),Nx); % Gridpoints along x
-y = linspace(range(2,1),range(2,2),Ny); % Gridpoints along y
+x = linspace(Q(1,1),Q(1,2),Nx); % Gridpoints along x
+y = linspace(Q(2,1),Q(2,2),Ny); % Gridpoints along y
 P = zeros(Nrect,3); % Gridpoints of bounding box
 for i=0:Nx-1
     for j=0:Nx-1  
@@ -47,7 +47,7 @@ for i=0:Nx-2 % For each element of the bounding box
         if is_inside(NewSquareElement, fun)
             % Store square elements that are inside domain
             accepted_node(indexes) = true(4,1);
-            NewSquareElement.Pind = indexes;
+            setPind(NewSquareElement, indexes);
             SquareElements = [SquareElements; NewSquareElement]; %#ok 
             continue
         end
@@ -66,7 +66,7 @@ P = P(accepted_node,:);
 acceptedindexes = zeros(Nrect,1);
 acceptedindexes(accepted_node,1) = linspace(1,length(P),length(P))';
 for i=1:length(SquareElements)
-   SquareElements(i).Pind = acceptedindexes(SquareElements(i).Pind); %#ok
+    setPind(SquareElements(i), acceptedindexes(SquareElements(i).Pind));
 end
 
 % DETERMINE SET OF NON-REPEATED NODES UP TO SMALL TOLERANCE
@@ -79,22 +79,22 @@ P = uniquetol(P,tol,'ByRows',true);
 % TO SMALL TOLERANCE
 for i=1:length(SquareElements)
    [~, ind] = ismembertol(SquareElements(i).P,P,tol,'ByRows',true);
-   SquareElements(i).Pind = ind; %#ok 
-   SquareElements(i).P = P(ind,:); %#ok
+   setPind(SquareElements(i), ind);
+   setP(SquareElements(i), P(ind,:));
 end
 
 for i=1:length(NonSquareElements)
    [~, ind] = ismembertol(NonSquareElements(i).P,P,tol,'ByRows',true);
-   NonSquareElements(i).Pind = ind; %#ok 
-   NonSquareElements(i).P = P(ind,:); %#ok
+   setPind(NonSquareElements(i), ind);
+   setP(NonSquareElements(i), P(ind,:));
 end
 
 BulkElements = [SquareElements; NonSquareElements];
 
-SurfaceElements = zeros(length(SE),2);
+SurfElements = zeros(length(SE),2);
 for i=1:length(SE)
     [~, ind] = ismembertol(SE{i},P,tol,'ByRows',true);
-    SurfaceElements(i,:) = ind';
+    SurfElements(i,:) = ind';
 end
 
 end
@@ -142,7 +142,7 @@ function [CutElement, LocalSurfaceElements] = cut(Element, fun, tol)
     end
     indnewsort = sort(ind);
     Pnewsort = Pnew(indnewsort,:);
-    CutElement = element2d_dummy(Pnewsort, false);
+    CutElement = element2d(Pnewsort, false, false, [], mean(Pnewsort,1));
     indboundary = find(abs(fun(Pnewsort)) < tol);
     LocalSurfaceElements = cell(0,1);
     for i=1:length(indnewsort)-1

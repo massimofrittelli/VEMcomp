@@ -6,10 +6,10 @@ fun = @(P) P(:,1).^2 + P(:,2).^2 -1;
 range = [-1,1; -1,1];
 tol = 1e-6;
 Nx = 40;
-[P, h, BulkElements, SurfaceElements] = generate_mesh_2d(fun, range, Nx, tol);
+[P, h, BulkElements, SurfElements] = generate_mesh_2d(fun, range, Nx, tol);
 
 % Assembling matrices
-[K,C,M,KS,MS,R] = assembly_2d(P, BulkElements, SurfaceElements);
+[K,C,M,KS,MS,R] = assembly_2d(P, BulkElements, SurfElements);
 
 % Solving PDE
 % Neumann

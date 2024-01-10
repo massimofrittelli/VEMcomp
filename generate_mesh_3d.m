@@ -1,24 +1,24 @@
-function [P, h, BulkElements, SurfaceElements, ElementsPlot] = generate_mesh_3d(fun, range, Nx, tol, xcut)
+function [P, h, BulkElements, SurfElements, ElementsPlot] = generate_mesh_3d(fun, Q, Nx, tol, xcut)
 %GENERATE_MESH_3D_DOMAIN Summary of this function goes here
 %   Detailed explanation goes here
 
-hx_requested = (range(1,2)-range(1,1))/(Nx-1); % Requested discretisation step along x
-hy_requested = (range(2,2)-range(2,1))/(Nx-1); % Requested discretisation step along y
-hz_requested = (range(3,2)-range(3,1))/(Nx-1); % Requested discretisation step along z
+hx_requested = (Q(1,2)-Q(1,1))/(Nx-1); % Requested discretisation step along x
+hy_requested = (Q(2,2)-Q(2,1))/(Nx-1); % Requested discretisation step along y
+hz_requested = (Q(3,2)-Q(3,1))/(Nx-1); % Requested discretisation step along z
 
 h_mono = min([hx_requested,hy_requested,hz_requested]); % Actual discretization step along each dimension
 h = h_mono*sqrt(3); % Meshsize
 
-Nx = ceil((range(1,2)-range(1,1))/h_mono)+1; % Corrected number of discretization nodes along x
-Ny = ceil((range(2,2)-range(2,1))/h_mono)+1; % Corrected number of discretization nodes along y
-Nz = ceil((range(3,2)-range(3,1))/h_mono)+1; % Corrected number of discretization nodes along z
+Nx = ceil((Q(1,2)-Q(1,1))/h_mono)+1; % Corrected number of discretization nodes along x
+Ny = ceil((Q(2,2)-Q(2,1))/h_mono)+1; % Corrected number of discretization nodes along y
+Nz = ceil((Q(3,2)-Q(3,1))/h_mono)+1; % Corrected number of discretization nodes along z
 N = Nx*Ny*Nz; % Number of nodes of bounding box
 
-range(1,:) = range(1,:) + (h_mono*(Nx-1) - (range(1,2)-range(1,1)))/2*[-1,1]; % Corrected range of bounding box along x
-range(2,:) = range(2,:) + (h_mono*(Ny-1) - (range(2,2)-range(2,1)))/2*[-1,1]; % Corrected range of bounding box along y
-range(3,:) = range(3,:) + (h_mono*(Nz-1) - (range(3,2)-range(3,1)))/2*[-1,1]; % Corrected range of bounding box along z
+Q(1,:) = Q(1,:) + (h_mono*(Nx-1) - (Q(1,2)-Q(1,1)))/2*[-1,1]; % Corrected range of bounding box along x
+Q(2,:) = Q(2,:) + (h_mono*(Ny-1) - (Q(2,2)-Q(2,1)))/2*[-1,1]; % Corrected range of bounding box along y
+Q(3,:) = Q(3,:) + (h_mono*(Nz-1) - (Q(3,2)-Q(3,1)))/2*[-1,1]; % Corrected range of bounding box along z
 
-i_cut = min(max(round((xcut-range(1,1))/h_mono),0),Nx);
+i_cut = min(max(round((xcut-Q(1,1))/h_mono),0),Nx);
 
 % GENERATE ONE CUBIC ELEMENT
 P1S = [0 0 0; 0 1 0; 1 1 0; 1 0 0]*h_mono; % bottom face
@@ -28,12 +28,12 @@ P4S = [1 0 0; 1 1 0; 1 1 1; 1 0 1]*h_mono; % front face
 P5S = [0 0 0; 1 0 0; 1 0 1; 0 0 1]*h_mono; % left face
 P6S = [0 1 0; 0 1 1; 1 1 1; 1 1 0]*h_mono; % right face
 
-E1S = element2d_dummy(P1S, true);
-E2S = element2d_dummy(P2S, true);
-E3S = element2d_dummy(P3S, true);
-E4S = element2d_dummy(P4S, true);
-E5S = element2d_dummy(P5S, true);
-E6S = element2d_dummy(P6S, true);
+E1S = element2d(P1S, true);
+E2S = element2d(P2S, true);
+E3S = element2d(P3S, true);
+E4S = element2d(P4S, true);
+E5S = element2d(P5S, true);
+E6S = element2d(P6S, true);
 PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
 
 [~, p1, q1] = intersect(PS, P1S, 'rows', 'stable');
@@ -43,20 +43,19 @@ PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
 [~, p5, q5] = intersect(PS, P5S, 'rows', 'stable');
 [~, p6, q6] = intersect(PS, P6S, 'rows', 'stable');
 
-E1S.Pind = p1(q1);
-E2S.Pind = p2(q2);
-E3S.Pind = p3(q3);
-E4S.Pind = p4(q4);
-E5S.Pind = p5(q5);
-E6S.Pind = p6(q6);
+setPind(E1S, p1(q1));
+setPind(E2S, p2(q2));
+setPind(E3S, p3(q3));
+setPind(E4S, p4(q4));
+setPind(E5S, p5(q5));
+setPind(E6S, p6(q6));
 
-ESD = element3d_dummy(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
-ESD.Pind = (1:8)';
+ESD = element3d(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true, (1:8)');
 
 % CREATING GRIDPOINTS OF BOUNDING BOX
-x = linspace(range(1,1),range(1,2),Nx); % Gridpoints in [-1,1]
-y = linspace(range(2,1),range(2,2),Ny); % Gridpoints in [-1,1]
-z = linspace(range(3,1),range(3,2),Nz); % Gridpoints in [-1,1]
+x = linspace(Q(1,1),Q(1,2),Nx); % Gridpoints in [-1,1]
+y = linspace(Q(2,1),Q(2,2),Ny); % Gridpoints in [-1,1]
+z = linspace(Q(3,1),Q(3,2),Nz); % Gridpoints in [-1,1]
 P = zeros(N,3); % Gridpoints of bounding box
 for i=0:Nx-1
     for j=0:Ny-1
@@ -100,7 +99,7 @@ for i=0:Nx-2 % For each element of the bounding box
                 continue
             end
             % Store non-cubic elements obtained by cutting cubic elements
-            % with boundary. Such non-cunic elements are not endowed with 
+            % with boundary. Such non-cubic elements are not endowed with 
             % node indexes yet.
             NewElement = cutElement(NewCubicElement, fun, tol);
             if not(isempty(NewElement))
@@ -131,17 +130,17 @@ P = uniquetol([P(accepted_node,:); newP],tol,'ByRows',true);
 ElementsPlot = [];
 % FIX ELEMENTS BY ASSIGNING NODE INDEXES AND ELIMINATING DUPLICATE NODES UP
 % TO SMALL TOLERANCE
-SurfaceElements = [];
+SurfElements = [];
 for i=1:length(BulkElements)
    [~, ind] = ismembertol(BulkElements(i).P,P,tol,'ByRows',true);
-   BulkElements(i).Pind = ind; %#ok 
-   BulkElements(i).P = P(ind,:); %#ok
+   setPind(BulkElements(i), ind);
+   setP(BulkElements(i), P(ind,:));
    for j=1:length(BulkElements(i).Faces)
        [~, ind] = ismembertol(BulkElements(i).Faces(j).P,P,tol,'ByRows',true);
-       BulkElements(i).Faces(j).Pind = ind;
-       BulkElements(i).Faces(j).P = P(ind,:);
+       setPind(BulkElements(i).Faces(j), ind);
+       setP(BulkElements(i).Faces(j), P(ind,:));
        if BulkElements(i).Faces(j).is_boundary
-           SurfaceElements = [SurfaceElements; ind']; %#ok
+           SurfElements = [SurfElements; ind']; %#ok
        end
        if BulkElements(i).Faces(j).to_plot
            ElementsPlot = [ElementsPlot; BulkElements(i).Faces(j)]; %#ok
@@ -215,10 +214,11 @@ function [CutElement] = cutElement(CubicElement, fun, tol)
             end
         end
         if not(contained)
-            CutFaces = [CutFaces; element2d_dummy(CutFacesP(chull(i,:),:), false, true)]; %#ok
+            newFaceP = CutFacesP(chull(i,:),:);
+            CutFaces = [CutFaces; element2d(newFaceP, false, true, [], mean(newFaceP,1))]; %#ok
         end
     end
-    CutElement = element3d_dummy(CutFacesP, CutFaces, false);
+    CutElement = element3d(CutFacesP, CutFaces, false, [], mean(CutFacesP,1));
 end
 
 % CUTS A FACE BY BOUNDARY OF DOMAIN
@@ -240,7 +240,8 @@ function CutFace = cutFace(Face, fun, tol)
         CutFace = [];
         return
     end
-    CutFace = element2d_dummy(Pnew(sort(ind),:), false);
+    cutFaceP = Pnew(sort(ind),:);
+    CutFace = element2d(cutFaceP, false, false, [], mean(cutFaceP,1));
 end
 
 % COMPUTES INTERSECTION POINT BETWEEN AN EDGE AND THE BOUNDARY OF THE

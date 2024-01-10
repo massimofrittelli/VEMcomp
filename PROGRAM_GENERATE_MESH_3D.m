@@ -1,6 +1,7 @@
 close all
+clearvars
 
-Nx = 4;
+Nx = 10;
 tol = 1e-6;
 
 % BATTERY-SHAPED DOMAIN
@@ -14,13 +15,13 @@ tol = 1e-6;
 % fun = @(P) ff(P(:,3)) + P(:,1).^2 + P(:,2).^2;
 
 % UNIT BALL
-% xmin = -1;
-% xmax = 1;
-% ymin = -1;
-% ymax = 1;
-% zmin = -1;
-% zmax = 1;
-% fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2  -1;
+xmin = -1;
+xmax = 1;
+ymin = -1;
+ymax = 1;
+zmin = -1;
+zmax = 1;
+fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2  -1;
 
 % HOLLOW BALL
 % fun = @(P) (P(:,1).^2 + P(:,2).^2 + P(:,3).^2).^2 - (P(:,1).^2 + P(:,2).^2 + P(:,3).^2)+0.2;
@@ -53,17 +54,17 @@ tol = 1e-6;
 % fun = @(P) (9*(P(:,1).^2 + P(:,2).^2 + P(:,3).^2) + 261/100).^2 -4*(6*P(:,1)-sqrt(39)/10).^2 -3249/25*P(:,2).^2;
 
 % TORUS
-xmin = -1;
-xmax = 1;
-ymin = -1;
-ymax = 1;
-zmin = -0.31;
-zmax = 0.31;
-fun = @(P) (sqrt(P(:,1).^2 + P(:,2).^2) - 7/10).^2 + P(:,3).^2 - 9/100;
+% xmin = -1;
+% xmax = 1;
+% ymin = -1;
+% ymax = 1;
+% zmin = -0.31;
+% zmax = 0.31;
+% fun = @(P) (sqrt(P(:,1).^2 + P(:,2).^2) - 7/10).^2 + P(:,3).^2 - 9/100;
 
 range = [xmin, xmax; ymin, ymax; zmin, zmax];
 xcut = -.5;
-[P, h, BulkElements, SurfaceElements, ElementsPlot] = generate_mesh_3d(fun, range, Nx, tol, xcut);
+[P, h, BulkElements, SurfElements, ElementsPlot] = generate_mesh_3d(fun, range, Nx, tol, xcut);
 
 figure
 set(gcf,'color','white')
