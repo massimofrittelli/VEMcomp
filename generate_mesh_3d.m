@@ -27,13 +27,6 @@ P3S = [0 0 0; 0 0 1; 0 1 1; 0 1 0]*h_mono; % back face
 P4S = [1 0 0; 1 1 0; 1 1 1; 1 0 1]*h_mono; % front face
 P5S = [0 0 0; 1 0 0; 1 0 1; 0 0 1]*h_mono; % left face
 P6S = [0 1 0; 0 1 1; 1 1 1; 1 1 0]*h_mono; % right face
-
-E1S = element2d(P1S, true);
-E2S = element2d(P2S, true);
-E3S = element2d(P3S, true);
-E4S = element2d(P4S, true);
-E5S = element2d(P5S, true);
-E6S = element2d(P6S, true);
 PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
 
 [~, p1, q1] = intersect(PS, P1S, 'rows', 'stable');
@@ -43,12 +36,12 @@ PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
 [~, p5, q5] = intersect(PS, P5S, 'rows', 'stable');
 [~, p6, q6] = intersect(PS, P6S, 'rows', 'stable');
 
-setPind(E1S, p1(q1));
-setPind(E2S, p2(q2));
-setPind(E3S, p3(q3));
-setPind(E4S, p4(q4));
-setPind(E5S, p5(q5));
-setPind(E6S, p6(q6));
+E1S = element2d(P1S, true, false, p1(q1));
+E2S = element2d(P2S, true, false, p2(q2));
+E3S = element2d(P3S, true, false, p3(q3));
+E4S = element2d(P4S, true, false, p4(q4));
+E5S = element2d(P5S, true, false, p5(q5));
+E6S = element2d(P6S, true, false, p6(q6));
 
 ESD = element3d(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true, (1:8)');
 

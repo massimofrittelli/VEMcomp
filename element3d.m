@@ -293,7 +293,7 @@ classdef element3d < element3dabstract
                    continue 
                 end
                 [~, indb] = ismember(obj.Faces(i).P,obj.P,'rows');
-                obj.Faces(i).Pind = obj.Pind(indb);
+                setPind(obj.Faces(i), obj.Pind(indb));
                 EE = [EE; extrude(obj.Faces(i), Ncube)]; %#ok
             end
         end

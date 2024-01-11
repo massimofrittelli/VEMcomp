@@ -1,7 +1,7 @@
 %
 % DESCRIPTION - Generates cubic inner mesh for the unit sphere
 % Notice: this function serves only as an auxiliary function for the script
-% MESH_PLOTTER_STEP_2
+% NUMPDE_MESH_GEN_STEP_3.m
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % INPUTS:
@@ -27,15 +27,15 @@ P3S = [0 0 0; 0 1 0; 0 1 1; 0 0 1]*hx; % back face
 P4S = [1 0 0; 1 1 0; 1 1 1; 1 0 1]*hx; % front face
 P5S = [0 0 0; 1 0 0; 1 0 1; 0 0 1]*hx; % left face
 P6S = [0 1 0; 1 1 0; 1 1 1; 0 1 1]*hx; % right face
-
-E1S = element2d_dummy(P1S, true);
-E2S = element2d_dummy(P2S, true);
-E3S = element2d_dummy(P3S, true);
-E4S = element2d_dummy(P4S, true);
-E5S = element2d_dummy(P5S, true);
-E6S = element2d_dummy(P6S, true);
 PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
-ESD = element3d_dummy(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
+
+E1S = element2d(P1S, true);
+E2S = element2d(P2S, true);
+E3S = element2d(P3S, true);
+E4S = element2d(P4S, true);
+E5S = element2d(P5S, true);
+E6S = element2d(P6S, true);
+ESD = element3d(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
 
 % CREATING GRIDPOINTS OF BOUNDING BOX
 

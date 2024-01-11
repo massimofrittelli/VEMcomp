@@ -21,7 +21,7 @@
 % - Ebot: 2d square elements of the bottom face
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [P, h, K, M, Kbot, Mbot, KGamma, MGamma, A, Abot, Atop] = generate_mesh_cube(Nx)
+function [P, h, K, M, Kbot, Mbot, KGamma, MGamma, A, Abot, Atop] = generate_mesh_and_matrices_DIB_cube(Nx)
 
 % INITIALIZE VARIABLES
 NGamma = 6*Nx^2 - 12*Nx + 8; % Number of nodes on the boundary
@@ -57,14 +57,6 @@ P3 = [0 0 0; 0 1 0; 0 1 1; 0 0 1]; % back face
 P4 = [1 0 0; 1 1 0; 1 1 1; 1 0 1]; % front face
 P5 = [0 0 0; 1 0 0; 1 0 1; 0 0 1]; % left face
 P6 = [0 1 0; 1 1 0; 1 1 1; 0 1 1]; % right face
-
-% LOCAL MATRICES OF REFERENCE CUBE
-E1S = element2dsquare(P1);
-E2S = element2dsquare(P2);
-E3S = element2dsquare(P3);
-E4S = element2dsquare(P4);
-E5S = element2dsquare(P5);
-E6S = element2dsquare(P6);
 PS = [0     0     0;
       1     0     0;
       0     1     0;
@@ -73,13 +65,21 @@ PS = [0     0     0;
       1     0     1;
       0     1     1;
       1     1     1];
-ES = element3dcube([E1S;E2S;E3S;E4S;E5S;E6S], PS);
-KE = ES.K;
-ME = ES.M;
+
+% LOCAL MATRICES OF REFERENCE CUBE
+E1S = element2d(P1, true);
+E2S = element2d(P2, true);
+E3S = element2d(P3, true);
+E4S = element2d(P4, true);
+E5S = element2d(P5, true);
+E6S = element2d(P6, true);
+ES = element3d(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
+KE = getLocalMatrices(ES).K;
+ME = getLocalMatrices(ES).M;
 
 % LOCAL MATRICES OF REFERENCE SQUARE
-KES = E1S.K;
-MES = E1S.M;
+KES = getLocalMatrices(E1S).K;
+MES = getLocalMatrices(E1S).M;
 KES([2 3], [2 3]) = KES([3 2], [3 2]); % reordering nodes
 MES([2 3], [2 3]) = MES([3 2], [3 2]); % reordering nodes
 

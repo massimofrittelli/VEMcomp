@@ -11,7 +11,7 @@
 %
 % - P: array of nodes
 % - h: meshsize
-% - Elements: polyhedral elements in element3d_dummy format
+% - Elements: polyhedral elements in element3d format
 % - EGamma: all elements of the surface
 % - ElementsCut: elements of the bulk. Not all of them, just the ones in
 %   proximity of the cut (sphere is cut to see inside)
@@ -19,7 +19,7 @@
 %   survive after the sphere is cut.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [P, h, SurfaceElements, BulkElements] = generate_mesh_sphere(Nx, tol)
+function [P, h, SurfElements, BulkElements] = generate_mesh_sphere(Nx, tol)
 
 hx = 2/(Nx-1); % Discretisation step along each dimension
 h = hx*sqrt(3); % Meshsize
@@ -32,13 +32,6 @@ P3S = [0 0 0; 0 0 1; 0 1 1; 0 1 0]*hx; % back face
 P4S = [1 0 0; 1 1 0; 1 1 1; 1 0 1]*hx; % front face
 P5S = [0 0 0; 1 0 0; 1 0 1; 0 0 1]*hx; % left face
 P6S = [0 1 0; 0 1 1; 1 1 1; 1 1 0]*hx; % right face
-
-E1S = element2d_dummy(P1S, true);
-E2S = element2d_dummy(P2S, true);
-E3S = element2d_dummy(P3S, true);
-E4S = element2d_dummy(P4S, true);
-E5S = element2d_dummy(P5S, true);
-E6S = element2d_dummy(P6S, true);
 PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
 
 [~, p1, q1] = intersect(PS, P1S, 'rows', 'stable');
@@ -48,15 +41,14 @@ PS = unique([P1S; P2S; P3S; P4S; P5S; P6S],'rows');
 [~, p5, q5] = intersect(PS, P5S, 'rows', 'stable');
 [~, p6, q6] = intersect(PS, P6S, 'rows', 'stable');
 
-E1S.Pind = p1(q1);
-E2S.Pind = p2(q2);
-E3S.Pind = p3(q3);
-E4S.Pind = p4(q4);
-E5S.Pind = p5(q5);
-E6S.Pind = p6(q6);
+E1S = element2d(P1S, true, false, p1(q1));
+E2S = element2d(P2S, true, false, p2(q2));
+E3S = element2d(P3S, true, false, p3(q3));
+E4S = element2d(P4S, true, false, p4(q4));
+E5S = element2d(P5S, true, false, p5(q5));
+E6S = element2d(P6S, true, false, p6(q6));
 
-ESD = element3d_dummy(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true);
-ESD.Pind = (1:8)';
+ESD = element3d(PS, [E1S;E2S;E3S;E4S;E5S;E6S], true, (1:8)');
 
 % CREATING GRIDPOINTS OF BOUNDING BOX
 
@@ -119,17 +111,17 @@ P = uniquetol([P; Pnew],tol,'ByRows',true);
 
 % FIX ELEMENTS BY ASSIGNING NODE INDEXES AND ELIMINATING DUPLICATE NODES UP
 % TO SMALL TOLERANCE
-SurfaceElements = [];
+SurfElements = [];
 for i=1:length(BulkElements)
    [~, ind] = ismembertol(BulkElements(i).P,P,tol,'ByRows',true);
-   BulkElements(i).Pind = ind; %#ok 
-   BulkElements(i).P = P(ind,:); %#ok
+   setPind(BulkElements(i), ind);
+   setP(BulkElements(i), P(ind,:));
    for j=1:length(BulkElements(i).Faces)
        [~, ind] = ismembertol(BulkElements(i).Faces(j).P,P,tol,'ByRows',true);
-       BulkElements(i).Faces(j).Pind = ind;
-       BulkElements(i).Faces(j).P = P(ind,:);
+       setPind(BulkElements(i).Faces(j), ind);
+       setP(BulkElements(i).Faces(j), P(ind,:));
        if BulkElements(i).Faces(j).is_boundary && length(BulkElements(i).Faces(j).Pind) == 3
-           SurfaceElements = [SurfaceElements; BulkElements(i).Faces(j).Pind']; %#ok
+           SurfElements = [SurfElements; BulkElements(i).Faces(j).Pind']; %#ok
        end
    end
 end
