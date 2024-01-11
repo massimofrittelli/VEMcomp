@@ -32,26 +32,65 @@ classdef element3d < element3dabstract
     end
     
     methods (Access = private)
-       function obj = initElement(obj)
+
+        function getLocalMatricesCube(obj)
+
+            for i=1:obj.NFaces
+                    getLocalMatrices(obj.Faces(i));
+            end
+
+            % Compute centroid and P0
+            obj.Centroid = mean(obj.P);
+            obj.P0 = obj.Centroid;
+           
+            % Compute diameter
+            obj.Diameter = 2*(norm(obj.P(1,:) - obj.Centroid));
+           
+            % Compute volume
+            obj.Volume = obj.Faces(1).EdgeLength^3;
+
+            % DETERMINE ADJACENCY STRUCTURE
+            adj_pairs = zeros(8);
+            opp_face_pairs = zeros(8);
+            opp_pairs = zeros(8);
+            
+            for i=1:8
+                for j=1:i-1
+                    edgelen = obj.Faces(1).EdgeLength;
+                    dist = norm(obj.P(i,:) - obj.P(j,:));
+                    if abs(dist - edgelen) < edgelen/10
+                        adj_pairs(i,j) = 1;
+                        adj_pairs(j,i) = 1;
+                    else
+                        if abs(dist - obj.Faces(1).Diameter) < edgelen/10
+                            opp_face_pairs(i,j) = 1;
+                            opp_face_pairs(j,i) = 1;
+                        else
+                            opp_pairs(i,j) = 1;
+                            opp_pairs(j,i) = 1;
+                        end
+                    end
+                end
+            end
+
+            %COMPUTING LOCAL STIFFNESS MATRIX FROM B AND D (See Hitchhiker's)
+            obj.K = obj.Diameter*(3*eye(8) + adj_pairs -   opp_face_pairs - 3*opp_pairs)*sqrt(3)/48 ...
+                + obj.Diameter*(2*eye(8) - adj_pairs + 0*opp_face_pairs +   opp_pairs)/4;
+
+            %COMPUTING LOCAL MASS MATRIX FROM H,B AND D (See Hitchhiker's)
+            obj.M = obj.Volume*(51*eye(8) - 22*adj_pairs + opp_face_pairs + 24*opp_pairs)/96;
+
+            %COMPUTING LOCAL CONSISTENCY MATRIX FROM H,B AND D (See Hitchhiker's)
+            obj.C = obj.Volume*(3*eye(8) + 2*adj_pairs + opp_face_pairs + 0*opp_pairs)/96;
+                
+        end
+       
+       function getLocalMatricesPoly(obj)
 
            for i=1:obj.NFaces
-                getLocalMatrices(obj.Faces(i));
+               getLocalMatrices(obj.Faces(i));
            end
 
-           if obj.is_cube
-                % Compute centroid and P0
-                obj.Centroid = mean(obj.P);
-                obj.P0 = obj.Centroid;
-           
-                % Compute diameter
-                obj.Diameter = 2*(norm(obj.P(1,:) - obj.Centroid));
-           
-                % Compute volume
-                obj.Volume = obj.Faces(1).EdgeLength^3;
-                
-                return
-           end
-           
            % Compute volume and centroid
            volumes = zeros(obj.NFaces, 1);
            CV = [0 0 0];
@@ -81,10 +120,6 @@ classdef element3d < element3dabstract
            end
            
            obj.OutwardNormals = ON;
-           
-       end
-       
-       function obj = computeLocalMatrices(obj)
             % if obj.NVert == 4
             %     obj.M = (ones(4)+eye(4))*obj.Volume/20;
             %     obj.C = obj.M;
@@ -93,44 +128,6 @@ classdef element3d < element3dabstract
             %     obj.K = Binv(:,1:3)*Binv(:,1:3)'*obj.Volume;
             %     return
             % end
-
-            if obj.is_cube
-                % DETERMINE ADJACENCY STRUCTURE
-                adj_pairs = zeros(8);
-                opp_face_pairs = zeros(8);
-                opp_pairs = zeros(8);
-            
-                for i=1:8
-                    for j=1:i-1
-                        edgelen = obj.Faces(1).EdgeLength;
-                        dist = norm(obj.P(i,:) - obj.P(j,:));
-                        if abs(dist - edgelen) < edgelen/10
-                            adj_pairs(i,j) = 1;
-                            adj_pairs(j,i) = 1;
-                        else
-                            if abs(dist - obj.Faces(1).Diameter) < edgelen/10
-                                opp_face_pairs(i,j) = 1;
-                                opp_face_pairs(j,i) = 1;
-                            else
-                                opp_pairs(i,j) = 1;
-                                opp_pairs(j,i) = 1;
-                            end
-                        end
-                    end
-                 end
-
-                %COMPUTING LOCAL STIFFNESS MATRIX FROM B AND D (See Hitchhiker's)
-                obj.K = obj.Diameter*(3*eye(8) + adj_pairs -   opp_face_pairs - 3*opp_pairs)*sqrt(3)/48 ...
-                  + obj.Diameter*(2*eye(8) - adj_pairs + 0*opp_face_pairs +   opp_pairs)/4;
-
-                %COMPUTING LOCAL MASS MATRIX FROM H,B AND D (See Hitchhiker's)
-                obj.M = obj.Volume*(51*eye(8) - 22*adj_pairs + opp_face_pairs + 24*opp_pairs)/96;
-
-                %COMPUTING LOCAL CONSISTENCY MATRIX FROM H,B AND D (See Hitchhiker's)
-                obj.C = obj.Volume*(3*eye(8) + 2*adj_pairs + opp_face_pairs + 0*opp_pairs)/96;
-            
-                return
-            end
 
 
            % computing gradient of the non-constant barycentric monomials 
@@ -329,11 +326,18 @@ classdef element3d < element3dabstract
         end
 
         function obj = getLocalMatrices(obj)
-            if not(obj.hasMatrices)
-               obj = initElement(obj);
-               obj = computeLocalMatrices(obj);
-               obj.hasMatrices = true;
+            if obj.hasMatrices
+                return
             end
+
+            if obj.is_cube
+                getLocalMatricesCube(obj);
+                obj.hasMatrices = true;
+                return
+            end
+
+            getLocalMatricesPoly(obj);
+            obj.hasMatrices = true;
         end
 
         function setP(obj, P)

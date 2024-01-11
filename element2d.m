@@ -14,15 +14,13 @@ classdef element2d < element2dabstract
         is_square
         is_boundary
         NVert
-        EdgeLength(1,1) double
         
-        %Computed by initElement
+        %Computed by getLocalMatrices
         Area
         OrientedArea
         Centroid
         Diameter
-
-        %Computed by getLocalMatrices
+        EdgeLength(1,1) double
         K
         M
         C        
@@ -40,30 +38,59 @@ classdef element2d < element2dabstract
     end
     
     methods(Access = private)
-        function obj = initElement(obj)
+        
+        function getLocalMatricesSquare(obj)
+                % Compute edge length
+                obj.EdgeLength = norm(obj.P(1,:) - obj.P(2,:));
+             
+                % Compute Area
+                obj.Area = obj.EdgeLength^2;
+             
+                % Compute Oriented Area
+                obj.OrientedArea = cross(obj.P(3,:) - obj.P(2,:), obj.P(2,:) - obj.P(1,:));
+             
+                % Compute Centroid and P0
+                obj.Centroid = (obj.P(1,:) + obj.P(3,:))/2;
+                obj.P0 = obj.Centroid;
+             
+                % Compute Diameter
+                obj.Diameter = norm(obj.P(1,:) - obj.P(3,:));
 
-             if obj.is_square
-             
-                  % Compute edge length
-                  obj.EdgeLength = norm(obj.P(1,:) - obj.P(2,:));
-             
-                  % Compute Area
-                  obj.Area = obj.EdgeLength^2;
-             
-                  % Compute Oriented Area
-                  obj.OrientedArea = cross(obj.P(3,:) - obj.P(2,:), obj.P(2,:) - obj.P(1,:));
-             
-                  % Compute Centroid and P0
-                  obj.Centroid = (obj.P(1,:) + obj.P(3,:))/2;
-                  obj.P0 = obj.Centroid;
-             
-                  % Compute Diameter
-                  obj.Diameter = norm(obj.P(1,:) - obj.P(3,:));
+                % Compute local stiffness matrix K
+                obj.K = (4*eye(4) - ones(4,4))/4;
+            
+                % Compute local mass matrix M
+                v2 = ones(2,1);
+                v3 = ones(3,1);
+                obj.M = obj.Area*(17*eye(4) -9*(diag(v3,1) + diag(v3,-1)) + 13*(diag(v2,2) + diag(v2,-2)) -9*(diag(1,3) + diag(1,-3)))/48;
+        
+                % Compute consistency matrix CM
+                obj.C = obj.Area*(5*eye(4) +3*(diag(v3,1) + diag(v3,-1)) + 1*(diag(v2,2) + diag(v2,-2)) +3*(diag(1,3) + diag(1,-3)))/48;
+            
+        end
+        
+        function getLocalMatricesPoly(obj)
 
-                  return;
-             end
-             
-             % Compute area, oriented area and centroid
+            % if obj.NVert == 3
+            %     obj.M = (ones(3)+eye(3))*obj.Area/12;
+            %     obj.C = obj.M;
+            %     % edges of the considered triangle
+            %     v1 = obj.P(3,:)-obj.P(2,:);
+            %     v2 = obj.P(1,:)-obj.P(3,:);
+            %     v3 = obj.P(2,:)-obj.P(1,:);
+            %     % heights of the considered triangle
+            %     h = [v2-(v1*v2')*v1/norm(v1)^2;
+            %          v3-(v2*v3')*v2/norm(v2)^2;
+            %          v1-(v3*v1')*v3/norm(v3)^2];
+            %     % gradients of the local basis functions
+            %     nabla = [h(1,:)/norm(h(1,:))^2;
+            %              h(2,:)/norm(h(2,:))^2;
+            %              h(3,:)/norm(h(3,:))^2];
+            %     obj.K = nabla*nabla'*obj.Area*2;
+            %     return
+            % end
+
+            % Compute area, oriented area and centroid
              orientedAreas = zeros(obj.NVert, 3);
              areas = zeros(obj.NVert, 1);
              centroids = zeros(obj.NVert,3);
@@ -116,43 +143,6 @@ classdef element2d < element2dabstract
              obj.TransformedP = PR;
              obj.TransformedP0 = P0R;
              obj.TransformedCentroid = GR;
-        end
-        
-        function obj = computeLocalMatrices(obj)
-
-            % if obj.NVert == 3
-            %     obj.M = (ones(3)+eye(3))*obj.Area/12;
-            %     obj.C = obj.M;
-            %     % edges of the considered triangle
-            %     v1 = obj.P(3,:)-obj.P(2,:);
-            %     v2 = obj.P(1,:)-obj.P(3,:);
-            %     v3 = obj.P(2,:)-obj.P(1,:);
-            %     % heights of the considered triangle
-            %     h = [v2-(v1*v2')*v1/norm(v1)^2;
-            %          v3-(v2*v3')*v2/norm(v2)^2;
-            %          v1-(v3*v1')*v3/norm(v3)^2];
-            %     % gradients of the local basis functions
-            %     nabla = [h(1,:)/norm(h(1,:))^2;
-            %              h(2,:)/norm(h(2,:))^2;
-            %              h(3,:)/norm(h(3,:))^2];
-            %     obj.K = nabla*nabla'*obj.Area*2;
-            %     return
-            % end
-
-            if obj.is_square
-                % Compute local stiffness matrix K
-                obj.K = (4*eye(4) - ones(4,4))/4;
-            
-                % Compute local mass matrix M
-                v2 = ones(2,1);
-                v3 = ones(3,1);
-                obj.M = obj.Area*(17*eye(4) -9*(diag(v3,1) + diag(v3,-1)) + 13*(diag(v2,2) + diag(v2,-2)) -9*(diag(1,3) + diag(1,-3)))/48;
-        
-                % Compute consistency matrix CM
-                obj.C = obj.Area*(5*eye(4) +3*(diag(v3,1) + diag(v3,-1)) + 1*(diag(v2,2) + diag(v2,-2)) +3*(diag(1,3) + diag(1,-3)))/48;
-            
-                return
-            end
 
             %computing edges of the element
             edges = zeros(obj.NVert,2);
@@ -227,17 +217,6 @@ classdef element2d < element2dabstract
         
         
         function [XY,W] = quadrature_quadratic(obj)
-            % Determines quadrature weights and nodes on polygon
-            % W = zeros(4*obj.NVert,1);
-            % XY = zeros(4*obj.NVert,2);
-            % for i = 1:obj.NVert-1
-            %     PP = [obj.TransformedP(i:i+1,:); obj.TransformedP0];
-            %     [XY(4*i-3:4*i,:), W(4*i-3:4*i,1)] = quadrature_triangle_quadratic(PP);
-            % end
-            % i = obj.NVert;
-            % PP = [obj.TransformedP([obj.NVert,1],:); obj.TransformedP0];
-            % [XY(4*i-3:4*i,:), W(4*i-3:4*i,1)] = quadrature_triangle_quadratic(PP);
-            
             W = zeros(3*obj.NVert,1);
             XY = zeros(3*obj.NVert,2);
             for i = 1:obj.NVert-1
@@ -343,11 +322,18 @@ classdef element2d < element2dabstract
         end
 
         function obj = getLocalMatrices(obj)
-            if not(obj.hasMatrices)
-                obj = initElement(obj);
-                obj = computeLocalMatrices(obj);
-                obj.hasMatrices = true;
+            if obj.hasMatrices
+                return
             end
+
+            if obj.is_square
+                getLocalMatricesSquare(obj);
+                obj.hasMatrices = true;
+                return;
+            end
+
+            getLocalMatricesPoly(obj);
+            obj.hasMatrices = true;    
         end
 
         function setP(obj, P)

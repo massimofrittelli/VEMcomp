@@ -2,7 +2,7 @@
 % computes errors.
 
 close all
-clearvars
+%clearvars
 
 % Script to solve an elliptic B-S problem on the sphere
 alpha = 1;
@@ -10,7 +10,7 @@ beta = 2;
 
 %load('mesh_sphere_marchcub_Nx30.mat')
 %load('mesh_sphere31.mat')
-load('mesh_sphere30_tol1e-6.mat')
+%load('mesh_sphere30_tol1e-6.mat')
 N = length(P); % Overall amount of nodes
 NGamma = length(MS); % Amount of boundary nodes
 
@@ -56,7 +56,7 @@ subplot(121)
 plot_bulk_3d(ElementsPlot, u, '$u$')
 % Surface Component v
 subplot(122)
-plot_surf_3d(P,R,SurfaceElements,v,'$v$')
+plot_surf_3d(P,R,SurfElements,v,'$v$')
 xlim([xcut,1])
 hold on
 Ccirc = [-0.5, 0, 0];   % Center of circle 
