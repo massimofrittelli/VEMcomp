@@ -7,6 +7,10 @@ close all
 % Script to solve an elliptic B-S problem on the sphere
 alpha = 1;
 beta = 2;
+gamma = -1;
+delta = 2;
+DOmega = 1;
+DGamma = 1;
 
 %load('mesh_sphere_marchcub_Nx30.mat')
 %load('mesh_sphere31.mat')
@@ -17,8 +21,8 @@ NGamma = length(MS); % Amount of boundary nodes
 % TOY PROBLEM 1 - 1 EIGENMODE
 esol_u = @(P) P(:,1).*P(:,2).*P(:,3);
 esol_v = @(P) 2*P(:,1).*P(:,2).*P(:,3);
-f_u = @(P) P(:,1).*P(:,2).*P(:,3);
-f_v = @(P) 29*P(:,1).*P(:,2).*P(:,3);
+f = @(P) P(:,1).*P(:,2).*P(:,3);
+g = @(P) 29*P(:,1).*P(:,2).*P(:,3);
 
 % TOY PROBLEM 2 - 2 EIGENMODES
 % esol_u = @(P) P(:,1).*P(:,2).*P(:,3) - P(:,1).*P(:,2);
@@ -27,9 +31,10 @@ f_v = @(P) 29*P(:,1).*P(:,2).*P(:,3);
 % f_v = @(P) 29*P(:,1).*P(:,2).*P(:,3) - 25/2*P(:,1).*P(:,2);
 
 tic
-numsol = [K+M+alpha*R*MS*R', -beta*R*MS; -alpha*MS*R', KS+(beta+1)*MS]\[M*f_u(P); MS*f_v(R'*P)];
-u = numsol(1:N,1);
-v = numsol(N+1:end,1);
+%numsol = [K+M+alpha*R*MS*R', -beta*R*MS; -alpha*MS*R', KS+(beta+1)*MS]\[M*f_u(P); MS*f_v(R'*P)];
+%u = numsol(1:N,1);
+%v = numsol(N+1:end,1);
+[u,v] = solver_elliptic_bulk_surf(DOmega, DGamma, alpha, beta, f, g, P, M, MS, K, KS, R, gamma, delta);
 toc
 u_exact = esol_u(P);
 v_exact = esol_v(R'*P);
@@ -53,10 +58,10 @@ figure
 set(gcf, 'Color','white')
 % Bulk Component u
 subplot(121)
-plot_bulk_3d(ElementsPlot, u, '$u$')
+plot_bulk3d(ElementsPlot, u, '$u$')
 % Surface Component v
 subplot(122)
-plot_surf_3d(P,R,SurfElements,v,'$v$')
+plot_surf3d(P,R,SurfElements,v,'$v$')
 xlim([xcut,1])
 hold on
 Ccirc = [-0.5, 0, 0];   % Center of circle 

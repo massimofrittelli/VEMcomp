@@ -4,10 +4,10 @@ range = [-1,1; -1,1; -1,1]*1.04;
 tol = 1e-10;
 Nx = 10;
 [P, h, BulkElements, SurfElements, ElementsPlot] = ...
-     generate_mesh_3d(fun, range, Nx, tol, -0.3);
+     generate_mesh3d(fun, range, Nx, tol, -0.3);
 % 
 % % Assembling matrices
-[K, M, C, KS, MS, CS, R] = assembly_3d(P, BulkElements, SurfElements);
+[K, M, C, KS, MS, CS, R] = assembly3d(P, BulkElements, SurfElements);
 
 % Solving PDE
 % Neumann
@@ -29,8 +29,8 @@ u_exact = esol(P);
 
 % Plotting numerical solution
 figure, set(gcf,'color','white')
-plot_bulk_3d(ElementsPlot, u, '$u$');
+plot_bulk3d(ElementsPlot, u, '$u$');
 
 % Plotting exact solution
 figure, set(gcf,'color','white')
-plot_bulk_3d(ElementsPlot, esol(P), '$u_{exact}$');
+plot_bulk3d(ElementsPlot, esol(P), '$u_{exact}$');

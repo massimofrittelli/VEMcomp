@@ -1,15 +1,10 @@
-function [u] = solver_elliptic_bulk_surf(n, D, alpha, f, P, M, K)
+function [u,v] = solver_elliptic_bulk_surf(DOmega, DGamma, alpha, beta, f, g, P, M, MS, K, KS, R, gamma, delta)
 
-    Nbulk = length(M);
-    LHS = spalloc(n*Nbulk, n*Nbulk, n*nnz(M+K));
-    for i=1:n
-        LHS((i-1)*Nbulk+1:i*Nbulk, (i-1)*Nbulk+1:i*Nbulk) = D(i)*K + alpha(i)*M; %#ok
-        RHS((i-1)*Nbulk+1:i*Nbulk, :) = M*f{i}(P);
-    end
-    uu = LHS\RHS;
-    u = zeros(Nbulk,n);
-    for i=1:n
-        u(:,i) = uu((i-1)*Nbulk+1:i*Nbulk,1);
-    end
+N = length(M);
+numsol = [DOmega*K + alpha*M - gamma*R*MS*R', -delta*R*MS;
+          0*MS*R', DGamma*KS + beta*MS]\ ...
+         [M*f(P); MS*g(R'*P)];
+u = numsol(1:N,1);
+v = numsol(N+1:end,1);
 
 end
