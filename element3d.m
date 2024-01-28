@@ -1,4 +1,4 @@
-classdef element3d < element3dabstract
+classdef element3d < handle
     % ELEMENT3D represents a VEM polyhedral element with k=1
 
     properties
@@ -8,22 +8,22 @@ classdef element3d < element3dabstract
     properties (SetAccess = private)
         
         % INITIALISED VIA CONSTRUCTOR
-        Faces
-        P % Vertexes
+        Faces(:,1) element2d
+        P(:,3) double % Vertexes
         Pind %Indexes of vertexes
-        NVert
-        NFaces
+        NVert(1,1) double % Number of vertexes
+        NFaces(1,1) double % Number of faces
         P0(1,3) double % The element is star-shaped wrt P0
         
         % Computed by initElement
-        Volume
-        Centroid
-        Diameter
+        Volume(1,1) double
+        Centroid(1,3) double
+        Diameter(1,1) double
 
         % Computed by getLocalMatrices
-        K
-        M
-        C
+        K(:,:) double % Stiffness matrix
+        M(:,:) double % Mass matrix
+        C(:,:) double % Consistency matrix
     end
     
     properties (SetAccess = private, GetAccess = private)

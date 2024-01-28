@@ -1,4 +1,4 @@
-classdef element2d < element2dabstract
+classdef element2d < handle
     % ELEMENT2D represents a VEM polygonal element with k=1
 
     properties
@@ -8,22 +8,22 @@ classdef element2d < element2dabstract
     properties(SetAccess = private)
         
         %Initialized by constructor
-        P % Vertexes
-        P0 % Element is star-shaped wrt P0
+        P(:,3) double % Nodes % Vertexes
+        P0(1,3) double % Element is star-shaped wrt P0
         Pind % Indexes of vertexes
         is_square
         is_boundary
-        NVert
+        NVert(1,1) double
         
         %Computed by getLocalMatrices
-        Area
-        OrientedArea
-        Centroid
-        Diameter
+        Area(1,1) double
+        OrientedArea(1,3) double
+        Centroid(1,3) double
+        Diameter(1,1) double
         EdgeLength(1,1) double
-        K
-        M
-        C        
+        K(:,:) double % Stiffness matrix
+        M(:,:) double % Mass matrix
+        C(:,:) double % Consistency matrix       
     end
     
     properties(SetAccess = private, GetAccess = private)
