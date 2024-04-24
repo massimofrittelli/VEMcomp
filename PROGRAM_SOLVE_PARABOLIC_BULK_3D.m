@@ -8,7 +8,17 @@ clearvars
 T = 1;
 tau = .01;
 
-load('mesh_sphere_marchcub_Nx30.mat')
+% Generating mesh
+fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2 - 1;
+range = [-1,1; -1,1; -1,1];
+tol = 1e-3;
+Nx = 10;
+xcut = -0.5;
+[P, h, BulkElements, SurfElements, ElementsPlot] = generate_mesh3d(fun, range, Nx, tol, xcut);
+
+% Assembling matrices
+[K, M, C, KS, MS, CS, R] = assembly3d(P, BulkElements, SurfElements);
+
 N = length(P);
 
 NGamma = length(MS); % Amount of boundary nodes

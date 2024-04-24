@@ -11,8 +11,8 @@ zlabel('z','rot',0)
 if nargin > 2
     title(titlestring,'Interpreter','latex')
 end
-set(gca,'FontSize',18)
-colormap parula
+set(gca,'FontSize',14)
+colormap jet %parula default
 colorbar
 
 end

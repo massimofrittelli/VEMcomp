@@ -34,10 +34,10 @@ MS = spalloc(Nbulk, Nbulk, 3*Nsurf); % Mass matrix on the 1D surface
 % find first square element in mesh (they are all equal)
 for i=1:length(BulkElements)
     if BulkElements(i).is_square
-        Square = copyElement2d(BulkElements(i));
-        MSq = getLocalMatrices(Square).M;
-        CSq = getLocalMatrices(Square).C;
-        KSq = getLocalMatrices(Square).K;
+        Square = getLocalMatrices(copyElement2d(BulkElements(i)));
+        MSq = Square.M;
+        CSq = Square.C;
+        KSq = Square.K;
         break
     end
 end
@@ -51,9 +51,10 @@ for i=1:length(BulkElements) % For each bulk element
         C(eind, eind) = C(eind, eind) + CSq; %#ok
         K(eind, eind) = K(eind, eind) + KSq; %#ok
     else
-        M(eind, eind) = M(eind, eind) + getLocalMatrices(Element).M; %#ok
-        C(eind, eind) = C(eind, eind) + getLocalMatrices(Element).C; %#ok
-        K(eind, eind) = K(eind, eind) + getLocalMatrices(Element).K; %#ok
+        Element = getLocalMatrices(Element);
+        M(eind, eind) = M(eind, eind) + Element.M; %#ok
+        C(eind, eind) = C(eind, eind) + Element.C; %#ok
+        K(eind, eind) = K(eind, eind) + Element.K; %#ok
     end
 end
 

@@ -3,7 +3,7 @@ close all
 
 Elements = BulkElements;
 
-file = fopen('mesh_sphere_NICE_3_less_than_half.voro','w');
+file = fopen('prova.voro','w');
 
 boundaryFaceCounter = 0;
 internalFaceCounter = 0;

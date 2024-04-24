@@ -128,7 +128,7 @@ ylabel('y')
 zlabel('z','rot',0)
 axis equal
 xlim([-0.5,1])
-title('$v_{\text{exact}}-v$')
+title('$v_{exact}-v$')
 colorbar
 colormap parula
 hold on

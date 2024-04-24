@@ -13,6 +13,7 @@
 
 
 close all
+clearvars
 
 % Set model parameters
 a = 0.1;

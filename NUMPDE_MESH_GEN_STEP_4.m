@@ -18,7 +18,7 @@ zmax = 1;
 range = [xmin, xmax; ymin, ymax; zmin, zmax];
 tol = 1e-10;
 fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2  -1;
-[P, h, BulkElements, SurfaceElements, ElementsPlot] = generate_mesh_3d(fun, range, Nx, tol, -0.2);
+[P, h, BulkElements, SurfaceElements, ElementsPlot] = generate_mesh3d(fun, range, Nx, tol, -0.2);
 
 figure
 set(gcf,'color','white')

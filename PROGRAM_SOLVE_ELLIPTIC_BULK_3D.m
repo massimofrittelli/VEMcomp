@@ -1,3 +1,5 @@
+clearvars
+
 % % Generating mesh
 fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2 -1;
 range = [-1,1; -1,1; -1,1]*1.04;
@@ -14,10 +16,10 @@ Nx = 10;
 % f = {@(P) 4*(3-5*(P(:,1).^2 + P(:,2).^2 + P(:,3).^2)) ...
 %    + (1- (P(:,1).^2 + P(:,2).^2 + P(:,3).^2)).^2};
 % Dirichlet
-f = {@(P) 7 - (P(:,1).^2 + P(:,2).^2 + P(:,3).^2)};
+f = @(P) 7 - (P(:,1).^2 + P(:,2).^2 + P(:,3).^2);
 D = 1;
 alpha = 1;
-u = solver_elliptic_bulk(1, D, alpha, f, P, M, K, R, 'dir');
+u = solver_elliptic_bulk(D, alpha, f, P, M, K, R, 'dir');
 
 % Computing relative L2 error
 % Neumann

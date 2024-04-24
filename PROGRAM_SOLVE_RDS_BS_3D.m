@@ -17,6 +17,7 @@
 
 
 close all
+clearvars
 
 % Set model parameters
 a = 0.1;
@@ -38,7 +39,16 @@ T = 1e-5;
 tau = 1e-5;
 
 % Set space discretisation
-%load('mesh_torus_marchcub_Nx11.mat')
+% Generating mesh
+fun = @(P) P(:,1).^2 + P(:,2).^2 + P(:,3).^2 - 1;
+range = [-1,1; -1,1; -1,1];
+tol = 1e-3;
+Nx = 10;
+xcut = -0.5;
+[P, h, BulkElements, SurfElements, ElementsPlot] = generate_mesh3d(fun, range, Nx, tol, xcut);
+
+% Assembling matrices
+[K, M, C, KS, MS, CS, R] = assembly3d(P, BulkElements, SurfElements);
 
 N = length(P);
 NGamma = length(MS); % Amount of boundary nodes
@@ -103,7 +113,7 @@ set(gcf, 'color', 'white')
 
 % % Plotting Numerical Solution - Bulk Component u
 subplot(2,2,1)
-plot_bulk_3d(ElementsPlot, u, '$u$')
+plot_bulk3d(ElementsPlot, u, '$u$')
 % Below code makes thicker lines on the cut
 % for i=1:size(ElementsPlot)
 %     hold on
@@ -117,7 +127,7 @@ plot_bulk_3d(ElementsPlot, u, '$u$')
 
 % % Plotting Numerical Solution - Bulk Component v
 subplot(2,2,2)
-plot_bulk_3d(ElementsPlot, v, '$v$')
+plot_bulk3d(ElementsPlot, v, '$v$')
 % Below code makes thicker lines on the cut
 % for i=1:size(ElementsPlot)
 %     hold on
@@ -136,7 +146,7 @@ zline = sqrt(9/100-(sqrt(xcut^2+yline.^2)-7/10).^2);
 
 % % Plotting Numerical Solution - Surface Component r
 subplot(2,2,3)
-plot_surf_3d(P,R,SurfaceElements,r,'$r$')
+plot_surf3d(P,R,SurfElements,r,'$r$')
 hold on
 plot3(xline,yline,zline,'k','LineWidth',1)
 plot3(xline,yline,-zline,'k','LineWidth',1)
@@ -147,7 +157,7 @@ xlim([xcut, max(P(:,1))])
 
 % % Plotting Numerical Solution - Surface Component s
 subplot(2,2,4)
-plot_surf_3d(P,R,SurfaceElements,s,'$s$')
+plot_surf3d(P,R,SurfElements,s,'$s$')
 hold on
 plot3(xline,yline,zline,'k','LineWidth',1)
 plot3(xline,yline,-zline,'k','LineWidth',1)

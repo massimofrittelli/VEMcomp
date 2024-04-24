@@ -11,7 +11,7 @@ ylabel('y','rot',0)
 if nargin > 2
     title(titlestring, 'Interpreter', 'latex')
 end
-set(gca,'FontSize',18)
+set(gca,'FontSize',14)
 colormap jet
 colorbar
 
