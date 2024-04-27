@@ -9,7 +9,7 @@ if nargin > 2
     title(titlestring,'Interpreter','latex')
 end
 set(gca,'FontSize',14)
-colormap jet %parula
+colormap parula
 colorbar
 caxis([min(v), max(v)])
 
