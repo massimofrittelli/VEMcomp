@@ -31,52 +31,75 @@ if isempty(BulkElements) % Triangulated surface mesh
     return
 end
 
-K = spalloc(Nbulk,Nbulk,27*Nbulk); % Stiffness matrix in the bulk
-M = spalloc(Nbulk,Nbulk,27*Nbulk); % Mass matrix in the bulk
-C = spalloc(Nbulk,Nbulk,27*Nbulk); % Mass matrix in the bulk
-
-KS = spalloc(Nbulk,Nbulk,9*Nsurf); % Stiffness matrix on the surf
-MS = spalloc(Nbulk,Nbulk,9*Nsurf); % Mass matrix on the surf
-CS = spalloc(Nbulk,Nbulk,9*Nsurf); % Consistency matrix on the surf
-
 % find first cubic element in mesh (they are all equal)
 for i=1:length(BulkElements)
     if BulkElements(i).is_cube
         Cube = getLocalMatrices(copyElement3d(BulkElements(i)));
-        MC = Cube.M;
-        KC = Cube.K;
-        CC = Cube.C;
+        MC = Cube.M(:);
+        KC = Cube.K(:);
+        CC = Cube.C(:);
         % An element3dcube is not supposed to have boundary faces
         break
     end
 end
 
+% allocate vectors for sparse matrix representation
+Nbulk_repeated = 0;
+for i=1:length(BulkElements)
+    Nbulk_repeated = Nbulk_repeated + BulkElements(i).NVert;
+end
+ii = zeros(Nbulk_repeated,1);
+jj = zeros(Nbulk_repeated,1);
+vk = zeros(Nbulk_repeated,1);
+vm = zeros(Nbulk_repeated,1);
+vc = zeros(Nbulk_repeated,1);
+Nsurf_repeated = size(SurfElements,1)*3;
+sii = zeros(Nsurf_repeated,1);
+sjj = zeros(Nsurf_repeated,1);
+svk = zeros(Nsurf_repeated,1);
+svm = zeros(Nsurf_repeated,1);
+svc = zeros(Nsurf_repeated,1); 
+
+
 % MATRIX ASSEMBLY
+bulk_counter = 0;
+surf_counter = 0;
 for i=1:length(BulkElements) % For each bulk element
-    ElementDummy = BulkElements(i);
-    eind = ElementDummy.Pind;
-    if ElementDummy.is_cube
-        M(eind, eind) = M(eind, eind) + MC; %#ok
-        C(eind, eind) = C(eind, eind) + CC; %#ok
-        K(eind, eind) = K(eind, eind) + KC; %#ok
+    E = BulkElements(i);
+    eind = E.Pind;
+    oind = ones(E.NVert,1);
+    ii(bulk_counter+1: bulk_counter+E.NVert^2) = kron(oind,eind);
+    jj(bulk_counter+1: bulk_counter+E.NVert^2) = kron(eind,oind);
+    if E.is_cube
+        vm(bulk_counter+1: bulk_counter+E.NVert^2) = MC;
+        vc(bulk_counter+1: bulk_counter+E.NVert^2) = CC;
+        vk(bulk_counter+1: bulk_counter+E.NVert^2) = KC;
     else
-        Element = getLocalMatrices(copyElement3d(ElementDummy));
-        M(eind, eind) = M(eind, eind) + Element.M; %#ok
-        C(eind, eind) = C(eind, eind) + Element.C; %#ok
-        K(eind, eind) = K(eind, eind) + Element.K; %#ok
+        Element = getLocalMatrices(copyElement3d(E));
+        vm(bulk_counter+1: bulk_counter+E.NVert^2) = Element.M(:);
+        vc(bulk_counter+1: bulk_counter+E.NVert^2) = Element.C(:);
+        vk(bulk_counter+1: bulk_counter+E.NVert^2) = Element.K(:);
         for j=1:Element.NFaces
             Face = copyElement2d(Element.Faces(j));
             if Face.is_boundary
                 eind_boundary = Face.Pind;
+                oind_boundary = ones(Face.NVert,1);
+                sii(surf_counter+1: surf_counter+Face.NVert^2) = kron(oind_boundary,eind_boundary);
+                sjj(surf_counter+1: surf_counter+Face.NVert^2) = kron(eind_boundary,oind_boundary);
                 Face = getLocalMatrices(Face);
-                MS(eind_boundary, eind_boundary) = MS(eind_boundary, eind_boundary) + Face.M; %#ok
-                KS(eind_boundary, eind_boundary) = KS(eind_boundary, eind_boundary) + Face.K; %#ok
-                CS(eind_boundary, eind_boundary) = CS(eind_boundary, eind_boundary) + Face.C; %#ok
+                svm(surf_counter+1: surf_counter+Face.NVert^2) = Face.M(:);
+                svc(surf_counter+1: surf_counter+Face.NVert^2) = Face.C(:);
+                svk(surf_counter+1: surf_counter+Face.NVert^2) = Face.K(:);
+                surf_counter = surf_counter + Face.NVert^2;
             end
         end
     end
+    bulk_counter = bulk_counter + E.NVert^2;
 end
 
+MS = sparse(sii,sjj, svm);
+CS = sparse(sii,sjj, svc);
+KS = sparse(sii,sjj, svk);
 MS = MS(boundarynodes,boundarynodes);
 CS = CS(boundarynodes,boundarynodes);
 KS = KS(boundarynodes,boundarynodes);
@@ -84,5 +107,8 @@ KS = KS(boundarynodes,boundarynodes);
 R = spalloc(Nbulk, Nsurf, Nsurf);
 R(boundarynodes,:) = speye(Nsurf);
 
+M = sparse(ii,jj, vm);
+C = sparse(ii,jj, vc);
+K = sparse(ii,jj, vk);
         
 end
