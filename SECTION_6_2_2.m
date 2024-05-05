@@ -22,13 +22,20 @@ g = [{@(u,P,t) gammaGamma*(a-u(:,1)+u(:,1).^2.*u(:,2))}; ...
 rng(0); % initialize random number generator
 v0 = [a + b + 1e-3*(2*rand(size(P,1),1)-1), ...
       b/(a+b)^2 + 1e-3*(2*rand(size(P,1),1)-1)];
-T = 5; tau = 1e-5;
-v = solver_parabolic_surf(dGamma,g,P,MS,KS,R,T,tau,v0);
+T = 10; tau = 1e-5;
+[v, t, vprime_norm, v_average] = solver_parabolic_surf(dGamma,g,P,MS,KS,R,T,tau,v0);
 
-% STEP 4: Plot both components of numerical solution
+% STEP 4: Post-processing
 figure, set(gcf, 'color', 'white')
 sgtitle('Reaction-diffusion system on ellipsoidal surface')
-subplot(1,2,1) % plot component v1
+subplot(2,2,1) % plot component v1
 plot_surf3d(P,R,SurfElements,v(:,1),'$v_1$')
-subplot(1,2,2) % plot component v2
+subplot(2,2,2) % plot component v2
 plot_surf3d(P,R,SurfElements,v(:,2),'$v_2$')
+subplot(2,2,3), semilogy(t, vprime_norm, 'LineWidth',2)
+legend('$\|\dot{v}_1\|_{L^2(\Gamma_h)}$', 'interpreter', 'latex') 
+xlabel('t'), set(gca, 'FontSize', 14)
+subplot(2,2,4), plot(t, v_average, 'LineWidth',2)
+legend('$<v_1>$', 'interpreter', 'latex') 
+xlabel('t'), set(gca, 'FontSize', 14)
+

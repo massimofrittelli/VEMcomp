@@ -1,4 +1,4 @@
-function u = solver_parabolic_bulk(D,f,P,M,K,R,bcond,T,tau,u0)
+function [u, t, uprime_norm, u_average] = solver_parabolic_bulk(D,f,P,M,K,R,bcond,T,tau,u0)
     
     n = length(D);
 
@@ -21,6 +21,14 @@ function u = solver_parabolic_bulk(D,f,P,M,K,R,bcond,T,tau,u0)
 
     NT = ceil(T/tau);
     u = u0;
+    if nargout >= 3
+        % spatial L2 norm of time derivative of fist component of u
+        uprime_norm = zeros(1,NT);
+    end
+    if nargout >= 4
+        % spatial average of first component of u
+        u_average = zeros(1,NT);
+    end
     progress_handle = waitbar(0);
     axes_handle = findobj(progress_handle, 'type','axes');
     title_handle = get(axes_handle,'title');
@@ -42,10 +50,27 @@ function u = solver_parabolic_bulk(D,f,P,M,K,R,bcond,T,tau,u0)
             ubcond(:,j) =  U{j}\(L{j}\RHS(perm(:,j),j)); %#ok
             ubcond(perm(:,j),j) = ubcond(:,j); %#ok
         end
-        u = zeros(length(M),n);
-        u(bulknodes,:) = ubcond;
+        u_new = zeros(length(M),n);
+        u_new(bulknodes,:) = ubcond;
+        if nargout >= 3
+            incr = u_new(:,1)-u(:,1);
+            uprime_norm(i+1) = incr'*M*incr;
+        end
+        if nargout >= 4
+            u_average(i+1) = sum(M*u_new(:,1));
+        end
+        u = u_new;
     end
 
     close(progress_handle);
 
+    if nargout >= 2
+        t = linspace(tau, NT*tau, NT);
+    end
+    if nargout >= 3
+        uprime_norm = sqrt(uprime_norm);
+    end
+    if nargout >= 4
+        u_average = u_average/sum(sum(M));
+    end
 end
