@@ -45,7 +45,7 @@ for i=0:NT-1
    end
 
    for j=1:n
-       RHS_Omega(:,j)= M*(u(:,j) + tau*f{j}(u,P,i*tau)) + tau*R*MS*h{j}(R'*u,v, PGamma, i*tau); %#ok
+       RHS_Omega(:,j)= M*(u(:,j) + tau*f{j}(u,P,i*tau)) + dOmega(j)*tau*R*MS*h{j}(R'*u,v, PGamma, i*tau); %#ok
    end
    for j=1:m
        RHS_Gamma(:,j)= MS*(v(:,j) + tau*g{j}(R'*u,v,PGamma,i*tau)); %#ok

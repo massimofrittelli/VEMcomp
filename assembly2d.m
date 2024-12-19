@@ -45,7 +45,7 @@ jj = zeros(Nbulk_repeated,1);
 vk = zeros(Nbulk_repeated,1);
 vm = zeros(Nbulk_repeated,1);
 vc = zeros(Nbulk_repeated,1);
-Nsurf_repeated = 2*Nsurf;
+Nsurf_repeated = 4*Nsurf;
 sii = zeros(Nsurf_repeated,1);
 sjj = zeros(Nsurf_repeated,1);
 svk = zeros(Nsurf_repeated,1);
@@ -75,18 +75,18 @@ end
 % MATRIX ASSEMBLY ON THE SURFACE
 surf_counter = 0;
 for i=1:length(SurfElements)
-    eind = SurfElements(i,:);
+    eind = SurfElements(i,:)';
     oind = [1;1];
-    sii(surf_counter+1: surf_counter+4) = kron(oind,eind);
-    sjj(surf_counter+1: surf_counter+4) = kron(eind,oind);
+    sii(surf_counter+1: surf_counter+4) = kron(eind,oind);
+    sjj(surf_counter+1: surf_counter+4) = kron(oind,eind);
     element_length = norm(P(eind(1),:) - P(eind(2),:));
     svm(surf_counter+1: surf_counter+4) = [2 1 1 2]'/6*element_length;
     svk(surf_counter+1: surf_counter+4) = [1 -1 -1 1]'/element_length;
     surf_counter = surf_counter + 4;
 end
 
-MS = sparse(sii,sjj, svm);
-KS = sparse(sii,sjj, svk);
+MS = sparse(sii,sjj,svm);
+KS = sparse(sii,sjj,svk);
 MS = MS(boundarynodes,boundarynodes);
 KS = KS(boundarynodes,boundarynodes);
             

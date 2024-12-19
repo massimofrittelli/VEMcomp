@@ -16,11 +16,11 @@ tol = 1e-6; xcut = -0.3;
 
 %% STEP 3: Solve PDE
 dOmega = 1; dGamma = 1;
-alpha = 1; beta = 2; gamma = -1; delta = 2;
+alpha = 1; beta = 1; gamma = -1; delta = 2;
 % right-hand-side of 1st eq. in (35)
 f = @(P) P(:,1).*P(:,2).*P(:,3);
 % right-hand-side of 2nd eq. in (35)
-g = @(P) 29*P(:,1).*P(:,2).*P(:,3);
+g = @(P) 26*P(:,1).*P(:,2).*P(:,3);
 [u,v] = solver_elliptic_bulk_surf(dOmega, dGamma, alpha, beta, f, g, P, M, MS, K, KS, R, gamma, delta);
 
 %% STEP 4: Post-processing
